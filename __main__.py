@@ -80,6 +80,7 @@ def generate_instance(instance_name, num_rooms):
             node_colors.append('blue')
     
     
+    
     # Objects
     template_mapping['room_list'] = room_list
     template_mapping['key_list'] = key_list
