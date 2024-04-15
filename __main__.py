@@ -95,11 +95,24 @@ def generate_instance(instance_name, num_rooms):
 
     f = open('./progetto/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
-    f.close
+    f.close()
 
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./progetto/simple_dungeon_domain.pddl", "./progetto/simple_dungeon_problem.pddl")
+
+    # Invoke a unified-planning planner 
+    with OneshotPlanner(problem_kind=problem.kind) as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s" % (planner.name, result.plan))
+
+    # Drawing the dungeon 
     nx.draw(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
     plt.show()
 
+'''
+Returns the farthest nodes inside the graph
+'''
 def farthest_nodes(G):
     all_shortest_paths = dict(nx.all_pairs_shortest_path_length(G))
 
@@ -115,6 +128,10 @@ def farthest_nodes(G):
 
     return farthest_nodes
 
+'''
+Generates links between rooms as normal or door link.
+If a door link is generated, a key will be located in a random room (with some constraints)
+'''
 def generate_keys (G, start_room, exit_room):
     key_rooms = {}
 
@@ -137,7 +154,7 @@ def generate_keys (G, start_room, exit_room):
                 key_rooms[(u,v)] = key_room
     return key_rooms
 
-    
+   
 def generate_exit_room(G, start_room):
     found = False
     while not found:
