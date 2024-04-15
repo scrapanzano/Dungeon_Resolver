@@ -103,7 +103,7 @@ def generate_keys (G, start_room, exit_room):
 
     for u, v in G.edges():
         # Assign a random type (normal edge or door edge) to each edge with different probabilities
-        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.8, 0.2], k=1)[0]
+        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.9, 0.1], k=1)[0]
         if G[u][v]['type'] == 'door':
             # If the edge is a door edge, assign to one of the neighbors of the two rooms a key
             # Neighbor is chosen randomly among the neighbors that are not connected to the selected room
