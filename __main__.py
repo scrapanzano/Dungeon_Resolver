@@ -94,7 +94,7 @@ def generate_instance(instance_name, num_rooms):
     problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
 
     # Invoke a unified-planning planner 
-    with OneshotPlanner(name='ENHSP') as planner:
+    with OneshotPlanner(name='enhsp') as planner:
         result = planner.solve(problem)
         print("%s returned: %s" % (planner.name, result.plan))
 
