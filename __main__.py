@@ -22,7 +22,7 @@ def generate_instance(instance_name, num_rooms):
 
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
-
+    
     start_room = 0
 
     exit_room = farthest_node(G, start_room)
@@ -94,12 +94,12 @@ def generate_instance(instance_name, num_rooms):
     problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
 
     # Invoke a unified-planning planner 
-    with OneshotPlanner(name='ENHSP') as planner:
+    with OneshotPlanner(name='enhsp') as planner:
         result = planner.solve(problem)
         print("%s returned: %s" % (planner.name, result.plan))
 
     # Drawing the dungeon 
-    nx.draw(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
+    nx.draw_kamada_kawai(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
     plt.show()
 
 '''
