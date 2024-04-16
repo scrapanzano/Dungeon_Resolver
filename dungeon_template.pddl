@@ -2,6 +2,7 @@
   (:domain ${domain_name})
   (:objects
     ${room_list} - room
+    ${treasures_list} - treasure
   )
   (:init
     ${start_room}
@@ -17,7 +18,7 @@
 
   (:goal
     (and
-      (escape)
+      (escape) ( >= (hero_loot) 50)
     )
   )
 )
