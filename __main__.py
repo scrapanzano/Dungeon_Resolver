@@ -167,7 +167,7 @@ def generate_exit_room(G, start_room):
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=True, help="Number of rooms in the dungeon", default = "5")
+    parser.add_argument( "--num_rooms", required=True, help="Number of rooms in the dungeon", default = "20")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)
