@@ -7,8 +7,8 @@
 (:types 
     ;Rooms that compose dungeon
     room 
-    ;Keys that open doors between rooms
-    key
+    ;Loot that hero can find in rooms
+    treasure
 )
 
 ;(:constants )
@@ -27,11 +27,17 @@
     (closed_door ?x ?y - room)
     ;Key position
     (key_at ?x - room)
+    ;Treasures position
+    (treasure_at ?t - treasure ?x - room)
 )
 
 (:functions
     ;Number of keys owned
     (key_counter)
+    ;Treasures value
+    (treasure_value ?t - treasure)
+    ;Hero stats
+    (hero_loot)
 )
 
 ;Actions
@@ -63,4 +69,12 @@
     :precondition (and (at ?x) (closed_door ?x ?y) (>= (key_counter) 1))
     :effect (and (not (closed_door ?x ?y)) (connected ?x ?y) (connected ?y ?x) (decrease (key_counter) 1))
 )
+
+;Collect treasures from room: hero_loot increased by treasure_value
+(:action collect_treasure
+    :parameters (?t - treasure ?x - room)
+    :precondition (and (at ?x) (treasure_at ?t ?x))
+    :effect (and (not (treasure_at ?t ?x)) (increase (hero_loot) (treasure_value ?t)))
+)
+
 )

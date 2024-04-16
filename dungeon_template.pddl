@@ -10,6 +10,9 @@
     ${closed_doors}
     ${keys_location}
     ${key_counter}
+    ${treasures_location}
+    ${treasures_value}
+    ${hero_loot}
   )
 
   (:goal
