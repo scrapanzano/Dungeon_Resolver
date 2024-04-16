@@ -27,12 +27,10 @@
     (closed_door ?x ?y - room)
     ;Key position
     (key_at ?x - room)
-    ;Key own
-    (own_key)
-    ;Enemies position
 )
 
 (:functions
+    ;Number of keys owned
     (key_counter)
 )
 
@@ -56,13 +54,13 @@
 (:action collect_key
     :parameters (?x - room)
     :precondition (and (at ?x) (key_at ?x))
-    :effect (and (not (key_at ?x)) (own_key) (increase (key_counter) 1))
+    :effect (and (not (key_at ?x)) (increase (key_counter) 1))
 )
 
 ;Open door between 2 rooms using key (two rooms with door between them are initially not connected)
 (:action open_door
     :parameters (?x ?y - room)
-    :precondition (and (at ?x) (closed_door ?x ?y) (own_key))
+    :precondition (and (at ?x) (closed_door ?x ?y) (>= (key_counter) 1))
     :effect (and (not (closed_door ?x ?y)) (connected ?x ?y) (connected ?y ?x) (decrease (key_counter) 1))
 )
 )

@@ -2,7 +2,6 @@
   (:domain ${domain_name})
   (:objects
     ${room_list} - room
-    ${key_list} - key
   )
   (:init
     ${start_room}
@@ -10,6 +9,7 @@
     ${room_links}
     ${closed_doors}
     ${keys_location}
+    ${key_counter}
   )
 
   (:goal

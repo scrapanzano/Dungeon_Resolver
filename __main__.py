@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
-template_name = "./progetto/dungeon_template.pddl"
+template_name = "./dungeon_resolver/dungeon_template.pddl"
 
 def generate_instance(instance_name, num_rooms):
     with open( template_name ) as instream :
@@ -21,15 +21,13 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['domain_name'] = 'simple_dungeon'
 
     # Generate a random dungeon in which each room is connected at least with another one
-    G = nx.connected_watts_strogatz_graph(num_rooms, k=3, p=0.1)
+    G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
 
-    start_room, exit_room = farthest_nodes(G)
+    start_room = 0
 
-    # Start room chosen randomly 
-    #start_room = random.choice(list(G.nodes))
+    exit_room = farthest_node(G, start_room)
 
-    # Exit room (cannot be the start_room)
-    #exit_room = generate_exit_room(G, start_room)
+    generate_doors(G)
 
     # List of rooms in which there's a key and a reference of which door that key can open
     key_rooms = generate_keys(G, start_room, exit_room)
@@ -40,12 +38,6 @@ def generate_instance(instance_name, num_rooms):
     for i in range(num_rooms):
         room_list += 'R' + str(i) + ' '
 
-    # Creating the string that contains the key_list
-    key_list = ''
-    
-    for i in range(len(key_rooms)):
-        key_list += 'K' + str(i) + ' '
-
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
 
@@ -54,17 +46,17 @@ def generate_instance(instance_name, num_rooms):
             if G[room][neighbor]['type'] == 'normal':
                 room_links += '(connected R' + str(room) + ' R' + str(neighbor) + ') ' 
 
-    # Creating the string that describes the doors between rooms and the locations of each key
     closed_doors = ''
+
+    for room in G.nodes:
+        for neighbor in G.neighbors(room):
+            if G[room][neighbor]['type'] == 'door':
+                closed_doors += '(closed_door R' + str(room) + ' R' + str(neighbor) + ') '
+
     keys_location = ''
-    index = 0
 
-    for key in key_rooms:
-        room_1, room_2 = key
-        closed_doors += '(closed_door R' + str(room_1) + ' R' + str(room_2) + ' K' + str(index) + ') '
-        keys_location += '(key_at K' + str(index) + ' R' + str(key_rooms.get(key)) + ')'
-        index += 1
-
+    for key_room in key_rooms:
+        keys_location += '(key_at R' + str(key_room) + ') '
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
@@ -73,7 +65,7 @@ def generate_instance(instance_name, num_rooms):
 
     # Each type of room has a different color to be represented with
     for node in G.nodes():
-        if node in key_rooms.values():
+        if node in key_rooms:
             node_colors.append('grey')
         elif node == start_room:
             node_colors.append('green')
@@ -82,28 +74,27 @@ def generate_instance(instance_name, num_rooms):
         else:
             node_colors.append('blue')
     
-    
-    
+     
     # Objects
     template_mapping['room_list'] = room_list
-    template_mapping['key_list'] = key_list
     # Init
     template_mapping['start_room'] = '(at R' + str(start_room) + ')'
     template_mapping['exit_room'] = '(exit_room R' + str(exit_room) + ')'
     template_mapping['room_links'] = room_links
     template_mapping['closed_doors'] = closed_doors
     template_mapping['keys_location'] = keys_location
+    template_mapping['key_counter'] = '(= (key_counter) 0)'
 
-    f = open('./progetto/simple_dungeon_problem.pddl', 'w')
+    f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
-    problem = reader.parse_problem("./progetto/simple_dungeon_domain.pddl", "./progetto/simple_dungeon_problem.pddl")
+    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
 
     # Invoke a unified-planning planner 
-    with OneshotPlanner(problem_kind=problem.kind) as planner:
+    with OneshotPlanner(name='ENHSP') as planner:
         result = planner.solve(problem)
         print("%s returned: %s" % (planner.name, result.plan))
 
@@ -114,46 +105,77 @@ def generate_instance(instance_name, num_rooms):
 '''
 Returns the farthest nodes inside the graph
 '''
-def farthest_nodes(G):
-    all_shortest_paths = dict(nx.all_pairs_shortest_path_length(G))
+def farthest_node(G, start_room):
+    shortest_paths = nx.single_source_shortest_path_length(G, start_room)
 
-# Find the pair with maximum shortest path length
+    # Find the node with maximum shortest path length
     max_length = -1
-    farthest_nodes = None
+    farthest_node = None
 
-    for source, paths in all_shortest_paths.items():
-        for target, length in paths.items():
-            if length > max_length:
-                max_length = length
-                farthest_nodes = (source, target)
+    for target, length in shortest_paths.items():
+        if length > max_length:
+            max_length = length
+            farthest_node = target
 
-    return farthest_nodes
+    return farthest_node
 
-'''
-Generates links between rooms as normal or door link.
-If a door link is generated, a key will be located in a random room (with some constraints)
-'''
-def generate_keys (G, start_room, exit_room):
-    key_rooms = {}
-
+def generate_doors(G):
+    door_probability = 0.4
     for u, v in G.edges():
-        # Assign a random type (normal edge or door edge) to each edge with different probabilities
-        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.6, 0.4], k=1)[0]
-        if G[u][v]['type'] == 'door':
-            # If the edge is a door edge, assign to one of the neighbors of the two rooms a key
-            # Neighbor is chosen randomly among the neighbors that are not connected to the selected room
-            room = random.choice([u, v])
-            temp_key_rooms = []
-            for neighbor in G.neighbors(room):
-                if room == u and neighbor != v and neighbor not in G.neighbors(v) and neighbor not in key_rooms.values() and neighbor != start_room and neighbor != exit_room:
-                    temp_key_rooms.append(neighbor)
-                elif room == v and neighbor != u and neighbor not in G.neighbors(u) and neighbor not in key_rooms.values() and neighbor != start_room and neighbor != exit_room:
-                    temp_key_rooms.append(neighbor)
-            
-            if temp_key_rooms:
-                key_room = random.choice(temp_key_rooms)
-                key_rooms[(u,v)] = key_room
+        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[1-door_probability, door_probability], k=1)[0]
+
+def generate_keys(G, start_room, exit_room):
+    key_rooms = []
+    visited = set()
+    queue = [start_room]
+    door_count = 0
+
+    while queue:
+        room = queue.pop(0)
+        visited.add(room)
+
+        for u, v in G.edges(room):
+            if G[u][v]['type'] == 'door':
+                door_count += 1
+                if door_count % 16 == 0:  # Only generate keys for half of the doors
+                    temp_key_rooms = []
+                    for neighbor in G.neighbors(room):
+                        if neighbor in visited and neighbor not in key_rooms and neighbor != start_room and neighbor != exit_room:
+                            temp_key_rooms.append(neighbor)
+                    
+                    if temp_key_rooms:
+                        key_room = random.choice(temp_key_rooms)
+                        key_rooms.append(key_room)
+            elif v not in visited:
+                queue.append(v)
+
     return key_rooms
+
+# '''
+# Generates links between rooms as normal or door link.
+# If a door link is generated, a key will be located in a random room (with some constraints)
+# '''
+# def generate_keys (G, start_room, exit_room):
+#     key_rooms = []
+
+#     for u, v in G.edges():
+#         # Assign a random type (normal edge or door edge) to each edge with different probabilities
+#         G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.6, 0.4], k=1)[0]
+#         if G[u][v]['type'] == 'door':
+#             # If the edge is a door edge, assign to one of the neighbors of the two rooms a key
+#             # Neighbor is chosen randomly among the neighbors that are not connected to the selected room
+#             room = random.choice([u, v])
+#             temp_key_rooms = []
+#             for neighbor in G.neighbors(room):
+#                 if room == u and neighbor != v and neighbor not in G.neighbors(v) and neighbor not in key_rooms and neighbor != start_room and neighbor != exit_room:
+#                     temp_key_rooms.append(neighbor)
+#                 elif room == v and neighbor != u and neighbor not in G.neighbors(u) and neighbor not in key_rooms and neighbor != start_room and neighbor != exit_room:
+#                     temp_key_rooms.append(neighbor)
+            
+#             if temp_key_rooms:
+#                 key_room = random.choice(temp_key_rooms)
+#                 key_rooms.append(key_room)
+#     return key_rooms
 
    
 def generate_exit_room(G, start_room):
