@@ -21,13 +21,15 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['domain_name'] = 'simple_dungeon'
 
     # Generate a random dungeon in which each room is connected at least with another one
-    G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
+    G = nx.connected_watts_strogatz_graph(num_rooms, k=3, p=0.1)
+
+    start_room, exit_room = farthest_nodes(G)
 
     # Start room chosen randomly 
-    start_room = random.choice(list(G.nodes))
+    #start_room = random.choice(list(G.nodes))
 
     # Exit room (cannot be the start_room)
-    exit_room = generate_exit_room(G, start_room)
+    #exit_room = generate_exit_room(G, start_room)
 
     # List of rooms in which there's a key and a reference of which door that key can open
     key_rooms = generate_keys(G, start_room, exit_room)
@@ -42,19 +44,20 @@ def generate_instance(instance_name, num_rooms):
     key_list = ''
     
     for i in range(len(key_rooms)):
-        key_list += 'K' + str(i+1) + ' '
+        key_list += 'K' + str(i) + ' '
 
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
 
     for room in G.nodes:
         for neighbor in G.neighbors(room):
-            room_links += '(connected R' + str(room) + ' R' + str(neighbor) + ') ' 
+            if G[room][neighbor]['type'] == 'normal':
+                room_links += '(connected R' + str(room) + ' R' + str(neighbor) + ') ' 
 
     # Creating the string that describes the doors between rooms and the locations of each key
     closed_doors = ''
     keys_location = ''
-    index = 1
+    index = 0
 
     for key in key_rooms:
         room_1, room_2 = key
@@ -93,17 +96,49 @@ def generate_instance(instance_name, num_rooms):
 
     f = open('./progetto/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
-    f.close
+    f.close()
 
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./progetto/simple_dungeon_domain.pddl", "./progetto/simple_dungeon_problem.pddl")
+
+    # Invoke a unified-planning planner 
+    with OneshotPlanner(problem_kind=problem.kind) as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s" % (planner.name, result.plan))
+
+    # Drawing the dungeon 
     nx.draw(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
     plt.show()
 
+'''
+Returns the farthest nodes inside the graph
+'''
+def farthest_nodes(G):
+    all_shortest_paths = dict(nx.all_pairs_shortest_path_length(G))
+
+# Find the pair with maximum shortest path length
+    max_length = -1
+    farthest_nodes = None
+
+    for source, paths in all_shortest_paths.items():
+        for target, length in paths.items():
+            if length > max_length:
+                max_length = length
+                farthest_nodes = (source, target)
+
+    return farthest_nodes
+
+'''
+Generates links between rooms as normal or door link.
+If a door link is generated, a key will be located in a random room (with some constraints)
+'''
 def generate_keys (G, start_room, exit_room):
     key_rooms = {}
 
     for u, v in G.edges():
         # Assign a random type (normal edge or door edge) to each edge with different probabilities
-        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.9, 0.1], k=1)[0]
+        G[u][v]['type'] = random.choices(['normal', 'door'], weights=[0.6, 0.4], k=1)[0]
         if G[u][v]['type'] == 'door':
             # If the edge is a door edge, assign to one of the neighbors of the two rooms a key
             # Neighbor is chosen randomly among the neighbors that are not connected to the selected room
@@ -120,7 +155,7 @@ def generate_keys (G, start_room, exit_room):
                 key_rooms[(u,v)] = key_room
     return key_rooms
 
-    
+   
 def generate_exit_room(G, start_room):
     found = False
     while not found:
