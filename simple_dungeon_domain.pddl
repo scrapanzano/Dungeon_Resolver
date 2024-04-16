@@ -56,7 +56,7 @@
 (:action collect_key
     :parameters (?x - room)
     :precondition (and (at ?x) (key_at ?x))
-    :effect (and (not (key_at ?x)) (own_key) ((increase (key_counter) 1)))
+    :effect (and (not (key_at ?x)) (own_key) (increase (key_counter) 1))
 )
 
 ;Open door between 2 rooms using key (two rooms with door between them are initially not connected)
