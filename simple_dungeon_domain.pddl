@@ -24,14 +24,17 @@
     ;Escape from dungeon
     (escape)
     ;Closed doors with key between rooms 
-    (closed_door ?x ?y - room ?k - key)
+    (closed_door ?x ?y - room)
     ;Key position
-    (key_at ?k - key ?x - room)
+    (key_at ?x - room)
     ;Key own
-    (own_key ?k - key)
+    (own_key)
     ;Enemies position
 )
 
+(:functions
+    (key_counter)
+)
 
 ;Actions
 
@@ -51,15 +54,15 @@
 
 ;Collect key from safe room (no enemies inside)
 (:action collect_key
-    :parameters (?k - key ?x - room)
-    :precondition (and (at ?x) (key_at ?k ?x))
-    :effect (and (not (key_at ?k ?x)) (own_key ?k))
+    :parameters (?x - room)
+    :precondition (and (at ?x) (key_at ?x))
+    :effect (and (not (key_at ?x)) (own_key) ((increase (key_counter) 1)))
 )
 
 ;Open door between 2 rooms using key (two rooms with door between them are initially not connected)
 (:action open_door
-    :parameters (?x ?y - room ?k - key)
-    :precondition (and (at ?x) (closed_door ?x ?y ?k) (own_key ?k))
-    :effect (and (not (closed_door ?x ?y ?k)) (connected ?x ?y) (connected ?y ?x))
+    :parameters (?x ?y - room)
+    :precondition (and (at ?x) (closed_door ?x ?y) (own_key))
+    :effect (and (not (closed_door ?x ?y)) (connected ?x ?y) (connected ?y ?x) (decrease (key_counter) 1))
 )
 )
