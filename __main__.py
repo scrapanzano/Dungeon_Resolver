@@ -119,16 +119,18 @@ def generate_instance(instance_name, num_rooms):
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    os.system("java -jar Dungeon_Resolver/enhsp.jar -o Dungeon_Resolver/simple_dungeon_domain.pddl -f Dungeon_Resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
+    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o Dungeon_Resolver/simple_dungeon_domain.pddl -f Dungeon_Resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
 
-    # # Using unified-planning for reading the domain and instance files
-    # reader = PDDLReader()
-    # problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
 
-    # # Invoke a unified-planning planner 
-    # with OneshotPlanner(name='enhsp') as planner:
-    #     result = planner.solve(problem)
-    #     print("%s returned: %s" % (planner.name, result.plan))
+    up.shortcuts.get_environment().credits_stream = None
+
+    # Invoke a unified-planning planner 
+    with OneshotPlanner(name='enhsp') as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s" % (planner.name, result.plan))
 
     # Drawing the dungeon 
     nx.draw_kamada_kawai(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
