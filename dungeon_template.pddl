@@ -18,7 +18,7 @@
 
   (:goal
     (and
-      (escape) ( >= (hero_loot) 50)
+      (escape) ( >= (hero_loot) ${loot_goal})
     )
   )
 )
