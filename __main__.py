@@ -130,7 +130,18 @@ def generate_instance(instance_name, num_rooms):
     # Invoke a unified-planning planner 
     with OneshotPlanner(name='enhsp') as planner:
         result = planner.solve(problem)
-        print("%s returned: %s" % (planner.name, result.plan))
+        #print("%s returned: %s" % (planner.name, result.plan))
+
+    loot = FluentExp(problem.fluent("hero_loot"))
+    with SequentialSimulator(problem) as simulator: 
+        state = simulator.get_initial_state()
+        print(f"Initial loot = {state.get_value(loot)}")
+        for ai in result.plan.actions:
+            state = simulator.apply(state, ai)
+            print(f"Applied action: {ai}. ", end="")
+            print(f"Loot: {state.get_value(loot)}")
+        if simulator.is_goal(state):
+            print("Goal reached!")
 
     # Drawing the dungeon 
     nx.draw_kamada_kawai(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
