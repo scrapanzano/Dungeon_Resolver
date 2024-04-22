@@ -10,13 +10,16 @@ import matplotlib.pyplot as plt
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
-template_name = "./dungeon_resolver/dungeon_template.pddl"
+template_name = "./temp/dungeon_template.pddl"
 
+'''
+Generates dungeon instance
+'''
 def generate_instance(instance_name, num_rooms):
     with open( template_name ) as instream :
         text = instream.read()
         template = string.Template( text )
-
+    
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
     
@@ -26,11 +29,23 @@ def generate_instance(instance_name, num_rooms):
 
     generate_doors(G)
 
-    # List of rooms in which there's a key and a reference of which door that key can open
+    # List of rooms in which there's a key 
     key_rooms = generate_keys(G, start_room, exit_room)
 
-    # Generate the loot that will be placed in the dungeon
-    loot_rooms = generate_loot(G, start_room)
+    # Dict of rooms in wich there's a treasure [format: {room : {'treasure_name' : treasure_value}}]
+    treasure_probability = 0.3
+    num_treasure_rooms = (int)(num_rooms * treasure_probability)
+    treasure_rooms = generate_treasures(G, start_room, num_treasure_rooms)
+
+    # List of rooms in which there's not a treasure 
+    no_treasure_rooms = []
+    for node in G.nodes():
+        if node not in list(treasure_rooms):
+            no_treasure_rooms.append(node)
+
+    # Generating loot_goal
+    loot_rate = 0.5
+    loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
 
     # Creating the string that containts the room_list
     room_list = ''
@@ -38,11 +53,12 @@ def generate_instance(instance_name, num_rooms):
     for i in range(num_rooms):
         room_list += 'R' + str(i) + ' '
 
-    # Creating the string that containts the treasures_list
-    treasures_list = ''
+    # Creating the string that contains the treasure_list
+    treasure_list = ''
 
-    for i in range(len(loot_rooms)):
-        treasures_list += 'T' + str(i) + ' '
+    for room in treasure_rooms:
+        for key in treasure_rooms[room]:
+            treasure_list += key + '_R' + str(room) + ' '
 
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
@@ -59,34 +75,36 @@ def generate_instance(instance_name, num_rooms):
             if G[room][neighbor]['type'] == 'door':
                 closed_doors += '(closed_door R' + str(room) + ' R' + str(neighbor) + ') '
 
+    # Creating the string that containts the keys location
     keys_location = ''
 
     for key_room in key_rooms:
         keys_location += '(key_at R' + str(key_room) + ') '
 
-
+    # Creating the string that containts the treasures location
     treasures_location = ''
+
+    for room in treasure_rooms:
+        for key in treasure_rooms[room]:
+            treasure_name = key + '_R' + str(room) + ' '
+            treasures_location += '(treasure_at ' + treasure_name + 'R' + str(room) + ') '
+
+    # Creating the string that containts the treasures value
     treasures_value = ''
-    index = 0
-    total_loot = 0
 
-    for room in loot_rooms:
-        treasures_location += '(treasure_at T' + str(index) + ' R' + str(room) + ') '
-        treasures_value += '( = (treasure_value T' + str(index) + ') ' + str(loot_rooms[room]) + ') '
-        total_loot += loot_rooms[room]
-        index += 1
-
-    loot_goal = loot_goal = math.ceil(total_loot * 0.75)  
-    print("Total loot:", total_loot)
-    print("Loot goal:", loot_goal)
+    for room in treasure_rooms:
+        for key in treasure_rooms[room]:
+            treasure_name = key + '_R' + str(room)
+            treasure_value = treasure_rooms[room][key]
+            treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
     
-    # Populate the template
+    # Populate template
     template_mapping = dict()
     template_mapping['instance_name'] = instance_name
-    template_mapping['domain_name'] = 'simple_dungeon'
+    template_mapping['domain_name'] = 'simple_dungeon' 
     # Objects
     template_mapping['room_list'] = room_list
-    template_mapping['treasures_list'] = treasures_list
+    template_mapping['treasure_list'] = treasure_list
     # Init
     template_mapping['start_room'] = '(at R' + str(start_room) + ')'
     template_mapping['exit_room'] = '(exit_room R' + str(exit_room) + ')'
@@ -97,43 +115,35 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['treasures_location'] = treasures_location
     template_mapping['treasures_value'] = treasures_value
     template_mapping['hero_loot'] = '(= (hero_loot) 0)'
-    template_mapping['loot_goal'] = str(loot_goal)
+    #Goal
+    template_mapping['loot_goal'] = '(>= (hero_loot) ' + str(loot_goal) + ')'
 
-    f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
+    # Write file
+    f = open('./temp/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    #os.system("java -jar Dungeon_Resolver/enhsp.jar -o Dungeon_Resolver/simple_dungeon_domain.pddl -f Dungeon_Resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
+    os.system("java -jar Dungeon_Resolver/enhsp.jar -o temp/simple_dungeon_domain.pddl -f temp/simple_dungeon_problem.pddl -planner opt-hrmax")
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
-    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
+    problem = reader.parse_problem("./temp/simple_dungeon_domain.pddl", "./temp/simple_dungeon_problem.pddl")
+    
+    # Invoke unified-planning planner enhsp
+    # up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
 
-    up.shortcuts.get_environment().credits_stream = None
-
-    # Invoke a unified-planning planner 
-    with OneshotPlanner(name='enhsp') as planner:
-        result = planner.solve(problem)
-        print("%s returned: %s" % (planner.name, result.plan))
-
-    # loot = FluentExp(problem.fluent("hero_loot"))
-    # with SequentialSimulator(problem) as simulator: 
-    #     state = simulator.get_initial_state()
-    #     print(f"Initial loot = {state.get_value(loot)}")
-    #     for ai in result.plan.actions:
-    #         state = simulator.apply(state, ai)
-    #         print(f"Applied action: {ai}. ", end="")
-    #         print(f"Loot: {state.get_value(loot)}")
-    #     if simulator.is_goal(state):
-    #         print("Goal reached!")
+    # with OneshotPlanner(name='enhsp') as planner:
+    #     result = planner.solve(problem)
+    #     print("%s returned: %s" % (planner.name, result.plan))
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
 
     node_colors = []
-
+    treasure_node_colors = []
+        
     # Each type of room has a different color to be represented with
-    for node in G.nodes():
+    for node in no_treasure_rooms:
         if node in key_rooms:
             node_colors.append('grey')
         elif node == start_room:
@@ -142,9 +152,19 @@ def generate_instance(instance_name, num_rooms):
             node_colors.append('gold')
         else:
             node_colors.append('blue')
+    
+    for node in treasure_rooms:
+        if node in key_rooms:
+            treasure_node_colors.append('grey')
+        elif node == exit_room:
+            treasure_node_colors.append('gold')
+        else:
+            treasure_node_colors.append('blue')
 
     # Drawing the dungeon 
-    nx.draw_kamada_kawai(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
+    nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=900, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=no_treasure_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
+    nx.draw_networkx_labels(G, pos=nx.kamada_kawai_layout(G), font_size=12, font_color="white")
     plt.show()
 
 '''
@@ -164,11 +184,17 @@ def farthest_node(G, start_room):
 
     return farthest_node
 
+'''
+Generates links between rooms as normal or door link.
+'''
 def generate_doors(G):
     door_probability = 0.4
     for u, v in G.edges():
         G[u][v]['type'] = random.choices(['normal', 'door'], weights=[1-door_probability, door_probability], k=1)[0]
 
+'''
+Generates keys in rooms and returns rooms with key
+'''
 def generate_keys(G, start_room, exit_room):
     key_rooms = []
     visited = set()
@@ -182,7 +208,7 @@ def generate_keys(G, start_room, exit_room):
         for u, v in G.edges(room):
             if G[u][v]['type'] == 'door':
                 door_count += 1
-                if door_count % 16 == 0:  # Only generate keys for half of the doors
+                if door_count % 16 == 0:  # Only generate keys for 1/8 of the doors
                     temp_key_rooms = []
                     for neighbor in G.neighbors(room):
                         if neighbor in visited and neighbor not in key_rooms and neighbor != start_room and neighbor != exit_room:
@@ -195,30 +221,40 @@ def generate_keys(G, start_room, exit_room):
                 queue.append(v)
 
     return key_rooms
-   
-def generate_exit_room(G, start_room):
-    found = False
-    while not found:
-        exit_room = random.choice(list(G.nodes))
-        if exit_room != start_room and exit_room not in G.neighbors(start_room):
-            found = True
-    return exit_room
 
-def generate_loot(G, start_room):
-    loot = [5, 10, 15, 20]
-    loot_weights = [0.4, 0.3, 0.2, 0.1]  # probabilities for each loot value
-    loot_rooms = {}
-    spawn_probability = 0.2
-    for room in G.nodes:
-        if room != start_room:
-            if random.random() < spawn_probability:  # Spawn loot with a certain probability
-                loot_rooms[room] = random.choices(loot, weights=loot_weights, k=1)[0]  # Assign a random loot value from loot
-    return loot_rooms   
+'''
+Generates treasure in rooms and returns rooms with treasure
+'''
+def generate_treasures(G, start_room, num_treasure_rooms):
+    treasure_rooms = {}
+    treasure_types = {'coins' : 10, 'rubies' : 20, 'diamonds' : 30, 'relic' : 40}
+    rooms_list = list(G)
+    rooms_list.remove(start_room) # Remove start_room from list
+     
+    drawn_rooms = random.sample(rooms_list, num_treasure_rooms) # Draw num_treasure_rooms from G_temp
+
+    for room in drawn_rooms:
+        selected_treasure = random.sample(list(treasure_types), 1) # Draw 1 element from treasure_types
+        treasure_name = selected_treasure[0] 
+        treasure_value = treasure_types[treasure_name]
+        treasure_rooms.update({room : {treasure_name : treasure_value}})
+    
+    return treasure_rooms
+
+'''
+Generates loot goal
+'''
+def generate_loot_goal(treasure_rooms, loot_rate):
+    sum = 0
+    for room in treasure_rooms:
+        for key in treasure_rooms[room]:
+            sum += treasure_rooms[room][key]
+    return (int)(sum * loot_rate)
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "40")
+    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "30")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)
