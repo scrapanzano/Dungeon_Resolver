@@ -16,9 +16,6 @@ def generate_instance(instance_name, num_rooms):
     with open( template_name ) as instream :
         text = instream.read()
         template = string.Template( text )
-    template_mapping = dict()
-    template_mapping['instance_name'] = instance_name
-    template_mapping['domain_name'] = 'simple_dungeon'
 
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
@@ -82,24 +79,11 @@ def generate_instance(instance_name, num_rooms):
     loot_goal = loot_goal = math.ceil(total_loot * 0.75)  
     print("Total loot:", total_loot)
     print("Loot goal:", loot_goal)
-
-    # Draw the graph with different colors for different types of edges
-    edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
-
-    node_colors = []
-
-    # Each type of room has a different color to be represented with
-    for node in G.nodes():
-        if node in key_rooms:
-            node_colors.append('grey')
-        elif node == start_room:
-            node_colors.append('green')
-        elif node == exit_room:
-            node_colors.append('gold')
-        else:
-            node_colors.append('blue')
     
-     
+    # Populate the template
+    template_mapping = dict()
+    template_mapping['instance_name'] = instance_name
+    template_mapping['domain_name'] = 'simple_dungeon'
     # Objects
     template_mapping['room_list'] = room_list
     template_mapping['treasures_list'] = treasures_list
@@ -142,6 +126,22 @@ def generate_instance(instance_name, num_rooms):
             print(f"Loot: {state.get_value(loot)}")
         if simulator.is_goal(state):
             print("Goal reached!")
+
+    # Draw the graph with different colors for different types of edges
+    edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
+
+    node_colors = []
+
+    # Each type of room has a different color to be represented with
+    for node in G.nodes():
+        if node in key_rooms:
+            node_colors.append('grey')
+        elif node == start_room:
+            node_colors.append('green')
+        elif node == exit_room:
+            node_colors.append('gold')
+        else:
+            node_colors.append('blue')
 
     # Drawing the dungeon 
     nx.draw_kamada_kawai(G, with_labels=True, edge_color=edge_colors, node_color=node_colors)
