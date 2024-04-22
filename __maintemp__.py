@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
-template_name = "./temp/dungeon_template.pddl"
+template_name = "./dungeon_resolver/dungeon_template.pddl"
 
 '''
 Generates dungeon instance
@@ -104,7 +104,7 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['domain_name'] = 'simple_dungeon' 
     # Objects
     template_mapping['room_list'] = room_list
-    template_mapping['treasure_list'] = treasure_list
+    template_mapping['treasures_list'] = treasure_list
     # Init
     template_mapping['start_room'] = '(at R' + str(start_room) + ')'
     template_mapping['exit_room'] = '(exit_room R' + str(exit_room) + ')'
@@ -116,25 +116,25 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['treasures_value'] = treasures_value
     template_mapping['hero_loot'] = '(= (hero_loot) 0)'
     #Goal
-    template_mapping['loot_goal'] = '(>= (hero_loot) ' + str(loot_goal) + ')'
+    template_mapping['loot_goal'] = str(loot_goal) 
 
     # Write file
-    f = open('./temp/simple_dungeon_problem.pddl', 'w')
+    f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    os.system("java -jar Dungeon_Resolver/enhsp.jar -o temp/simple_dungeon_domain.pddl -f temp/simple_dungeon_problem.pddl -planner opt-hrmax")
+    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o temp/simple_dungeon_domain.pddl -f temp/simple_dungeon_problem.pddl -planner opt-hrmax")
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
-    problem = reader.parse_problem("./temp/simple_dungeon_domain.pddl", "./temp/simple_dungeon_problem.pddl")
+    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
     
     # Invoke unified-planning planner enhsp
-    # up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
 
-    # with OneshotPlanner(name='enhsp') as planner:
-    #     result = planner.solve(problem)
-    #     print("%s returned: %s" % (planner.name, result.plan))
+    with OneshotPlanner(name='enhsp') as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s" % (planner.name, result.plan))
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
