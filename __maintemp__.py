@@ -32,9 +32,9 @@ def generate_instance(instance_name, num_rooms):
     # List of rooms in which there's a key 
     key_rooms = generate_keys(G, start_room, exit_room)
 
-    # Dict of rooms in wich there's a treasure [format: {room : {'treasure_name' : treasure_value}}]
-    treasure_probability = 0.3
-    num_treasure_rooms = (int)(num_rooms * treasure_probability)
+    # Dict of rooms in wich there's a treasure [format: {room : treasure_value}]
+    treasure_probability = 0.3 # 30%
+    num_treasure_rooms = (int)(num_rooms * treasure_probability) 
     treasure_rooms = generate_treasures(G, start_room, num_treasure_rooms)
 
     # List of rooms in which there's not a treasure 
@@ -44,7 +44,7 @@ def generate_instance(instance_name, num_rooms):
             no_treasure_rooms.append(node)
 
     # Generating loot_goal
-    loot_rate = 0.5
+    loot_rate = 0.5 # 50%
     loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
 
     # Creating the string that containts the room_list
@@ -56,9 +56,8 @@ def generate_instance(instance_name, num_rooms):
     # Creating the string that contains the treasure_list
     treasure_list = ''
 
-    for room in treasure_rooms:
-        for key in treasure_rooms[room]:
-            treasure_list += key + '_R' + str(room) + ' '
+    for i in range(len(treasure_rooms)):
+        treasure_list += 'T' + str(i) + ' '
 
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
@@ -81,22 +80,17 @@ def generate_instance(instance_name, num_rooms):
     for key_room in key_rooms:
         keys_location += '(key_at R' + str(key_room) + ') '
 
-    # Creating the string that containts the treasures location
+    # Creating the string that containts the treasures location and the treasures value
     treasures_location = ''
-
-    for room in treasure_rooms:
-        for key in treasure_rooms[room]:
-            treasure_name = key + '_R' + str(room) + ' '
-            treasures_location += '(treasure_at ' + treasure_name + 'R' + str(room) + ') '
-
-    # Creating the string that containts the treasures value
     treasures_value = ''
+    index = 0
 
     for room in treasure_rooms:
-        for key in treasure_rooms[room]:
-            treasure_name = key + '_R' + str(room)
-            treasure_value = treasure_rooms[room][key]
-            treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
+        treasure_name = 'T' + str(index) + ' '
+        treasure_value = treasure_rooms[room]
+        treasures_location += '(treasure_at ' + treasure_name + 'R' + str(room) + ') '
+        treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
+        index += 1
     
     # Populate template
     template_mapping = dict()
@@ -134,7 +128,19 @@ def generate_instance(instance_name, num_rooms):
 
     with OneshotPlanner(name='enhsp') as planner:
         result = planner.solve(problem)
-        print("%s returned: %s" % (planner.name, result.plan))
+        print("%s returned: %s\n" % (planner.name, result.plan))
+
+    # Invoke unified-planning sequential simulator
+    loot = FluentExp(problem.fluent("hero_loot"))
+    with SequentialSimulator(problem) as simulator: 
+        state = simulator.get_initial_state()
+        print(f"Initial loot = {state.get_value(loot)}")
+        for ai in result.plan.actions:
+            state = simulator.apply(state, ai)
+            print(f"Applied action: {ai}. ", end="")
+            print(f"Loot: {state.get_value(loot)}")
+        if simulator.is_goal(state):
+            print("Goal reached!")
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
@@ -161,7 +167,7 @@ def generate_instance(instance_name, num_rooms):
         else:
             treasure_node_colors.append('blue')
 
-    # Drawing the dungeon 
+    # Drawing the dungeon (different shape for treasure_rooms)
     nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=900, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
     nx.draw_kamada_kawai(G, nodelist=no_treasure_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
     nx.draw_networkx_labels(G, pos=nx.kamada_kawai_layout(G), font_size=12, font_color="white")
@@ -227,17 +233,15 @@ Generates treasure in rooms and returns rooms with treasure
 '''
 def generate_treasures(G, start_room, num_treasure_rooms):
     treasure_rooms = {}
-    treasure_types = {'coins' : 10, 'rubies' : 20, 'diamonds' : 30, 'relic' : 40}
+    treasures_value = [10, 20, 30, 40]
     rooms_list = list(G)
     rooms_list.remove(start_room) # Remove start_room from list
      
-    drawn_rooms = random.sample(rooms_list, num_treasure_rooms) # Draw num_treasure_rooms from G_temp
+    drawn_rooms = random.sample(rooms_list, num_treasure_rooms) # Draw num_treasure_rooms from rooms_list
 
     for room in drawn_rooms:
-        selected_treasure = random.sample(list(treasure_types), 1) # Draw 1 element from treasure_types
-        treasure_name = selected_treasure[0] 
-        treasure_value = treasure_types[treasure_name]
-        treasure_rooms.update({room : {treasure_name : treasure_value}})
+        selected_treasure = random.sample(treasures_value, 1) # Draw 1 element from treasures_value
+        treasure_rooms.update({room : selected_treasure[0]})
     
     return treasure_rooms
 
@@ -247,8 +251,7 @@ Generates loot goal
 def generate_loot_goal(treasure_rooms, loot_rate):
     sum = 0
     for room in treasure_rooms:
-        for key in treasure_rooms[room]:
-            sum += treasure_rooms[room][key]
+        sum += treasure_rooms[room]
     return (int)(sum * loot_rate)
 
 def parse_arguments():
@@ -260,7 +263,7 @@ def parse_arguments():
     args.random_seed = int(args.random_seed)
     if args.random_seed != None:
         random.seed( args.random_seed )
-        print( ";;Setting seed to {0}".format(args.random_seed) )
+        print( ";;Setting seed to {0}\n".format(args.random_seed) )
     return args
 
 def Main():
