@@ -26,35 +26,35 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, player:bool, enemy:int, weapon:int, potion:int, key:bool, start: bool, exit:bool, loot=None):
+    def __init__(self, id:int, key:bool, player=None, loot=None, enemy=None, weapon=None, potion=None):
         self.id = id
-        self.player = player
+        self.key = key
         self.enemy = enemy
         self.weapon = weapon
-        self.potion = potion
-        self.key = key
-        self.start = start
-        self.exit = exit
+        self.player = player
         self.loot = loot
+        self.potion = potion
 
     
-    def render_room(self, screen, player):
+    def render_room(self, screen):
         for y, row in enumerate(room_layout):
             for x, tile in enumerate(row):
                 if tile in tile_mapping:
                     tile_x, tile_y = tile_mapping[tile]
                     screen.blit(dungeon_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
-        if self.player:
-          screen.blit(player.character_tileset, (player.player_pos_x * TILE_SIZE, player.player_pos_y * TILE_SIZE), (player.player_tile_x * TILE_SIZE, player.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        if self.player is not None:
+          screen.blit(self.player.character_tileset, (self.player.player_pos_x * TILE_SIZE, self.player.player_pos_y * TILE_SIZE), (self.player.player_tile_x * TILE_SIZE, self.player.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
         if self.loot is not None:
           screen.blit(self.loot.loot_tileset, (self.loot.loot_pos_x * TILE_SIZE, self.loot.loot_pos_y * TILE_SIZE), (self.loot.loot_tile_x * TILE_SIZE, self.loot.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
+        if self.potion is not None:
+          screen.blit(self.potion.potion_tileset, (self.potion.potion_pos_x * TILE_SIZE, self.potion.potion_pos_y * TILE_SIZE), (self.potion.potion_tile_x * TILE_SIZE, self.potion.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
-    def thereis_player(self):
-        self.player = not self.player
-    
-    def thereis_loot(self):
-        self.loot = not self.loot
 
+    def add_player(self, player):
+        self.player = player
+        
+    def remove_player(self):
+        self.player = None     
