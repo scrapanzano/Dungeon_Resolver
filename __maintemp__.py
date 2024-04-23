@@ -52,11 +52,14 @@ def generate_instance(instance_name, num_rooms):
         if node not in list(enemy_rooms):
             safe_rooms.append(node)
 
-    # List of rooms in which there's not a treasure 
+    # List of safe rooms (no enemy) in which there's not a treasure 
     no_treasure_safe_rooms = []
     for node in G.nodes():
         if node not in list(treasure_rooms) and node in safe_rooms:
             no_treasure_safe_rooms.append(node)
+
+    # Dict of rooms in wich there's a weapon [format: {room : weapon_strength}]
+    weapon_rooms = generate_weapons(G, start_room, enemy_rooms)
 
     # Creating the string that containts the room_list
     room_list = ''
@@ -70,11 +73,17 @@ def generate_instance(instance_name, num_rooms):
     for i in range(len(treasure_rooms)):
         treasures_list += 'T' + str(i) + ' '
 
-    # Creating the string that contains the enemy_list
+    # Creating the string that contains the enemies_list
     enemies_list = ''
 
     for i in range(len(enemy_rooms)):
         enemies_list += 'E' + str(i) + ' '
+
+    # Creating the string that contains the weapons_list
+    weapons_list = ''
+
+    for i in range(len(weapon_rooms)):
+        weapons_list += 'W' + str(i) + ' '
 
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
@@ -126,9 +135,21 @@ def generate_instance(instance_name, num_rooms):
         enemy_value = enemy_rooms[room]
         enemies_location += '(enemy_at ' + enemy_name + ' R' + str(room) + ') '
         enemies_life += '(= (enemy_life ' + enemy_name + ') ' + str(enemy_value) +') '
-        enemies_strength += '(= (enemy_life ' + enemy_name + ') ' + str(enemy_value) +') '
+        enemies_strength += '(= (enemy_strength ' + enemy_name + ') ' + str(enemy_value) +') '
         index += 1
     
+    # Creating the string that containts the weapons location and strength
+    weapons_location = ''
+    weapons_strength = ''
+    index = 0
+
+    for room in weapon_rooms:
+        weapon_name = 'W' + str(index)
+        weapon_value = weapon_rooms[room]
+        weapons_location += '(weapon_at ' + weapon_name + ' R' + str(room) + ') '
+        weapons_strength += '(= (weapon_strength ' + weapon_name + ') ' + str(weapon_value) +') '
+        index += 1
+
     # Populate template
     template_mapping = dict()
     template_mapping['instance_name'] = instance_name
@@ -137,6 +158,7 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['room_list'] = room_list
     template_mapping['treasures_list'] = treasures_list
     template_mapping['enemies_list'] = enemies_list
+    template_mapping['weapons_list'] = weapons_list
     # Init
     template_mapping['start_room'] = '(at R' + str(start_room) + ')'
     template_mapping['exit_room'] = '(exit_room R' + str(exit_room) + ')'
@@ -150,9 +172,14 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['enemies_location'] = enemies_location
     template_mapping['enemies_life'] = enemies_life
     template_mapping['enemies_strength'] = enemies_strength
+    template_mapping['weapons_location'] = weapons_location
+    template_mapping['weapons_strength'] = weapons_strength
+    template_mapping['hero_life'] = '(= (hero_life) 100)'
+    template_mapping['max_hero_life'] = '(= (max_hero_life) 100)'
+    template_mapping['hero_strength'] = '(= (hero_strength) 0)'
     template_mapping['hero_loot'] = '(= (hero_loot) 0)'
     #Goal
-    template_mapping['loot_goal'] = str(loot_goal) 
+    template_mapping['loot_goal'] = '(>= (hero_loot) ' + str(loot_goal) + ')' 
 
     # Write file
     f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
@@ -323,6 +350,23 @@ def generate_enemies(G, start_room, num_enemy_rooms):
     
     return enemy_rooms
 
+'''
+Generates weapons in rooms and returns rooms with weapon
+'''
+def generate_weapons(G, start_room, enemy_rooms):
+    weapons_rooms = {}
+    rooms_list = list(G)
+    
+    available_rooms = [room for room in rooms_list if room not in list(enemy_rooms)]
+    available_rooms.remove(start_room)
+    print(enemy_rooms)
+    for enemy in list(enemy_rooms):
+        selected_room = random.choice(available_rooms)
+        weapon_strength = enemy_rooms[enemy]
+        weapons_rooms.update({selected_room : weapon_strength})
+
+    print(weapons_rooms)
+    return weapons_rooms    
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )

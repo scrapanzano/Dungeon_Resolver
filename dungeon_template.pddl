@@ -6,6 +6,7 @@
     ${room_list} - room
     ${treasures_list} - treasure
     ${enemies_list} - enemy 
+    ${weapons_list} - weapon 
   )
 
   ;Initial state's facts and numeric values
@@ -23,21 +24,28 @@
     ;Keys position and counter
     ${keys_location}
     ${key_counter}
-    ;Treasure position and value
+    ;Treasures position and value
     ${treasures_location}
     ${treasures_value}
-    ;Enemy position and stats
+    ;Enemies position and stats
     ${enemies_location} 
     ${enemies_life} 
-    ${enemies_strength} 
-    ;Hero initial stats
+    ${enemies_strength}
+    ;Weapons position and strength
+    ${weapons_location} 
+    ${weapons_strength}
+    ;Hero initial stats 
+    ${hero_life}
+    ${max_hero_life}
+    ${hero_strength}
     ${hero_loot}
   )
 
   ;Goal condition
   (:goal
     (and
-      (escape) (>= (hero_loot) ${loot_goal})
+      (escape) 
+      ${loot_goal}
     )
   )
 )
