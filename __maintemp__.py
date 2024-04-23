@@ -117,7 +117,7 @@ def generate_instance(instance_name, num_rooms):
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o temp/simple_dungeon_domain.pddl -f temp/simple_dungeon_problem.pddl -planner opt-hrmax")
+    # os.system("java -jar dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
@@ -130,17 +130,17 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
-    # Invoke unified-planning sequential simulator
-    loot = FluentExp(problem.fluent("hero_loot"))
-    with SequentialSimulator(problem) as simulator: 
-        state = simulator.get_initial_state()
-        print(f"Initial loot = {state.get_value(loot)}")
-        for ai in result.plan.actions:
-            state = simulator.apply(state, ai)
-            print(f"Applied action: {ai}. ", end="")
-            print(f"Loot: {state.get_value(loot)}")
-        if simulator.is_goal(state):
-            print("Goal reached!")
+    # # Invoke unified-planning sequential simulator
+    # loot = FluentExp(problem.fluent("hero_loot"))
+    # with SequentialSimulator(problem) as simulator: 
+    #     state = simulator.get_initial_state()
+    #     print(f"Initial loot = {state.get_value(loot)}")
+    #     for ai in result.plan.actions:
+    #         state = simulator.apply(state, ai)
+    #         print(f"Applied action: {ai}. ", end="")
+    #         print(f"Loot: {state.get_value(loot)}")
+    #     if simulator.is_goal(state):
+    #         print("Goal reached!")
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
@@ -256,8 +256,8 @@ def generate_loot_goal(treasure_rooms, loot_rate):
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
-    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "30")
+    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "42")
+    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "100")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)

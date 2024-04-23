@@ -217,8 +217,8 @@ def generate_loot(G, start_room):
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
-    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "40")
+    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "42")
+    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "100")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)
