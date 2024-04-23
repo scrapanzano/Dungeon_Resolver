@@ -26,16 +26,16 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, player:bool, loot:int, enemy:int, weapon:int, potion:int, key:bool, start: bool, exit:bool):
+    def __init__(self, id:int, player:bool, enemy:int, weapon:int, potion:int, key:bool, start: bool, exit:bool, loot=None):
         self.id = id
         self.player = player
-        self.loot = loot
         self.enemy = enemy
         self.weapon = weapon
         self.potion = potion
         self.key = key
         self.start = start
         self.exit = exit
+        self.loot = loot
 
     
     def render_room(self, screen, player):
@@ -48,8 +48,8 @@ class Room():
         if self.player:
           screen.blit(player.character_tileset, (player.player_pos_x * TILE_SIZE, player.player_pos_y * TILE_SIZE), (player.player_tile_x * TILE_SIZE, player.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
-        if self.loot:
-            pass
+        if self.loot is not None:
+          screen.blit(self.loot.loot_tileset, (self.loot.loot_pos_x * TILE_SIZE, self.loot.loot_pos_y * TILE_SIZE), (self.loot.loot_tile_x * TILE_SIZE, self.loot.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
 
 
     def thereis_player(self):
