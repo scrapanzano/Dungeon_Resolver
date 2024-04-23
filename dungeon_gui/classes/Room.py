@@ -58,3 +58,9 @@ class Room():
         
     def remove_player(self):
         self.player = None     
+
+    def collected_loot(self):
+        self.loot = None
+
+    def collected_potion(self):
+        self.potion = None
