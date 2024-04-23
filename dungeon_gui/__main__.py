@@ -1,9 +1,10 @@
 import pygame
 import sys
 import time
-from Room import Room
-from Player import Player
-from Loot import Loot
+from classes.Room import Room
+from classes.Player import Player
+from classes.Loot import Loot
+from classes.Potion import Potion
 # Initialize pygame
 pygame.init()
 
@@ -17,7 +18,7 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    room = Room(1, True, 1, 1, 1, True, False, False, None)
+    room = Room(1, False, Player(1, 100), Loot(20), None, None, Potion(20))
 
     while True:
         for event in pygame.event.get():
@@ -26,7 +27,7 @@ def main():
                 sys.exit()
 
         screen.fill((255, 255, 255))  # Fill the screen with white
-        room.render_room(screen, Player(1, 100))
+        room.render_room(screen)
         pygame.display.flip()
 
 if __name__ == "__main__":
