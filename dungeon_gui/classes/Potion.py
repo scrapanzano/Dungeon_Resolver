@@ -4,8 +4,8 @@ potion_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_
 
 
 class Potion():
-    def __init_(self, potion_value=0, potion_tileset=potion_tileset, potion_pos_x=potion_pos_x, potion_pos_y=potion_pos_y):
+    def __init__(self, potion_value=0, potion_tileset=potion_tileset):
         self.potion_value = potion_value
         self.potion_tileset = potion_tileset
-        self.potion_pos_x, self.potion_pos_y = (1, 7)
-        self.loot_tile_x, self.loot_tile_y = (10, 8)
+        self.potion_pos_x, self.potion_pos_y = (7, 1)
+        self.potion_tile_x, self.potion_tile_y = (9, 8)
