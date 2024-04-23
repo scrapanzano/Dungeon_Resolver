@@ -7,6 +7,7 @@ import string
 from string import Template
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
@@ -42,7 +43,7 @@ def generate_instance(instance_name, num_rooms):
     loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
 
     # Dict of rooms in wich there's an enemy [format: {room : enemy_value(life/strength)}]
-    enemy_probability = 0.2 #20%
+    enemy_probability = 0.3 #30%
     num_enemy_rooms = (int)(num_rooms * enemy_probability)
     enemy_rooms = generate_enemies(G, start_room, num_enemy_rooms)
 
@@ -52,14 +53,14 @@ def generate_instance(instance_name, num_rooms):
         if node not in list(enemy_rooms):
             safe_rooms.append(node)
 
-    # List of safe rooms (no enemy) in which there's not a treasure 
-    no_treasure_safe_rooms = []
-    for node in G.nodes():
-        if node not in list(treasure_rooms) and node in safe_rooms:
-            no_treasure_safe_rooms.append(node)
-
     # Dict of rooms in wich there's a weapon [format: {room : weapon_strength}]
     weapon_rooms = generate_weapons(G, start_room, enemy_rooms)
+
+    # List of safe rooms (no enemy) in which there's not a treasure and not weapon
+    standard_rooms = []
+    for node in G.nodes():
+        if node not in list(treasure_rooms) + list(weapon_rooms) and node in safe_rooms:
+            standard_rooms.append(node)
 
     # Creating the string that containts the room_list
     room_list = ''
@@ -217,9 +218,10 @@ def generate_instance(instance_name, num_rooms):
     node_colors = []
     treasure_node_colors = []
     enemy_node_colors = []
+    weapon_node_colors = []
 
     # Each type of room has a different color to be represented with
-    for node in no_treasure_safe_rooms:
+    for node in standard_rooms:
         if node in key_rooms:
             node_colors.append('grey')
         elif node == start_room:
@@ -244,12 +246,38 @@ def generate_instance(instance_name, num_rooms):
             enemy_node_colors.append('gold')
         else:
             enemy_node_colors.append('blue')
+    
+    for node in weapon_rooms:
+        if node in key_rooms:
+            weapon_node_colors.append('grey')
+        elif node == exit_room:
+            weapon_node_colors.append('gold')
+        else:
+            weapon_node_colors.append('blue')
 
-    # Drawing the dungeon (different shape for treasure_rooms)
+    # Drawing the dungeon 
+    nx.draw_kamada_kawai(G, nodelist=list(enemy_rooms), node_size=500, node_color=enemy_node_colors, node_shape ='h', edge_color=edge_colors, label = 'Enemy room')
+    nx.draw_kamada_kawai(G, nodelist=list(weapon_rooms), node_size=400, node_color=weapon_node_colors, node_shape ='d', edge_color=edge_colors)
     nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=900, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=list(enemy_rooms), node_size=500, node_color=enemy_node_colors, node_shape = 'h', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=no_treasure_safe_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=standard_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
     nx.draw_networkx_labels(G, pos=nx.kamada_kawai_layout(G), font_size=12, font_color="white")
+    
+    # Legend (different shapes and colors)
+    legend_elements = [
+        lines.Line2D([], [], color="green", marker='o', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="gold", marker='o', markersize=10,linestyle='' ),
+        lines.Line2D([], [], color="grey", marker='o', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="red"),
+        lines.Line2D([], [], color="blue", marker='h', markersize=12, linestyle=''),
+        lines.Line2D([], [], color="blue", marker='d', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="blue", marker='*', markersize=12, linestyle='')
+    ]
+    legend_labels = [
+        'Start room', 'Exit room', 'Key room', 'Closed door', 'Enemy room', 'Weapon room', 'Treasure room'
+    ]
+    
+    plt.legend(legend_elements, legend_labels, fontsize = 12)
+    
     plt.show()
 
 '''
@@ -359,13 +387,13 @@ def generate_weapons(G, start_room, enemy_rooms):
     
     available_rooms = [room for room in rooms_list if room not in list(enemy_rooms)]
     available_rooms.remove(start_room)
-    print(enemy_rooms)
+    
     for enemy in list(enemy_rooms):
         selected_room = random.choice(available_rooms)
+        available_rooms.remove(selected_room)
         weapon_strength = enemy_rooms[enemy]
         weapons_rooms.update({selected_room : weapon_strength})
 
-    print(weapons_rooms)
     return weapons_rooms    
 
 def parse_arguments():

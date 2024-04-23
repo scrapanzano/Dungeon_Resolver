@@ -3,10 +3,10 @@
 
   ;Objects and their hierarchy 
   (:objects
-    ${room_list} - room
-    ${treasures_list} - treasure
-    ${enemies_list} - enemy 
-    ${weapons_list} - weapon 
+    ${room_list}- room
+    ${treasures_list}- treasure
+    ${enemies_list}- enemy 
+    ${weapons_list}- weapon 
   )
 
   ;Initial state's facts and numeric values
