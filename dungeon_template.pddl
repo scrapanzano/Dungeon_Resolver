@@ -6,7 +6,8 @@
     ${room_list}- room
     ${treasures_list}- treasure
     ${enemies_list}- enemy 
-    ${weapons_list}- weapon 
+    ${weapons_list}- weapon
+    ${potions_list}- potion 
   )
 
   ;Initial state's facts and numeric values
@@ -34,6 +35,9 @@
     ;Weapons position and strength
     ${weapons_location} 
     ${weapons_strength}
+    ;Potions position and value
+    ${potions_location} 
+    ${potions_value} 
     ;Hero initial stats 
     ${hero_life}
     ${max_hero_life}
@@ -46,6 +50,7 @@
     (and
       (escape) 
       ${loot_goal}
+      ${life_goal}
     )
   )
 )
