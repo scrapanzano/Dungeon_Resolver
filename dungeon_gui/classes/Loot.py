@@ -2,7 +2,7 @@ import pygame
 
 loot_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
-
+TILE_SIZE = 16
 
 class Loot():
     def __init__(self, loot_value=0, loot_tileset=loot_tileset):
@@ -18,3 +18,6 @@ class Loot():
             self.loot_tile_x, self.loot_tile_y = (2, 8)
         else:
             self.loot_tile_x, self.loot_tile_y = (4, 8)
+
+    def render_loot(self, screen):
+        screen.blit(self.loot_tileset, (self.loot_pos_x * TILE_SIZE, self.loot_pos_y * TILE_SIZE), (self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

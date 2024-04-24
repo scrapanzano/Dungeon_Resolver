@@ -44,13 +44,13 @@ class Room():
                     screen.blit(dungeon_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
         if self.player is not None:
-          screen.blit(self.player.character_tileset, (self.player.player_pos_x * TILE_SIZE, self.player.player_pos_y * TILE_SIZE), (self.player.player_tile_x * TILE_SIZE, self.player.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+          self.player.render_player(screen)
 
         if self.loot is not None:
-          screen.blit(self.loot.loot_tileset, (self.loot.loot_pos_x * TILE_SIZE, self.loot.loot_pos_y * TILE_SIZE), (self.loot.loot_tile_x * TILE_SIZE, self.loot.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+          self.loot.render_loot(screen)
 
         if self.potion is not None:
-          screen.blit(self.potion.potion_tileset, (self.potion.potion_pos_x * TILE_SIZE, self.potion.potion_pos_y * TILE_SIZE), (self.potion.potion_tile_x * TILE_SIZE, self.potion.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+          self.potion.render_potion(screen)
 
 
     def add_player(self, player):
