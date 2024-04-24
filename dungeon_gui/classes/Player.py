@@ -1,6 +1,6 @@
 import pygame
 
-character_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/character_tileset.png")
+character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
 
 TILE_SIZE = 16
 
