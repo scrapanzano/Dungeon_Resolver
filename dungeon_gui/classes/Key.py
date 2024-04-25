@@ -7,7 +7,7 @@ TILE_SIZE = 16
 class Key():
     def __init__(self, key_tileset=potion_tileset):
         self.key_tileset = key_tileset
-        self.key_pos_x, self.key_pos_y = (7, 4)
+        self.key_pos_x, self.key_pos_y = (7, 5)
         self.key_tile_x, self.key_tile_y = (9, 9)
 
     def render_key(self, screen):

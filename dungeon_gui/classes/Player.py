@@ -10,7 +10,7 @@ class Player():
         self.health = health
         self.character_tileset = character_tileset
         self.player_tile_x, self.player_tile_y = (0, 0)
-        self.player_pos_x, self.player_pos_y = (4, 4)
+        self.player_pos_x, self.player_pos_y = (4, 5)
 
     def render_player(self, screen):
         screen.blit(self.character_tileset, (self.player_pos_x * TILE_SIZE, self.player_pos_y * TILE_SIZE), (self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
