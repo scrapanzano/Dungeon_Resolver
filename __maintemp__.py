@@ -217,31 +217,33 @@ def generate_instance(instance_name, num_rooms):
 
     # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
 
-    # # Using unified-planning for reading the domain and instance files
+    # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
     problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
     
-    # # Invoke unified-planning planner enhsp
+    # Invoke unified-planning planner enhsp
     up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
 
-    with OneshotPlanner(name='enhsp') as planner:
+    with OneshotPlanner(name='enhsp-opt') as planner:
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
-    # # # Invoke unified-planning sequential simulator
+    # Invoke unified-planning sequential simulator
     life = FluentExp(problem.fluent("hero_life"))
     strength = FluentExp(problem.fluent("hero_strength"))
     loot = FluentExp(problem.fluent("hero_loot"))
+    n_action = 1
 
     with SequentialSimulator(problem) as simulator: 
         state = simulator.get_initial_state()
         print(colored(f"Initial life = {state.get_value(life)}", 'green'))
         print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-        print(colored(f"Initial loot = {state.get_value(loot)}", 'yellow'))
+        print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal = {loot_goal}", 'yellow'))
         for ai in result.plan.actions:
             state = simulator.apply(state, ai)
-            print(colored("Applied action: ", 'grey')+ str(ai) + ". ", end="")
+            print(colored(f"Applied action {n_action}: ", 'grey')+ str(ai) + ". ", end="")
             print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+            n_action += 1
         if simulator.is_goal(state):
             print(colored("Goal reached!", 'magenta'))
 

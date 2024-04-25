@@ -1,3 +1,6 @@
+; DUNGEON RESOLVER
+; Pddl domain that define a dungeon's structure, where a hero try to escape exploring rooms, collecting loot and defeating enemies... staying alive.
+
 (define (domain simple_dungeon)
 
 ;General requirements
