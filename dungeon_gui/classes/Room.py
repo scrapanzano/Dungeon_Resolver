@@ -1,8 +1,9 @@
 import pygame
 
-TILE_SIZE = 16 
+TILE_SIZE = 16
+WIDTH, HEIGHT = 144, 112
 
-dungeon_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
+room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
 
 # Create a list of layout for every different state of the room
@@ -27,14 +28,18 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None):
+    def __init__(self, id:int, x=0, y=0, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None):
         self.id = id
+        self.x = x
+        self.y = y
         self.player = player
         self.key = key
         self.loot = loot
         self.enemy = enemy
         self.weapon = weapon
         self.potion = potion
+        self.width = WIDTH
+        self.height = HEIGHT
 
     
     def render_room(self, screen):
@@ -42,7 +47,7 @@ class Room():
             for x, tile in enumerate(row):
                 if tile in tile_mapping:
                     tile_x, tile_y = tile_mapping[tile]
-                    screen.blit(dungeon_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    screen.blit(room_tileset, (x * TILE_SIZE + self.x, y * TILE_SIZE + self.y), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
         if self.player is not None:
           self.player.render_player(screen)
