@@ -26,13 +26,13 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, key:bool, player=None, loot=None, enemy=None, weapon=None, potion=None):
+    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None):
         self.id = id
+        self.player = player
         self.key = key
+        self.loot = loot
         self.enemy = enemy
         self.weapon = weapon
-        self.player = player
-        self.loot = loot
         self.potion = potion
 
     
@@ -46,8 +46,17 @@ class Room():
         if self.player is not None:
           self.player.render_player(screen)
 
+        if self.key is not None:
+            self.key.render_key(screen)
+
         if self.loot is not None:
           self.loot.render_loot(screen)
+
+        if self.enemy is not None:
+          self.enemy.render_enemy(screen)
+
+        if self.weapon is not None:
+            self.weapon.render_weapon(screen)
 
         if self.potion is not None:
           self.potion.render_potion(screen)
@@ -57,10 +66,36 @@ class Room():
         self.player = player
         
     def remove_player(self):
-        self.player = None     
+        self.player = None 
 
-    def collected_loot(self):
+    def add_key(self, key):
+        self.key = key
+
+    def remove_key(self):
+        self.key = None    
+
+    def add_loot(self, loot):
+        self.loot = loot
+
+    def remove_loot(self):
         self.loot = None
+    
+    def add_potion(self, potion):
+        self.potion = potion
 
-    def collected_potion(self):
+    def remove_potion(self):
         self.potion = None
+
+    def add_weapon(self, weapon):
+        self.weapon = weapon
+    
+    def remove_weapon(self):
+        self.weapon = None
+    
+    def add_enemy(self, enemy):
+        self.enemy = enemy
+    
+    def remove_enemy(self):
+        self.enemy = None
+
+    
