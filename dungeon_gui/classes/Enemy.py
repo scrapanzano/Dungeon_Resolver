@@ -20,5 +20,7 @@ class Enemy():
         else:
             self.enemy_tile_x, self.enemy_tile_y = (3, 12)
 
-    def render_enemy(self, screen, room_x, room_y):
-        screen.blit(self.enemy_tileset, (self.pos_x * TILE_SIZE + room_x, self.pos_y * TILE_SIZE + room_y), (self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_enemy(self, screen, room_x, room_y, scale_factor):
+        enemy_surface = self.enemy_tileset.subsurface(pygame.Rect(self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        scaled_enemy_surface = pygame.transform.scale(enemy_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
+        screen.blit(scaled_enemy_surface, (self.pos_x * TILE_SIZE * scale_factor + room_x, self.pos_y * TILE_SIZE * scale_factor + room_y))

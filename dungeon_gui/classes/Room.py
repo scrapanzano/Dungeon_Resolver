@@ -2,6 +2,7 @@ import pygame
 
 TILE_SIZE = 16
 WIDTH, HEIGHT = 144, 112
+SCALE_FACTOR = 2 
 
 room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
@@ -28,10 +29,8 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, x=0.0, y=0.0, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT):
+    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, x=0, y=0):
         self.id = id
-        self.x = x
-        self.y = y
         self.player = player
         self.key = key
         self.loot = loot
@@ -40,6 +39,10 @@ class Room():
         self.potion = potion
         self.width = WIDTH
         self.height = HEIGHT
+        self.x = x
+        self.y = y
+
+        self.surface = pygame.Surface((self.width, self.height))
 
     
     def render_room(self, screen):
@@ -47,25 +50,36 @@ class Room():
             for x, tile in enumerate(row):
                 if tile in tile_mapping:
                     tile_x, tile_y = tile_mapping[tile]
-                    screen.blit(room_tileset, (x * TILE_SIZE + self.x, y * TILE_SIZE + self.y), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
+         # Scale the surface
+        scaled_surface = pygame.transform.scale(self.surface, (self.width * SCALE_FACTOR, self.height * SCALE_FACTOR))
+
+        # Calculate the new position of the room to center it
+        screen_width, screen_height = pygame.display.get_surface().get_size()
+        self.x = (screen_width - self.width * SCALE_FACTOR) // 2
+        self.y = (screen_height - self.height * SCALE_FACTOR) // 2
+
+        # Draw the scaled surface onto the screen
+        screen.blit(scaled_surface, (self.x, self.y))
+
         if self.player is not None:
-          self.player.render_player(screen, self.x, self.y)
+          self.player.render_player(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.key is not None:
-            self.key.render_key(screen, self.x, self.y)
+            self.key.render_key(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.loot is not None:
-          self.loot.render_loot(screen, self.x, self.y)
+          self.loot.render_loot(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.enemy is not None:
-          self.enemy.render_enemy(screen, self.x, self.y)
+          self.enemy.render_enemy(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.weapon is not None:
-            self.weapon.render_weapon(screen, self.x, self.y)
+            self.weapon.render_weapon(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.potion is not None:
-          self.potion.render_potion(screen, self.x, self.y)
+          self.potion.render_potion(screen, self.x, self.y, SCALE_FACTOR)
 
 
     def add_player(self, player):

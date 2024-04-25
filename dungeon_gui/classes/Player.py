@@ -12,8 +12,10 @@ class Player():
         self.player_tile_x, self.player_tile_y = (0, 0)
         self.player_pos_x, self.player_pos_y = (4, 5)
 
-    def render_player(self, screen, room_x, room_y):
-        screen.blit(self.character_tileset, (self.player_pos_x * TILE_SIZE + room_x, self.player_pos_y * TILE_SIZE + room_y), (self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_player(self, screen, room_x, room_y, scale_factor):
+        player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        scaled_player_surface = pygame.transform.scale(player_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
+        screen.blit(scaled_player_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))
 
     def update_room(self, room:int):
         self.room = room

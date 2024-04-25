@@ -19,5 +19,7 @@ class Loot():
         else:
             self.loot_tile_x, self.loot_tile_y = (4, 8)
 
-    def render_loot(self, screen, room_x, room_y):
-        screen.blit(self.loot_tileset, (self.loot_pos_x * TILE_SIZE + room_x, self.loot_pos_y * TILE_SIZE + room_y), (self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_loot(self, screen, room_x, room_y, scale_factor):
+        loot_surface = self.loot_tileset.subsurface(pygame.Rect(self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+        scaled_loot_surface = pygame.transform.scale(loot_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
+        screen.blit(scaled_loot_surface, (self.loot_pos_x * TILE_SIZE * scale_factor + room_x, self.loot_pos_y * TILE_SIZE * scale_factor + room_y))

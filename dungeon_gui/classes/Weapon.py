@@ -21,5 +21,7 @@ class Weapon():
         else:
             self.weapon_tile_x, self.weapon_tile_y = (9, 1)
 
-    def render_weapon(self, screen, room_x, room_y):
-        screen.blit(self.weapon_tileset, (self.pos_x * TILE_SIZE_X + room_x, self.pos_y * TILE_SIZE_X + room_y), (self.weapon_tile_x * TILE_SIZE_X, self.weapon_tile_y * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y))
+    def render_weapon(self, screen, room_x, room_y, scale_factor):
+        weapon_surface = self.weapon_tileset.subsurface(pygame.Rect(self.weapon_tile_x * TILE_SIZE_X, self.weapon_tile_y * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y))
+        scaled_weapon_surface = pygame.transform.scale(weapon_surface, (TILE_SIZE_X * scale_factor, TILE_SIZE_Y * scale_factor))
+        screen.blit(scaled_weapon_surface, (self.pos_x * TILE_SIZE_X * scale_factor + room_x, self.pos_y * TILE_SIZE_X * scale_factor + room_y))
