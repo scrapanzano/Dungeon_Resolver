@@ -28,7 +28,7 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, x=0, y=0, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None):
+    def __init__(self, id:int, x=0.0, y=0.0, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT):
         self.id = id
         self.x = x
         self.y = y
