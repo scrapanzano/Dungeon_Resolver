@@ -48,6 +48,8 @@ def generate_instance(instance_name, num_rooms):
     num_enemy_rooms = (int)(num_rooms * enemy_probability)
     enemy_rooms = generate_enemies(G, start_room, num_enemy_rooms)
 
+    defeated_enemy_goal = (int)(num_enemy_rooms * 0.3) # 50%
+
     # List of safe rooms (in which there's not an enemy)
     safe_rooms = []
     for node in G.nodes():
@@ -206,9 +208,11 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['max_hero_life'] = '(= (max_hero_life) 100)'
     template_mapping['hero_strength'] = '(= (hero_strength) 0)'
     template_mapping['hero_loot'] = '(= (hero_loot) 0)'
+    template_mapping['defeated_enemy_counter'] = '(= (defeated_enemy_counter) 0)'
     #Goal
     template_mapping['loot_goal'] = '(>= (hero_loot) ' + str(loot_goal) + ')' 
     template_mapping['life_goal'] = '(> (hero_life) 0)'
+    template_mapping['defeated_enemy_goal'] = '(>= (defeated_enemy_counter) ' + str(defeated_enemy_goal) + ')'
 
     # Write file
     f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')

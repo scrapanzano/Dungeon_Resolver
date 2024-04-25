@@ -43,6 +43,7 @@
     ${max_hero_life}
     ${hero_strength}
     ${hero_loot}
+    ${defeated_enemy_counter}
   )
 
   ;Goal condition
@@ -51,6 +52,7 @@
       (escape) 
       ${loot_goal}
       ${life_goal}
+      ${defeated_enemy_goal}
     )
   )
 )

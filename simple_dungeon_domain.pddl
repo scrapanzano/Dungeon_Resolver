@@ -56,6 +56,7 @@
     (max_hero_life)
     (hero_strength)
     (hero_loot)
+    (defeated_enemy_counter)
     ;Number of keys owned
     (key_counter)
     ;Treasures value
@@ -85,14 +86,14 @@
     :effect (and (not (at ?x)) (escape))
 )
 
-;Collect key from safe room (no enemies inside)
+;Collect key from safe room (no enemies inside): key_counter increased by 1
 (:action collect_key
     :parameters (?x - room)
     :precondition (and (at ?x) (key_at ?x))
     :effect (and (not (key_at ?x)) (increase (key_counter) 1))
 )
 
-;Open door between 2 rooms using key (two rooms with door between them are initially not connected)
+;Open door between 2 rooms using key (two rooms with door between them are initially not connected): key_counter decreased by 1
 (:action open_door
     :parameters (?x ?y - room)
     :precondition (and (at ?x) (closed_door ?x ?y) (>= (key_counter) 1))
@@ -106,11 +107,11 @@
     :effect (and (not (treasure_at ?t ?x)) (increase (hero_loot) (treasure_value ?t)))
 )
 
-;Defeat enemies in the room if hero_strength >= enemy_life; hero_life decreased by enemy_strength
+;Defeat enemies in the room if hero_strength >= enemy_life; hero_life decreased by enemy_strength, defeated_enemy_counter increased by 1
 (:action defeat_enemy
     :parameters (?e - enemy ?x - room)
     :precondition (and (at ?x) (enemy_at ?e ?x) (> (hero_life) (enemy_strength ?e)) (>= (hero_strength) (enemy_life ?e)))
-    :effect (and (not (enemy_at ?e ?x)) (room_safe ?x) (decrease (hero_life) (enemy_strength ?e)))
+    :effect (and (not (enemy_at ?e ?x)) (room_safe ?x) (decrease (hero_life) (enemy_strength ?e)) (increase (defeated_enemy_counter) 1))
 )
 
 ;Collect potions from safe room (no enemies inside)

@@ -43,6 +43,7 @@
     (= (max_hero_life) 100)
     (= (hero_strength) 0)
     (= (hero_loot) 0)
+    (= (defeated_enemy_counter) 0)
   )
 
   ;Goal condition
@@ -51,6 +52,7 @@
       (escape) 
       (>= (hero_loot) 115)
       (> (hero_life) 0)
+      (>= (defeated_enemy_counter) 3)
     )
   )
 )
