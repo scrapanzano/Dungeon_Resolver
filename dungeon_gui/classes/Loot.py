@@ -19,5 +19,5 @@ class Loot():
         else:
             self.loot_tile_x, self.loot_tile_y = (4, 8)
 
-    def render_loot(self, screen):
-        screen.blit(self.loot_tileset, (self.loot_pos_x * TILE_SIZE, self.loot_pos_y * TILE_SIZE), (self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_loot(self, screen, room_x, room_y):
+        screen.blit(self.loot_tileset, (self.loot_pos_x * TILE_SIZE + room_x, self.loot_pos_y * TILE_SIZE + room_y), (self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

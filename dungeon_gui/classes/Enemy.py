@@ -20,5 +20,5 @@ class Enemy():
         else:
             self.enemy_tile_x, self.enemy_tile_y = (3, 12)
 
-    def render_enemy(self, screen):
-        screen.blit(self.enemy_tileset, (self.pos_x * TILE_SIZE, self.pos_y * TILE_SIZE), (self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_enemy(self, screen, room_x, room_y):
+        screen.blit(self.enemy_tileset, (self.pos_x * TILE_SIZE + room_x, self.pos_y * TILE_SIZE + room_y), (self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

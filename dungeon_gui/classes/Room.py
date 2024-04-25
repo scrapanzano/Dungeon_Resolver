@@ -50,22 +50,22 @@ class Room():
                     screen.blit(room_tileset, (x * TILE_SIZE + self.x, y * TILE_SIZE + self.y), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
         if self.player is not None:
-          self.player.render_player(screen)
+          self.player.render_player(screen, self.x, self.y)
 
         if self.key is not None:
-            self.key.render_key(screen)
+            self.key.render_key(screen, self.x, self.y)
 
         if self.loot is not None:
-          self.loot.render_loot(screen)
+          self.loot.render_loot(screen, self.x, self.y)
 
         if self.enemy is not None:
-          self.enemy.render_enemy(screen)
+          self.enemy.render_enemy(screen, self.x, self.y)
 
         if self.weapon is not None:
-            self.weapon.render_weapon(screen)
+            self.weapon.render_weapon(screen, self.x, self.y)
 
         if self.potion is not None:
-          self.potion.render_potion(screen)
+          self.potion.render_potion(screen, self.x, self.y)
 
 
     def add_player(self, player):

@@ -11,5 +11,5 @@ class Potion():
         self.potion_pos_x, self.potion_pos_y = (7, 1)
         self.potion_tile_x, self.potion_tile_y = (12, 11)
 
-    def render_potion(self, screen):
-        screen.blit(self.potion_tileset, (self.potion_pos_x * TILE_SIZE, self.potion_pos_y * TILE_SIZE), (self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+    def render_potion(self, screen, room_x, room_y):
+        screen.blit(self.potion_tileset, (self.potion_pos_x * TILE_SIZE + room_x, self.potion_pos_y * TILE_SIZE + room_y), (self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
