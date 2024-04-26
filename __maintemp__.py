@@ -24,7 +24,7 @@ def generate_instance(instance_name, num_rooms):
     
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
-    
+
     start_room = 0
 
     exit_room = farthest_node(G, start_room)
@@ -35,12 +35,12 @@ def generate_instance(instance_name, num_rooms):
     key_rooms = generate_keys(G, start_room, exit_room)
 
     # Dict of rooms in wich there's a treasure [format: {room : treasure_value}]
-    treasure_probability = 0.3 # 30%
+    treasure_probability = 0.4 # 40%
     num_treasure_rooms = (int)(num_rooms * treasure_probability) 
     treasure_rooms = generate_treasures(G, start_room, num_treasure_rooms)
 
     # Generating loot_goal
-    loot_rate = 0.5 # 50%
+    loot_rate = 0.3 # 30%
     loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
 
     # Dict of rooms in wich there's an enemy [format: {room : enemy_value(life/strength)}]
@@ -48,7 +48,7 @@ def generate_instance(instance_name, num_rooms):
     num_enemy_rooms = (int)(num_rooms * enemy_probability)
     enemy_rooms = generate_enemies(G, start_room, num_enemy_rooms)
 
-    defeated_enemy_goal = (int)(num_enemy_rooms * 0.3) # 50%
+    defeated_enemy_goal = (int)(num_enemy_rooms * 0.2) # 20%
 
     # List of safe rooms (in which there's not an enemy)
     safe_rooms = []
@@ -60,7 +60,7 @@ def generate_instance(instance_name, num_rooms):
     weapon_rooms = generate_weapons(G, start_room, enemy_rooms)
 
     # Dict of rooms in wich there's a potion [format: {room : potion_value}]
-    potion_probability = 0.3 # 30%
+    potion_probability = 0.4 # 40%
     num_potion_rooms = (int)(num_rooms * potion_probability)
     potion_rooms = generate_potions(G, start_room, num_potion_rooms)
 
@@ -218,39 +218,7 @@ def generate_instance(instance_name, num_rooms):
     f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
-
-    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
-
-    # Using unified-planning for reading the domain and instance files
-    reader = PDDLReader()
-    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
     
-    # Invoke unified-planning planner enhsp
-    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
-
-    with OneshotPlanner(name='enhsp-opt') as planner:
-        result = planner.solve(problem)
-        print("%s returned: %s\n" % (planner.name, result.plan))
-
-    # Invoke unified-planning sequential simulator
-    life = FluentExp(problem.fluent("hero_life"))
-    strength = FluentExp(problem.fluent("hero_strength"))
-    loot = FluentExp(problem.fluent("hero_loot"))
-    n_action = 1
-
-    with SequentialSimulator(problem) as simulator: 
-        state = simulator.get_initial_state()
-        print(colored(f"Initial life = {state.get_value(life)}", 'green'))
-        print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-        print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal = {loot_goal}", 'yellow'))
-        for ai in result.plan.actions:
-            state = simulator.apply(state, ai)
-            print(colored(f"Applied action {n_action}: ", 'grey')+ str(ai) + ". ", end="")
-            print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
-            n_action += 1
-        if simulator.is_goal(state):
-            print(colored("Goal reached!", 'magenta'))
-
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
 
@@ -329,6 +297,38 @@ def generate_instance(instance_name, num_rooms):
     plt.legend(legend_elements, legend_labels, fontsize = 12)
     
     plt.show()
+
+    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
+
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
+    
+    # Invoke unified-planning planner enhsp
+    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+
+    with OneshotPlanner(name='enhsp-opt') as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s\n" % (planner.name, result.plan))
+
+    # Invoke unified-planning sequential simulator
+    life = FluentExp(problem.fluent("hero_life"))
+    strength = FluentExp(problem.fluent("hero_strength"))
+    loot = FluentExp(problem.fluent("hero_loot"))
+    n_action = 1
+
+    with SequentialSimulator(problem) as simulator: 
+        state = simulator.get_initial_state()
+        print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+        print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+        print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+        for ai in result.plan.actions:
+            state = simulator.apply(state, ai)
+            print(colored(f"Applied action {n_action}: ", 'grey')+ str(ai) + ". ", end="")
+            print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+            n_action += 1
+        if simulator.is_goal(state):
+            print(colored("Goal reached!", 'magenta'))
 
 '''
 Returns the farthest nodes inside the graph
