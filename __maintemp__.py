@@ -7,8 +7,10 @@ import string
 from string import Template
 import networkx as nx
 import matplotlib.pyplot as plt
+import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
+from termcolor import colored
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
@@ -22,7 +24,7 @@ def generate_instance(instance_name, num_rooms):
     
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
-    
+
     start_room = 0
 
     exit_room = farthest_node(G, start_room)
@@ -33,19 +35,40 @@ def generate_instance(instance_name, num_rooms):
     key_rooms = generate_keys(G, start_room, exit_room)
 
     # Dict of rooms in wich there's a treasure [format: {room : treasure_value}]
-    treasure_probability = 0.3 # 30%
+    treasure_probability = 0.4 # 40%
     num_treasure_rooms = (int)(num_rooms * treasure_probability) 
     treasure_rooms = generate_treasures(G, start_room, num_treasure_rooms)
 
-    # List of rooms in which there's not a treasure 
-    no_treasure_rooms = []
-    for node in G.nodes():
-        if node not in list(treasure_rooms):
-            no_treasure_rooms.append(node)
-
     # Generating loot_goal
-    loot_rate = 0.5 # 50%
+    loot_rate = 0.3 # 30%
     loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
+
+    # Dict of rooms in wich there's an enemy [format: {room : enemy_value(life/strength)}]
+    enemy_probability = 0.40 # 40%
+    num_enemy_rooms = (int)(num_rooms * enemy_probability)
+    enemy_rooms = generate_enemies(G, start_room, num_enemy_rooms)
+
+    defeated_enemy_goal = (int)(num_enemy_rooms * 0.2) # 20%
+
+    # List of safe rooms (in which there's not an enemy)
+    safe_rooms = []
+    for node in G.nodes():
+        if node not in list(enemy_rooms):
+            safe_rooms.append(node)
+
+    # Dict of rooms in wich there's a weapon [format: {room : weapon_strength}]
+    weapon_rooms = generate_weapons(G, start_room, enemy_rooms)
+
+    # Dict of rooms in wich there's a potion [format: {room : potion_value}]
+    potion_probability = 0.4 # 40%
+    num_potion_rooms = (int)(num_rooms * potion_probability)
+    potion_rooms = generate_potions(G, start_room, num_potion_rooms)
+
+    # List of safe rooms (no enemy) in which there's not a treasure, weapon or potion
+    standard_rooms = []
+    for node in G.nodes():
+        if node not in list(treasure_rooms) + list(weapon_rooms) + list(potion_rooms) and node in safe_rooms:
+            standard_rooms.append(node)
 
     # Creating the string that containts the room_list
     room_list = ''
@@ -53,11 +76,29 @@ def generate_instance(instance_name, num_rooms):
     for i in range(num_rooms):
         room_list += 'R' + str(i) + ' '
 
-    # Creating the string that contains the treasure_list
-    treasure_list = ''
+    # Creating the string that contains the treasures_list
+    treasures_list = ''
 
     for i in range(len(treasure_rooms)):
-        treasure_list += 'T' + str(i) + ' '
+        treasures_list += 'T' + str(i) + ' '
+
+    # Creating the string that contains the enemies_list
+    enemies_list = ''
+
+    for i in range(len(enemy_rooms)):
+        enemies_list += 'E' + str(i) + ' '
+
+    # Creating the string that contains the weapons_list
+    weapons_list = ''
+
+    for i in range(len(weapon_rooms)):
+        weapons_list += 'W' + str(i) + ' '
+
+    # Creating the string that contains the potions_list
+    potions_list = ''
+
+    for i in range(len(potion_rooms)):
+        potions_list += 'P' + str(i) + ' '
 
     # Creating the string that describes how all the rooms are connected with each others
     room_links = ''
@@ -74,82 +115,121 @@ def generate_instance(instance_name, num_rooms):
             if G[room][neighbor]['type'] == 'door':
                 closed_doors += '(closed_door R' + str(room) + ' R' + str(neighbor) + ') '
 
+    # Creating the string that containts the safe rooms
+    safe_rooms_list = ''
+    
+    for room in safe_rooms:
+        safe_rooms_list += '(room_safe R' +str(room) + ') '
+
     # Creating the string that containts the keys location
     keys_location = ''
 
     for key_room in key_rooms:
         keys_location += '(key_at R' + str(key_room) + ') '
 
-    # Creating the string that containts the treasures location and the treasures value
+    # Creating the string that containts the treasures location and value
     treasures_location = ''
     treasures_value = ''
-    index = 0
+    t_index = 0
 
     for room in treasure_rooms:
-        treasure_name = 'T' + str(index) + ' '
+        treasure_name = 'T' + str(t_index)
         treasure_value = treasure_rooms[room]
-        treasures_location += '(treasure_at ' + treasure_name + 'R' + str(room) + ') '
+        treasures_location += '(treasure_at ' + treasure_name + ' R' + str(room) + ') '
         treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
-        index += 1
+        t_index += 1
+
+    # Creating the string that containts the enemies location, life and strength
+    enemies_location = ''
+    enemies_life = ''
+    enemies_strength = ''
+    e_index = 0
+
+    for room in enemy_rooms:
+        enemy_name = 'E' + str(e_index)
+        enemy_value = enemy_rooms[room]
+        enemies_location += '(enemy_at ' + enemy_name + ' R' + str(room) + ') '
+        enemies_life += '(= (enemy_life ' + enemy_name + ') ' + str(enemy_value) +') '
+        enemies_strength += '(= (enemy_strength ' + enemy_name + ') ' + str(enemy_value) +') '
+        e_index += 1
     
+    # Creating the string that containts the weapons location and strength
+    weapons_location = ''
+    weapons_strength = ''
+    w_index = 0
+
+    for room in weapon_rooms:
+        weapon_name = 'W' + str(w_index)
+        weapon_value = weapon_rooms[room]
+        weapons_location += '(weapon_at ' + weapon_name + ' R' + str(room) + ') '
+        weapons_strength += '(= (weapon_strength ' + weapon_name + ') ' + str(weapon_value) +') '
+        w_index += 1
+
+    # Creating the string that containts the potions location and value
+    potions_location = ''
+    potions_value = ''
+    p_index = 0
+
+    for room in potion_rooms:
+        potion_name = 'P' + str(p_index)
+        potion_value = potion_rooms[room]
+        potions_location += '(potion_at ' + potion_name + ' R' + str(room) + ') '
+        potions_value += '(= (potion_value ' + potion_name + ') ' + str(potion_value) +') '
+        p_index += 1
+
     # Populate template
     template_mapping = dict()
     template_mapping['instance_name'] = instance_name
     template_mapping['domain_name'] = 'simple_dungeon' 
     # Objects
     template_mapping['room_list'] = room_list
-    template_mapping['treasures_list'] = treasure_list
+    template_mapping['treasures_list'] = treasures_list
+    template_mapping['enemies_list'] = enemies_list
+    template_mapping['weapons_list'] = weapons_list
+    template_mapping['potions_list'] = potions_list
     # Init
     template_mapping['start_room'] = '(at R' + str(start_room) + ')'
     template_mapping['exit_room'] = '(exit_room R' + str(exit_room) + ')'
     template_mapping['room_links'] = room_links
+    template_mapping['safe_rooms'] = safe_rooms_list
     template_mapping['closed_doors'] = closed_doors
     template_mapping['keys_location'] = keys_location
     template_mapping['key_counter'] = '(= (key_counter) 0)'
     template_mapping['treasures_location'] = treasures_location
     template_mapping['treasures_value'] = treasures_value
+    template_mapping['enemies_location'] = enemies_location
+    template_mapping['enemies_life'] = enemies_life
+    template_mapping['enemies_strength'] = enemies_strength
+    template_mapping['weapons_location'] = weapons_location
+    template_mapping['weapons_strength'] = weapons_strength
+    template_mapping['potions_location'] = potions_location
+    template_mapping['potions_value'] = potions_value
+    template_mapping['hero_life'] = '(= (hero_life) 100)'
+    template_mapping['max_hero_life'] = '(= (max_hero_life) 100)'
+    template_mapping['hero_strength'] = '(= (hero_strength) 0)'
     template_mapping['hero_loot'] = '(= (hero_loot) 0)'
+    template_mapping['defeated_enemy_counter'] = '(= (defeated_enemy_counter) 0)'
     #Goal
-    template_mapping['loot_goal'] = str(loot_goal) 
+    template_mapping['loot_goal'] = '(>= (hero_loot) ' + str(loot_goal) + ')' 
+    template_mapping['life_goal'] = '(> (hero_life) 0)'
+    template_mapping['defeated_enemy_goal'] = '(>= (defeated_enemy_counter) ' + str(defeated_enemy_goal) + ')'
 
     # Write file
     f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
-
-    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o temp/simple_dungeon_domain.pddl -f temp/simple_dungeon_problem.pddl -planner opt-hrmax")
-
-    # Using unified-planning for reading the domain and instance files
-    reader = PDDLReader()
-    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
     
-    # Invoke unified-planning planner enhsp
-    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
-
-    with OneshotPlanner(name='enhsp') as planner:
-        result = planner.solve(problem)
-        print("%s returned: %s\n" % (planner.name, result.plan))
-
-    # Invoke unified-planning sequential simulator
-    loot = FluentExp(problem.fluent("hero_loot"))
-    with SequentialSimulator(problem) as simulator: 
-        state = simulator.get_initial_state()
-        print(f"Initial loot = {state.get_value(loot)}")
-        for ai in result.plan.actions:
-            state = simulator.apply(state, ai)
-            print(f"Applied action: {ai}. ", end="")
-            print(f"Loot: {state.get_value(loot)}")
-        if simulator.is_goal(state):
-            print("Goal reached!")
-
     # Draw the graph with different colors for different types of edges
     edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
 
     node_colors = []
     treasure_node_colors = []
-        
+    enemy_node_colors = []
+    weapon_node_colors = []
+    potion_node_colors = []
+
     # Each type of room has a different color to be represented with
-    for node in no_treasure_rooms:
+    for node in standard_rooms:
         if node in key_rooms:
             node_colors.append('grey')
         elif node == start_room:
@@ -166,12 +246,89 @@ def generate_instance(instance_name, num_rooms):
             treasure_node_colors.append('gold')
         else:
             treasure_node_colors.append('blue')
+    
+    for node in enemy_rooms:
+        if node in key_rooms:
+            enemy_node_colors.append('grey')
+        elif node == exit_room:
+            enemy_node_colors.append('gold')
+        else:
+            enemy_node_colors.append('blue')
+    
+    for node in weapon_rooms:
+        if node in key_rooms:
+            weapon_node_colors.append('grey')
+        elif node == exit_room:
+            weapon_node_colors.append('gold')
+        else:
+            weapon_node_colors.append('blue')
 
-    # Drawing the dungeon (different shape for treasure_rooms)
-    nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=900, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=no_treasure_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
+    for node in potion_rooms:
+        if node in key_rooms:
+            potion_node_colors.append('grey')
+        elif node == exit_room:
+            potion_node_colors.append('gold')
+        else:
+           potion_node_colors.append('blue')
+
+    # Drawing the dungeon 
+    nx.draw_kamada_kawai(G, nodelist=list(enemy_rooms), node_size=500, node_color=enemy_node_colors, node_shape ='h', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=list(weapon_rooms), node_size=400, node_color=weapon_node_colors, node_shape ='d', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=list(potion_rooms), node_size=300, node_color=potion_node_colors, node_shape ='s', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=1000, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
+    nx.draw_kamada_kawai(G, nodelist=standard_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
     nx.draw_networkx_labels(G, pos=nx.kamada_kawai_layout(G), font_size=12, font_color="white")
+    
+    # Legend (different shapes and colors)
+    legend_elements = [
+        lines.Line2D([], [], color="green", marker='o', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="gold", marker='o', markersize=10,linestyle='' ),
+        lines.Line2D([], [], color="grey", marker='o', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="red"),
+        lines.Line2D([], [], color="blue", marker='h', markersize=12, linestyle=''),
+        lines.Line2D([], [], color="blue", marker='d', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="blue", marker='s', markersize=10, linestyle=''),
+        lines.Line2D([], [], color="blue", marker='*', markersize=12, linestyle='')
+    ]
+    legend_labels = [
+        'Start room', 'Exit room', 'Key room', 'Closed door', 'Enemy room', 'Weapon room', 'Potion room', 'Treasure room'
+    ]
+    
+    plt.legend(legend_elements, legend_labels, fontsize = 12)
+    
     plt.show()
+
+    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
+
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
+    
+    # Invoke unified-planning planner enhsp
+    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+
+    with OneshotPlanner(name='enhsp-opt') as planner:
+        result = planner.solve(problem)
+        print("%s returned: %s\n" % (planner.name, result.plan))
+
+    # Invoke unified-planning sequential simulator
+    life = FluentExp(problem.fluent("hero_life"))
+    strength = FluentExp(problem.fluent("hero_strength"))
+    loot = FluentExp(problem.fluent("hero_loot"))
+    n_action = 1
+
+    with SequentialSimulator(problem) as simulator: 
+        state = simulator.get_initial_state()
+        print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+        print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+        print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+        for ai in result.plan.actions:
+            state = simulator.apply(state, ai)
+            print(colored(f"Applied action {n_action}: ", 'grey')+ str(ai) + ". ", end="")
+            print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+            n_action += 1
+        if simulator.is_goal(state):
+            print(colored("Goal reached!", 'magenta'))
 
 '''
 Returns the farthest nodes inside the graph
@@ -229,7 +386,7 @@ def generate_keys(G, start_room, exit_room):
     return key_rooms
 
 '''
-Generates treasure in rooms and returns rooms with treasure
+Generates treasures in rooms and returns rooms with treasure
 '''
 def generate_treasures(G, start_room, num_treasure_rooms):
     treasure_rooms = {}
@@ -240,8 +397,8 @@ def generate_treasures(G, start_room, num_treasure_rooms):
     drawn_rooms = random.sample(rooms_list, num_treasure_rooms) # Draw num_treasure_rooms from rooms_list
 
     for room in drawn_rooms:
-        selected_treasure = random.sample(treasures_value, 1) # Draw 1 element from treasures_value
-        treasure_rooms.update({room : selected_treasure[0]})
+        selected_treasure = random.choice(treasures_value) # Draw 1 element from treasures_value
+        treasure_rooms.update({room : selected_treasure})
     
     return treasure_rooms
 
@@ -253,6 +410,58 @@ def generate_loot_goal(treasure_rooms, loot_rate):
     for room in treasure_rooms:
         sum += treasure_rooms[room]
     return (int)(sum * loot_rate)
+
+'''
+Generates enemies in rooms and returns rooms with enemy 
+'''
+def generate_enemies(G, start_room, num_enemy_rooms):
+    enemy_rooms = {}
+    enemies_value = [30, 50, 70, 90]
+    room_list = list(G)
+    room_list.remove(start_room) # Remove start_room from list
+
+    drawn_rooms = random.sample(room_list, num_enemy_rooms) # Draw num_enemy_rooms from rooms_list
+
+    for room in drawn_rooms:
+        selected_enemy = random.choice(enemies_value) # Draw 1 element from enemies_value
+        enemy_rooms.update({room : selected_enemy})
+    
+    return enemy_rooms
+
+'''
+Generates weapons in rooms and returns rooms with weapon
+'''
+def generate_weapons(G, start_room, enemy_rooms):
+    weapons_rooms = {}
+    rooms_list = list(G)
+    
+    available_rooms = [room for room in rooms_list if room not in list(enemy_rooms)] # Remove enemy_rooms from list
+    available_rooms.remove(start_room) # Remove start_room from list
+    
+    for enemy in list(enemy_rooms):
+        selected_room = random.choice(available_rooms) # Draw 1 room from available_rooms
+        available_rooms.remove(selected_room) # Remove selected_room from list
+        weapon_strength = enemy_rooms[enemy] # Set weapon_stregth to enemy_strength
+        weapons_rooms.update({selected_room : weapon_strength})
+
+    return weapons_rooms 
+
+'''
+Generates potions in rooms and returns rooms with potion 
+'''
+def generate_potions(G, start_room, num_potion_rooms):
+    potion_rooms = {}
+    potions_value = [10, 30, 50]
+    room_list = list(G)
+    room_list.remove(start_room) # Remove start_room from list
+
+    drawn_rooms = random.sample(room_list, num_potion_rooms) # Draw num_potion_rooms from rooms_list
+
+    for room in drawn_rooms:
+        selected_potion = random.choice(potions_value) # Draw 1 element from potions_value
+        potion_rooms.update({room : selected_potion})
+    
+    return potion_rooms   
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
