@@ -14,7 +14,7 @@ from classes.Enemy  import Enemy
 pygame.init()
 
 # Set up the display
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1270, 720
 
 
 # Main loop
@@ -23,7 +23,7 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    actual_room = Room(0, Player(0, 100), Key(), Loot(10), Enemy(10), Weapon(10), Potion(10))
+    actual_room = Room(id=0, player=Player(0, 100), key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
 
     actual_room.x = (WIDTH  - actual_room.width) // 2
     actual_room.y = (HEIGHT - actual_room.height) // 2
@@ -35,7 +35,7 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        screen.fill((255, 255, 255))  # Fill the screen with white
+        screen.fill((0, 0, 0))  
         actual_room.render_room(screen)
     
         pygame.display.flip()

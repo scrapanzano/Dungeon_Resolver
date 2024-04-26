@@ -1,7 +1,7 @@
 import pygame
 
 TILE_SIZE = 16
-WIDTH, HEIGHT = 144, 112
+WIDTH, HEIGHT = 160, 112
 SCALE_FACTOR = 2 
 
 room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
@@ -10,13 +10,13 @@ room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_ti
 # Create a list of layout for every different state of the room
 
 room_layout = [
-    "LWWWWWWWR",
-    "L       R",
-    "L       R",
-    "L       R",
-    "L       R",
-    "L       R",
-    "lwwwwwwwr"
+    "LWWWDdWWWR",
+    "L        R",
+    "L        R",
+    "L        R",
+    "L        R",
+    "L        R",
+    "lwww  wwwwr"
 ]
 tile_mapping = {
     "L" : (0,0),
@@ -29,7 +29,7 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, x=0, y=0):
+    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
         self.id = id
         self.player = player
         self.key = key
@@ -39,8 +39,14 @@ class Room():
         self.potion = potion
         self.width = WIDTH
         self.height = HEIGHT
+        self.has_door = has_door
         self.x = x
         self.y = y
+
+        tile_mapping.update({
+            "D" : (6,6) if has_door else (1,1),
+            "d" : (7,6) if has_door else (1,1)
+        })
 
         self.surface = pygame.Surface((self.width, self.height))
 

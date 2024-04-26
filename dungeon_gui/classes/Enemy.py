@@ -9,7 +9,7 @@ class Enemy():
         self.enemy_tileset = enemy_tileset
         self.damage = damage
         self.enemy_tileset = enemy_tileset
-        self.pos_x, self.pos_y = (4, 3)
+        self.pos_x, self.pos_y = (4.5, 3)
 
         if self.damage == 10:
             self.enemy_tile_x, self.enemy_tile_y = (0, 12)
