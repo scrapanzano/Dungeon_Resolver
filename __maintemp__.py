@@ -227,8 +227,14 @@ def generate_instance(instance_name, num_rooms):
     
     # Invoke unified-planning planner enhsp
     up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+    
+    choice = yes_or_no('Do you want the optimal version?')
+    if choice:
+        selected_planner = 'enhsp-opt'
+    else:
+        selected_planner = 'enhsp'
 
-    with OneshotPlanner(name='enhsp-opt') as planner:
+    with OneshotPlanner(name=selected_planner) as planner:
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
@@ -463,10 +469,26 @@ def generate_potions(G, start_room, num_potion_rooms):
     
     return potion_rooms   
 
+'''
+Choices yes or not (y/n) 
+'''
+def yes_or_no(question):
+    incorrect_entry = True
+    while incorrect_entry:
+        choice = input(question + ' (y/n) ')
+        if choice == 'y':
+            incorrect_entry = False
+            return True
+        elif choice == 'n':
+            incorrect_entry = False
+            return False
+        else:
+             print(colored('Incorrect entry! Type \'y\' or \'n\'', 'light_red'))
+
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "30")
+    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "100")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)
