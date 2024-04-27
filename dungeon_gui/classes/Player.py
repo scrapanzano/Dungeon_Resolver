@@ -21,7 +21,8 @@ class Player():
         self.room = room
     
     def travel(self, target_y):
-        self.player_pos_y -= 0.05
-        self.weapon.pos_y -= 0.1
+        speed = 0.05
+        self.player_pos_y -= speed
+        self.weapon.pos_y -= speed *2 
         if self.player_pos_y < target_y:
             return True

@@ -9,7 +9,7 @@ TILE_SIZE_Y = 32
 
 
 class Weapon(Collectable):
-    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=1, weapon_pos_y=4):
+    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=1.15, weapon_pos_y=4.5):
         super().__init__()
         self.weapon_tileset = weapon_tileset
         self.pos_x = weapon_pos_x
@@ -21,7 +21,7 @@ class Weapon(Collectable):
     def render_collectable(self, screen, room_x, room_y, scale_factor):
         if self.visible:
             weapon_surface = self.weapon_tileset.subsurface(pygame.Rect(self.weapon_tile_x * TILE_SIZE_X, self.weapon_tile_y * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y))
-            scaled_weapon_surface = pygame.transform.scale(weapon_surface, (TILE_SIZE_X * scale_factor, TILE_SIZE_Y * scale_factor))
+            scaled_weapon_surface = pygame.transform.scale(weapon_surface, (TILE_SIZE_X * (scale_factor - 1), TILE_SIZE_Y * (scale_factor - 1)))
         
             if self.collected and self.alpha > 0:
                 self.alpha -= 0.5
