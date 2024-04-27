@@ -7,7 +7,7 @@ from classes.potion import Potion
 from classes.key import Key
 from classes.weapon import Weapon
 from classes.enemy  import Enemy
-
+from classes.hud import HUD
 
 # Initialize pygame
 pygame.init()
@@ -22,12 +22,16 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    actual_room = Room(id=0, player=Player(0, 100), key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
+    player_weapon = Weapon(damage=10, weapon_pos_x=10.3, weapon_pos_y=9.5)
+    player = Player(weapon=player_weapon)
+
+    actual_room = Room(id=0, player=player, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
 
     actual_room.x = (WIDTH  - actual_room.width) // 2
     actual_room.y = (HEIGHT - actual_room.height) // 2
 
-
+    hud = HUD()
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -36,7 +40,7 @@ def main():
 
         screen.fill((0, 0, 0))  
         actual_room.render(screen)
-    
+        hud.render(screen)
         pygame.display.flip()
 
 if __name__ == "__main__":

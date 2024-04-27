@@ -2,7 +2,7 @@ import pygame
 
 TILE_SIZE = 16
 WIDTH, HEIGHT = 160, 112
-SCALE_FACTOR = 2 
+SCALE_FACTOR = 4 
 
 room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
