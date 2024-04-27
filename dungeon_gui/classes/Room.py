@@ -53,7 +53,7 @@ class Room():
         self.surface = pygame.Surface((self.width, self.height))
 
     
-    def render_room(self, screen):
+    def render(self, screen):
         for y, row in enumerate(room_layout):
             for x, tile in enumerate(row):
                 if tile in tile_mapping:

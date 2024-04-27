@@ -1,6 +1,5 @@
 import pygame
 import sys
-import time
 from classes.room import Room
 from classes.player import Player
 from classes.loot import Loot
@@ -36,7 +35,7 @@ def main():
                 sys.exit()
 
         screen.fill((0, 0, 0))  
-        actual_room.render_room(screen)
+        actual_room.render(screen)
     
         pygame.display.flip()
 
