@@ -50,7 +50,7 @@
   (:goal
     (and
       (escape) 
-      (>= (hero_loot) 96)
+      (>= (hero_loot) 112)
       (> (hero_life) 0)
       (>= (defeated_enemy_counter) 2)
     )

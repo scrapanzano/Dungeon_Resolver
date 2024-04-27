@@ -40,7 +40,7 @@ def generate_instance(instance_name, num_rooms):
     treasure_rooms = generate_treasures(G, start_room, num_treasure_rooms)
 
     # Generating loot_goal
-    loot_rate = 0.3 # 30%
+    loot_rate = 0.35 # 35%
     loot_goal = generate_loot_goal(treasure_rooms, loot_rate)
 
     # Dict of rooms in wich there's an enemy [format: {room : enemy_value(life/strength)}]
@@ -228,7 +228,8 @@ def generate_instance(instance_name, num_rooms):
     # Invoke unified-planning planner enhsp
     up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
     
-    choice = yes_or_no('Do you want the optimal version?')
+    choice = yes_or_no('Do you want enhsp optimal version?')
+    print()
     if choice:
         selected_planner = 'enhsp-opt'
     else:
