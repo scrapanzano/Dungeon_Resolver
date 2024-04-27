@@ -43,6 +43,8 @@ class Room():
         self.x = x
         self.y = y
 
+        self.collectables = [key, loot, weapon, potion]
+
         tile_mapping.update({
             "D" : (6,6) if has_door else (1,1),
             "d" : (7,6) if has_door else (1,1)
@@ -69,59 +71,41 @@ class Room():
         # Draw the scaled surface onto the screen
         screen.blit(scaled_surface, (self.x, self.y))
 
-        if self.player is not None:
-          self.player.render_player(screen, self.x, self.y, SCALE_FACTOR)
-
-        if self.key is not None:
-            self.key.render_key(screen, self.x, self.y, SCALE_FACTOR)
-
-        if self.loot is not None:
-          self.loot.render_loot(screen, self.x, self.y, SCALE_FACTOR)
+        for collectable in self.collectables:
+            if collectable is not None:
+                collectable.render_collectable(screen, self.x, self.y, SCALE_FACTOR)
 
         if self.enemy is not None:
           self.enemy.render_enemy(screen, self.x, self.y, SCALE_FACTOR)
 
-        if self.weapon is not None:
-            self.weapon.render_weapon(screen, self.x, self.y, SCALE_FACTOR)
-
-        if self.potion is not None:
-          self.potion.render_potion(screen, self.x, self.y, SCALE_FACTOR)
+        if self.player is not None:
+          self.player.render_player(screen, self.x, self.y, SCALE_FACTOR)
 
 
-    def add_player(self, player):
-        self.player = player
+    def collect_key(self):
+        if self.key is not None:
+            self.key.collect()
+            self.key = None
         
-    def remove_player(self):
-        self.player = None 
 
-    def add_key(self, key):
-        self.key = key
+    def collect_loot(self):
+        if self.loot is not None:
+            self.loot.collect()
+            self.loot = None
 
-    def remove_key(self):
-        self.key = None    
+    def collect_weapon(self):
+        if self.weapon is not None:
+            self.weapon.collect()
+            self.weapon = None
 
-    def add_loot(self, loot):
-        self.loot = loot
+    def collect_potion(self):
+        if self.potion is not None:
+            self.potion.collect()
+            self.potion = None
 
-    def remove_loot(self):
-        self.loot = None
-    
-    def add_potion(self, potion):
-        self.potion = potion
-
-    def remove_potion(self):
-        self.potion = None
-
-    def add_weapon(self, weapon):
-        self.weapon = weapon
-    
-    def remove_weapon(self):
-        self.weapon = None
-    
-    def add_enemy(self, enemy):
-        self.enemy = enemy
-    
-    def remove_enemy(self):
-        self.enemy = None
-
+    def kill_enemy(self):
+        if self.enemy is not None:
+            self.enemy.kill()
+            if self.enemy.alpha <= 0:
+                self.enemy = None
     

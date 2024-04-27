@@ -19,3 +19,9 @@ class Player():
 
     def update_room(self, room:int):
         self.room = room
+    
+    def travel(self, target_y):
+        self.player_pos_y -= 0.1
+        pygame.time.delay(60)
+        if self.player_pos_y < target_y:
+            return True
