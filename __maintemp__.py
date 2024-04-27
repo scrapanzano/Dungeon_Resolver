@@ -180,7 +180,7 @@ def generate_instance(instance_name, num_rooms):
     # Populate template
     template_mapping = dict()
     template_mapping['instance_name'] = instance_name
-    template_mapping['domain_name'] = 'simple_dungeon' 
+    template_mapping['domain_name'] = 'dungeon' 
     # Objects
     template_mapping['room_list'] = room_list
     template_mapping['treasures_list'] = treasures_list
@@ -215,7 +215,7 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['defeated_enemy_goal'] = '(>= (defeated_enemy_counter) ' + str(defeated_enemy_goal) + ')'
 
     # Write file
-    f = open('./dungeon_resolver/simple_dungeon_problem.pddl', 'w')
+    f = open('./dungeon_resolver/dungeon_problem.pddl', 'w')
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
@@ -223,7 +223,7 @@ def generate_instance(instance_name, num_rooms):
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
-    problem = reader.parse_problem("./dungeon_resolver/simple_dungeon_domain.pddl", "./dungeon_resolver/simple_dungeon_problem.pddl")
+    problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", "./dungeon_resolver/dungeon_problem.pddl")
     
     # Invoke unified-planning planner enhsp
     up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits

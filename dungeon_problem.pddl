@@ -1,5 +1,5 @@
 (define (problem instance_30_1229)
-  (:domain simple_dungeon)
+  (:domain dungeon)
 
   ;Objects and their hierarchy 
   (:objects
