@@ -1,13 +1,13 @@
 import pygame
 import sys
 import time
-from classes.Room import Room
-from classes.Player import Player
-from classes.Loot import Loot
-from classes.Potion import Potion
-from classes.Key import Key
-from classes.Weapon import Weapon
-from classes.Enemy  import Enemy
+from classes.room import Room
+from classes.player import Player
+from classes.loot import Loot
+from classes.potion import Potion
+from classes.key import Key
+from classes.weapon import Weapon
+from classes.enemy  import Enemy
 
 
 # Initialize pygame
