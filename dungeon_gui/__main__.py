@@ -31,8 +31,13 @@ def main():
     actual_room.y = (HEIGHT - actual_room.height) // 2
 
     hud = HUD()
-    
+
+    travel = False
+
+    clock = pygame.time.Clock()
+
     while True:
+        clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -40,7 +45,10 @@ def main():
 
         screen.fill((0, 0, 0))  
         actual_room.render(screen)
+        player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
         hud.render(screen)
+        if not travel:
+            travel = player.travel(0)
         pygame.display.flip()
 
 if __name__ == "__main__":

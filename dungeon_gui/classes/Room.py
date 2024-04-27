@@ -42,6 +42,7 @@ class Room():
         self.has_door = has_door
         self.x = x
         self.y = y
+        self.scale_factor = SCALE_FACTOR
 
         self.collectables = [key, loot, weapon, potion]
 
@@ -61,25 +62,25 @@ class Room():
                     self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
          # Scale the surface
-        scaled_surface = pygame.transform.scale(self.surface, (self.width * SCALE_FACTOR, self.height * SCALE_FACTOR))
+        scaled_surface = pygame.transform.scale(self.surface, (self.width * self.scale_factor, self.height * self.scale_factor))
 
         # Calculate the new position of the room to center it
         screen_width, screen_height = pygame.display.get_surface().get_size()
-        self.x = (screen_width - self.width * SCALE_FACTOR) // 2
-        self.y = (screen_height - self.height * SCALE_FACTOR) // 2
+        self.x = (screen_width - self.width * self.scale_factor) // 2
+        self.y = (screen_height - self.height * self.scale_factor) // 2
 
         # Draw the scaled surface onto the screen
         screen.blit(scaled_surface, (self.x, self.y))
 
         for collectable in self.collectables:
             if collectable is not None:
-                collectable.render_collectable(screen, self.x, self.y, SCALE_FACTOR)
+                collectable.render_collectable(screen, self.x, self.y, self.scale_factor)
 
         if self.enemy is not None:
-          self.enemy.render_enemy(screen, self.x, self.y, SCALE_FACTOR)
+          self.enemy.render_enemy(screen, self.x, self.y, self.scale_factor)
 
-        if self.player is not None:
-          self.player.render_player(screen, self.x, self.y, SCALE_FACTOR)
+        # if self.player is not None:
+        #   self.player.render_player(screen, self.x, self.y, self.scale_factor)
 
 
     def collect_key(self):

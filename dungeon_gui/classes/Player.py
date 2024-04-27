@@ -8,8 +8,6 @@ class Player():
     def __init__(self, character_tileset=character_tileset, weapon=None):
         self.character_tileset = character_tileset
         self.weapon = weapon
-        self.weapon.weapon_pos_x = 5.5
-        self.weapon.weapon_pos_y = 4
         self.player_tile_x, self.player_tile_y = (0, 0)
         self.player_pos_x, self.player_pos_y = (4.5, 5)
 
@@ -23,7 +21,7 @@ class Player():
         self.room = room
     
     def travel(self, target_y):
-        self.player_pos_y -= 0.1
-        pygame.time.delay(60)
+        self.player_pos_y -= 0.05
+        self.weapon.pos_y -= 0.1
         if self.player_pos_y < target_y:
             return True
