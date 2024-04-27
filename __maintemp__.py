@@ -488,7 +488,7 @@ def yes_or_no(question):
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "100")
+    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "30")
 
     args = parser.parse_args()
     args.random_seed = int(args.random_seed)
