@@ -245,19 +245,29 @@ def generate_instance(instance_name, num_rooms):
     loot = FluentExp(problem.fluent("hero_loot"))
     n_action = 1
 
+    txt = open('./dungeon_resolver/sequential_simulator.txt', 'w') # Open file where save SequentialSimulator
+
     with SequentialSimulator(problem) as simulator: 
         state = simulator.get_initial_state()
         print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+        txt.write(f"Initial life = {state.get_value(life)}" + '\n')
         print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+        txt.write(f"Initial strength = {state.get_value(strength)}" + '\n')
         print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+        txt.write(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}" + '\n')
         for ai in result.plan.actions:
             state = simulator.apply(state, ai)
-            print(colored(f"Applied action {n_action}: ", 'grey')+ str(ai) + ". ", end="")
+            print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+            txt.write(f"Applied action {n_action}: {ai}. ")
             print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+            txt.write(f"Life: {state.get_value(life)} - Strength: {state.get_value(strength)} - Loot: {state.get_value(loot)}\n")
             n_action += 1
         if simulator.is_goal(state):
             print(colored("Goal reached!", 'magenta'))
-    
+            txt.write("Goal reached!")
+
+    txt.close()
+
     # Draw the graph with different colors for different types of edges
     edge_colors = ['xkcd:olive' if G[u][v]['type'] == 'normal' else 'xkcd:red' for u, v in G.edges()]
 
