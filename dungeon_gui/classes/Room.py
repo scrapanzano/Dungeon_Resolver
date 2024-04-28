@@ -16,7 +16,7 @@ room_layout = [
     "L        R",
     "L        R",
     "L        R",
-    "lwww  wwwwr"
+    "lwww  wwwr"
 ]
 tile_mapping = {
     "L" : (0,0),

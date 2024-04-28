@@ -22,8 +22,8 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    player_weapon = Weapon(damage=10, weapon_pos_x=10.3, weapon_pos_y=9.5)
-    player = Player(weapon=player_weapon)
+    player_weapon = Weapon(damage=10, weapon_pos_x=6.8, weapon_pos_y=6)
+    player = Player(health=100, weapon=player_weapon)
 
     actual_room = Room(id=0, player=player, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
 

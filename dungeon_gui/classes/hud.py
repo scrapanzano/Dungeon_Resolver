@@ -71,10 +71,12 @@ class HUD():
         self.potions_icon_rect.x = 5
         self.potions_icon_rect.y = self.potions_text_rect.y - 7.5
 
+        # Setting up the health bar
+        self.health_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/HeartUiFull.png")
+
         # self.health_bar = HealthBar()
 
     def render(self, screen):
-        self.loot_text = self.font.render(f"loot: {self.hero_loot}", True, (255, 255, 255))
         screen.blit(self.loot_icon, self.loot_icon_rect)
         screen.blit(self.keys_icon, self.keys_icon_rect)
         screen.blit(self.potions_icon, self.potions_icon_rect)
