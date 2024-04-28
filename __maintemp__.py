@@ -259,7 +259,7 @@ def generate_instance(instance_name, num_rooms):
             print(colored("Goal reached!", 'magenta'))
     
     # Draw the graph with different colors for different types of edges
-    edge_colors = ['blue' if G[u][v]['type'] == 'normal' else 'red' for u, v in G.edges()]
+    edge_colors = ['xkcd:olive' if G[u][v]['type'] == 'normal' else 'xkcd:red' for u, v in G.edges()]
 
     node_colors = []
     treasure_node_colors = []
@@ -270,71 +270,77 @@ def generate_instance(instance_name, num_rooms):
     # Each type of room has a different color to be represented with
     for node in standard_rooms:
         if node in key_rooms:
-            node_colors.append('grey')
+            node_colors.append('xkcd:lightblue')
         elif node == start_room:
-            node_colors.append('green')
+            node_colors.append('xkcd:green')
         elif node == exit_room:
             node_colors.append('gold')
         else:
-            node_colors.append('blue')
+            node_colors.append('xkcd:lavender')
     
     for node in treasure_rooms:
         if node in key_rooms:
-            treasure_node_colors.append('grey')
+            treasure_node_colors.append('xkcd:lightblue')
         elif node == exit_room:
             treasure_node_colors.append('gold')
         else:
-            treasure_node_colors.append('blue')
+            treasure_node_colors.append('xkcd:lavender')
     
     for node in enemy_rooms:
         if node in key_rooms:
-            enemy_node_colors.append('grey')
+            enemy_node_colors.append('xkcd:lightblue')
         elif node == exit_room:
             enemy_node_colors.append('gold')
         else:
-            enemy_node_colors.append('blue')
+            enemy_node_colors.append('xkcd:lavender')
     
     for node in weapon_rooms:
         if node in key_rooms:
-            weapon_node_colors.append('grey')
+            weapon_node_colors.append('xkcd:lightblue')
         elif node == exit_room:
             weapon_node_colors.append('gold')
         else:
-            weapon_node_colors.append('blue')
+            weapon_node_colors.append('xkcd:lavender')
 
     for node in potion_rooms:
         if node in key_rooms:
-            potion_node_colors.append('grey')
+            potion_node_colors.append('xkcd:lightblue')
         elif node == exit_room:
             potion_node_colors.append('gold')
         else:
-           potion_node_colors.append('blue')
+           potion_node_colors.append('xkcd:lavender')
 
-    # Drawing the dungeon 
-    nx.draw_kamada_kawai(G, nodelist=list(enemy_rooms), node_size=500, node_color=enemy_node_colors, node_shape ='h', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=list(weapon_rooms), node_size=400, node_color=weapon_node_colors, node_shape ='d', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=list(potion_rooms), node_size=300, node_color=potion_node_colors, node_shape ='s', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=list(treasure_rooms), node_size=1000, node_color=treasure_node_colors, node_shape ='*', edge_color=edge_colors)
-    nx.draw_kamada_kawai(G, nodelist=standard_rooms, node_size=400, node_color=node_colors, node_shape = 'o', edge_color=edge_colors)
-    nx.draw_networkx_labels(G, pos=nx.kamada_kawai_layout(G), font_size=12, font_color="white")
-    
+    # Drawing the dungeon
+    pos = nx.kamada_kawai_layout(G)
+    enemy_nodes = nx.draw_networkx_nodes(G, pos, nodelist=list(enemy_rooms), node_size=1200, node_color=enemy_node_colors, node_shape ='h', linewidths=2)
+    enemy_nodes.set_edgecolor('crimson')
+    weapon_nodes = nx.draw_networkx_nodes(G, pos, nodelist=list(weapon_rooms), node_size=1000, node_color=weapon_node_colors, node_shape ='d', linewidths=2)
+    weapon_nodes.set_edgecolor('xkcd:purple')
+    potion_nodes = nx.draw_networkx_nodes(G, pos, nodelist=list(potion_rooms), node_size=700, node_color=potion_node_colors, node_shape ='s', linewidths=2)
+    potion_nodes.set_edgecolor('xkcd:teal')
+    treasure_nodes = nx.draw_networkx_nodes(G, pos, nodelist=list(treasure_rooms), node_size=2000, node_color=treasure_node_colors, node_shape ='*', linewidths=2)
+    treasure_nodes.set_edgecolor('silver')
+    nx.draw_networkx_nodes(G,pos, nodelist=standard_rooms, node_size=900, node_color=node_colors, node_shape = 'o')
+    nx.draw_networkx_labels(G, pos, font_size=12, font_color="xkcd:ivory", font_weight='bold')
+    nx.draw_networkx_edges(G, pos, edge_color=edge_colors, width=1.5)
+
     # Legend (different shapes and colors)
     legend_elements = [
-        lines.Line2D([], [], color="green", marker='o', markersize=10, linestyle=''),
-        lines.Line2D([], [], color="gold", marker='o', markersize=10,linestyle='' ),
-        lines.Line2D([], [], color="grey", marker='o', markersize=10, linestyle=''),
-        lines.Line2D([], [], color="red"),
-        lines.Line2D([], [], color="blue", marker='h', markersize=12, linestyle=''),
-        lines.Line2D([], [], color="blue", marker='d', markersize=10, linestyle=''),
-        lines.Line2D([], [], color="blue", marker='s', markersize=10, linestyle=''),
-        lines.Line2D([], [], color="blue", marker='*', markersize=12, linestyle='')
+        lines.Line2D([], [], color="xkcd:green", marker='o', markersize=12, linestyle=''),
+        lines.Line2D([], [], color="gold", marker='o', markersize=12,linestyle='' ),
+        lines.Line2D([], [], color="xkcd:lightblue", marker='o', markersize=12, linestyle=''),
+        lines.Line2D([], [], color="xkcd:red"),
+        lines.Line2D([], [], color="xkcd:lavender", marker='h', markersize=14, markeredgecolor='crimson', markeredgewidth=1.3, linestyle=''),
+        lines.Line2D([], [], color="xkcd:lavender", marker='d', markersize=12, markeredgecolor='xkcd:purple', markeredgewidth=1.3, linestyle=''),
+        lines.Line2D([], [], color="xkcd:lavender", marker='s', markersize=12, markeredgecolor='xkcd:teal', markeredgewidth=1.3, linestyle=''),
+        lines.Line2D([], [], color="xkcd:lavender", marker='*', markersize=14, markeredgecolor='silver', markeredgewidth=1.3, linestyle='')
     ]
     legend_labels = [
         'Start room', 'Exit room', 'Key room', 'Closed door', 'Enemy room', 'Weapon room', 'Potion room', 'Treasure room'
     ]
-    
     plt.legend(legend_elements, legend_labels, fontsize = 12)
-    
+
+    plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
     plt.show()
 
 '''
