@@ -22,10 +22,10 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    player_weapon = Weapon(damage=10, weapon_pos_x=6.8, weapon_pos_y=6)
-    player = Player(health=100, weapon=player_weapon)
+    player_weapon = Weapon(damage=40, weapon_pos_x=6.8, weapon_pos_y=6)
+    player = Player(max_health=100, weapon=player_weapon)
 
-    actual_room = Room(id=0, player=player, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
+    actual_room = Room(id=0, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
 
     actual_room.x = (WIDTH  - actual_room.width) // 2
     actual_room.y = (HEIGHT - actual_room.height) // 2
@@ -33,6 +33,9 @@ def main():
     hud = HUD()
 
     travel = False
+
+    damaged = False
+    healed = False
 
     clock = pygame.time.Clock()
 
@@ -42,13 +45,27 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.USEREVENT:
+                player.blink_counter += 1
+                player.health_bar.blink_counter = player.blink_counter
+                if player.blink_counter >=6:
+                    player.taking_damage = False
+                    player.healed = False
+                    player.health_bar.blinking = False
+                    player.blink_counter = 0
+                    player.health_bar.blink_counter = 0
+                    pygame.time.set_timer(pygame.USEREVENT, 0)  # Stop the timer
 
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
         hud.render(screen)
-        if not travel:
-            travel = player.travel(0)
+        # if not healed:
+        #     player.get_heal(10)
+        #     healed = True
+        if not damaged:
+            player.get_damage(10)
+            damaged = True
         pygame.display.flip()
 
 if __name__ == "__main__":

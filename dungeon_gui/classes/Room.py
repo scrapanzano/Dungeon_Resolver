@@ -30,9 +30,8 @@ tile_mapping = {
 }
 
 class Room():
-    def __init__(self, id:int, player=None, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
+    def __init__(self, id:int, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
         self.id = id
-        self.player = player
         self.key = key
         self.loot = loot
         self.enemy = enemy
@@ -87,9 +86,6 @@ class Room():
 
         if self.enemy is not None:
           self.enemy.render_enemy(screen, self.x, self.y, self.scale_factor)
-
-        # if self.player is not None:
-        #   self.player.render_player(screen, self.x, self.y, self.scale_factor)
 
 
     def collect_key(self):
