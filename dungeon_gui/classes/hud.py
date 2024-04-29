@@ -5,7 +5,7 @@ TILE_SIZE = 16
 SCALE_FACTOR = 2
 
 class HUD():
-    def __init__(self, hero_loot=0, keys=0, potions=0):
+    def __init__(self, hero_loot=0, keys=0, potions=0, id=20):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.font = pygame.font.Font("dungeon_Resolver/dungeon_gui/Minecraft.ttf", 36)
@@ -71,7 +71,7 @@ class HUD():
         self.potions_icon_rect.x = 5
         self.potions_icon_rect.y = self.potions_text_rect.y - 7.5
 
-        # Setting up the health icon
+        # Setting up the health icon HUD
         self.health_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/Sprite_heart.png")
         self.health_icon = self.health_icon.subsurface(pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE))
         self.health_icon = pygame.transform.scale(self.health_icon, (30, 30))
@@ -79,6 +79,31 @@ class HUD():
         self.health_icon_rect = self.health_icon.get_rect()
         self.health_icon_rect.x = 10
         self.health_icon_rect.y = 130 - 7.5
+
+        # Setting up the room id HUD
+        self.id_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/Minecraft.ttf", 250)
+        self.id = id
+        self.id_text = self.id_font.render(f"{self.id}", True, (37, 19, 26))
+
+        # Create a new surface with the same size as the id_text
+        self.id_text_alpha = pygame.Surface(self.id_text.get_size(), pygame.SRCALPHA)
+
+        # Fill the new surface with the desired color
+        self.id_text_alpha.fill((37, 19, 26))
+
+        # Set the alpha of the new surface
+        self.id_text_alpha.set_alpha(50)  # Set the alpha to a low value to make the text barely visible
+
+        # Blit the id_text onto the new surface with a blending mode
+        self.id_text_alpha.blit(self.id_text, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+
+        self.id_text_rect = self.id_text.get_rect()
+        center_x = 1100
+        center_y = 400
+        self.id_text_rect.x = center_x - self.id_text_rect.width / 2
+        self.id_text_rect.y = center_y - self.id_text_rect.height / 2
+
+
 
     def render(self, screen):
         screen.blit(self.loot_icon, self.loot_icon_rect)
@@ -88,6 +113,7 @@ class HUD():
         screen.blit(self.loot_text, self.loot_text_rect)
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
+        screen.blit(self.id_text_alpha, self.id_text_rect)
        
 
 
@@ -102,3 +128,7 @@ class HUD():
     def update_potions(self, potions):
         self.potions = potions
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
+    
+    def update_id(self, id):
+        self.id = id
+        self.id_text = self.id_font.render(f"{self.id}", True, (37, 19, 26))        

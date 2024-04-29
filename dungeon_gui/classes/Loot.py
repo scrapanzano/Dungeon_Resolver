@@ -11,7 +11,7 @@ class Loot(Collectable):
         super().__init__()
         self.loot_value = loot_value
         self.loot_tileset = loot_tileset
-        self.loot_pos_x, self.loot_pos_y = (1, 1)
+        self.loot_pos_x, self.loot_pos_y = (1, 3)
 
         if self.loot_value == 10:
             self.loot_tile_x, self.loot_tile_y = (5, 8)

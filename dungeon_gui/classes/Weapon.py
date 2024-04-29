@@ -9,7 +9,7 @@ TILE_SIZE_Y = 32
 
 
 class Weapon(Collectable):
-    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=1.15, weapon_pos_y=4.5):
+    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=1.15, weapon_pos_y=7.5):
         super().__init__()
         self.weapon_tileset = weapon_tileset
         self.pos_x = weapon_pos_x

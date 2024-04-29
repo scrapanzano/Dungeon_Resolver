@@ -12,7 +12,7 @@ class Player():
         self.character_tileset = character_tileset
         self.weapon = weapon
         self.player_tile_x, self.player_tile_y = (0, 0)
-        self.player_pos_x, self.player_pos_y = (4.5, 5)
+        self.player_pos_x, self.player_pos_y = (4.5, 8)
         
         self.taking_damage = False
         self.healed = False

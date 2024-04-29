@@ -10,7 +10,7 @@ class Key(Collectable):
     def __init__(self, key_tileset=key_tileset):
         super().__init__()
         self.key_tileset = key_tileset
-        self.key_pos_x, self.key_pos_y = (8, 5)
+        self.key_pos_x, self.key_pos_y = (8, 8)
         self.key_tile_x, self.key_tile_y = (9, 9)
 
     def render_collectable(self, screen, room_x, room_y, scale_factor):

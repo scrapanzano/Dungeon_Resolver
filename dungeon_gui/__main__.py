@@ -22,10 +22,10 @@ def main():
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
 
-    player_weapon = Weapon(damage=40, weapon_pos_x=6.8, weapon_pos_y=6)
+    player_weapon = Weapon(damage=40, weapon_pos_x=6.8, weapon_pos_y=10)
     player = Player(max_health=100, weapon=player_weapon)
 
-    actual_room = Room(id=0, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=False)
+    actual_room = Room(id=0, key=Key(), loot=Loot(10), enemy=Enemy(10), weapon=Weapon(10), potion=Potion(10), has_door=True)
 
     actual_room.x = (WIDTH  - actual_room.width) // 2
     actual_room.y = (HEIGHT - actual_room.height) // 2
@@ -45,6 +45,7 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            # Create custom event
             if event.type == pygame.USEREVENT:
                 player.blink_counter += 1
                 player.health_bar.blink_counter = player.blink_counter

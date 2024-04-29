@@ -9,7 +9,7 @@ class Enemy():
         self.enemy_tileset = enemy_tileset
         self.damage = damage
         self.enemy_tileset = enemy_tileset
-        self.pos_x, self.pos_y = (4.5, 3)
+        self.pos_x, self.pos_y = (4.5, 5)
         self.alpha = 255
         self.killed = False
 
