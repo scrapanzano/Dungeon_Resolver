@@ -43,7 +43,7 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-        screen.fill((0, 0, 0))  
+        screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
         hud.render(screen)

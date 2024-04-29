@@ -27,7 +27,7 @@ class Enemy():
         scaled_enemy_surface = pygame.transform.scale(enemy_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
         if self.killed and self.alpha > 0:
-            self.alpha -= 0.5
+            self.alpha -= 8
             scaled_enemy_surface.set_alpha(self.alpha)
         elif self.alpha <= 0:
             return

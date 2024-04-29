@@ -10,7 +10,7 @@ room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_ti
 # Create a list of layout for every different state of the room
 
 room_layout = [
-    "LWWWDdWWWR",
+    "LWWTDdTWWR",
     "L        R",
     "L        R",
     "L        R",
@@ -25,6 +25,7 @@ tile_mapping = {
     "r" : (5,4),
     "W" : (1,0), 
     "w" : (1,5),
+    "T" : (0,9),
     " " : (1,1)
 }
 
@@ -59,7 +60,15 @@ class Room():
             for x, tile in enumerate(row):
                 if tile in tile_mapping:
                     tile_x, tile_y = tile_mapping[tile]
-                    self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    if tile == 'T':
+                        # Render tile 'W' first
+                        tile_w_x, tile_w_y = tile_mapping['W']
+                        self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_w_x * TILE_SIZE, tile_w_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                        # Then render tile 'T' above it
+                        self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                    else:
+                        # Render other tiles normally
+                        self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         
          # Scale the surface
         scaled_surface = pygame.transform.scale(self.surface, (self.width * self.scale_factor, self.height * self.scale_factor))

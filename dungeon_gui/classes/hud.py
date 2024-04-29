@@ -71,19 +71,24 @@ class HUD():
         self.potions_icon_rect.x = 5
         self.potions_icon_rect.y = self.potions_text_rect.y - 7.5
 
-        # Setting up the health bar
-        self.health_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/HeartUiFull.png")
+        # Setting up the health icon
+        self.health_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/Sprite_heart.png")
+        self.health_icon = self.health_icon.subsurface(pygame.Rect(0, 0, TILE_SIZE, TILE_SIZE))
+        self.health_icon = pygame.transform.scale(self.health_icon, (30, 30))
 
-        # self.health_bar = HealthBar()
+        self.health_icon_rect = self.health_icon.get_rect()
+        self.health_icon_rect.x = 10
+        self.health_icon_rect.y = 130 - 7.5
 
     def render(self, screen):
         screen.blit(self.loot_icon, self.loot_icon_rect)
         screen.blit(self.keys_icon, self.keys_icon_rect)
         screen.blit(self.potions_icon, self.potions_icon_rect)
+        screen.blit(self.health_icon, self.health_icon_rect)
         screen.blit(self.loot_text, self.loot_text_rect)
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
-        # self.health_bar.draw(screen)
+       
 
 
     def update(self, hero_loot):

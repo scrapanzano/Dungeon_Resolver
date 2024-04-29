@@ -24,7 +24,7 @@ class Weapon(Collectable):
             scaled_weapon_surface = pygame.transform.scale(weapon_surface, (TILE_SIZE_X * (scale_factor - 1), TILE_SIZE_Y * (scale_factor - 1)))
         
             if self.collected and self.alpha > 0:
-                self.alpha -= 0.5
+                self.alpha -= 8
                 scaled_weapon_surface.set_alpha(self.alpha)
             elif self.alpha <= 0:
                 return
