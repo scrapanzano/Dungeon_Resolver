@@ -18,6 +18,13 @@ def extract_rooms(str):
     rooms = re.findall("r[0-9][0-9]|r[0-9]", str)
     return rooms
 
+def extract_room_numbers(str): #da sistemare, estrarre numero
+    numbers = []
+    rooms = extract_rooms(str)
+    for room in rooms:
+        num = re.findall("[0-9][0-9]|[0-9]", room)
+        numbers.append(num[0])   
+    return numbers
 
 with open('./dungeon_resolver/sequential_simulator.txt', 'r') as instream:
     lines = instream.readlines()
@@ -33,7 +40,7 @@ with open('./dungeon_resolver/sequential_simulator.txt', 'r') as instream:
             print(f'Loot = {loot}')
         elif 'Applied action' in line:
             if 'move' in line:
-                rooms = extract_rooms(line)
+                rooms = extract_room_numbers(line)
                 print('Move action')
                 print(rooms)
             elif 'collect_weapon' in line:
