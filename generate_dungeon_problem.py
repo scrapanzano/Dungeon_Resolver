@@ -1,3 +1,8 @@
+"""
+This module creates a random dungeon pddl problem file, that describe
+the specific instance of the dungeon problem
+"""
+
 import sys
 import os
 import argparse
@@ -14,10 +19,25 @@ from termcolor import colored
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
-'''
-Generates dungeon instance
-'''
 def generate_instance(instance_name, num_rooms):
+    """
+    Generates a random instance of the dungeon problem, starting from a pddl template file.
+    In this function there are:
+        - Creation of a graph with networkx representing the dungeon
+        - Generation of all elements inside the dungeon (doors, keys, treasures, enemies, weapons, potions)
+        - Population and writing of the pddl template file with the previous elements
+        - Invocation of unified-planning planner to solve the problem
+        - Drawing the schematic representation (graph) of the dungeon whit matplotlib
+
+    Parameters
+    ----------
+    :param instance_name: Instance name for the pddl problem file
+    :type instance_name: str
+    
+    :param num_rooms: Number of dungeon rooms 
+    :type num_rooms: int
+    """
+   # Open pddl template file
     with open( template_name ) as instream :
         text = instream.read()
         template = string.Template( text )
@@ -25,10 +45,13 @@ def generate_instance(instance_name, num_rooms):
     # Generate a random dungeon in which each room is connected at least with another one
     G = nx.connected_watts_strogatz_graph(num_rooms, k=4, p=0.1)
 
+    # Starting room
     start_room = 0
 
+    # Generate exit room
     exit_room = farthest_node(G, start_room)
 
+    # Generate doors (graph edges)
     generate_doors(G)
 
     # List of rooms in which there's a key 
@@ -48,6 +71,7 @@ def generate_instance(instance_name, num_rooms):
     num_enemy_rooms = (int)(num_rooms * enemy_probability)
     enemy_rooms = generate_enemies(G, start_room, num_enemy_rooms)
 
+    # Generating defeated_enemy_goal
     defeated_enemy_goal = (int)(num_enemy_rooms * 0.2) # 20%
 
     # List of safe rooms (in which there's not an enemy)
@@ -353,10 +377,24 @@ def generate_instance(instance_name, num_rooms):
     plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
     plt.show()
 
-'''
-Returns the farthest nodes inside the graph
-'''
+
 def farthest_node(G, start_room):
+    """
+    Returns the farthest node from start_room inside the graph G
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    Returns
+    -------
+    :returns: Farthest node from start_room
+    :rtype: int
+    """
     shortest_paths = nx.single_source_shortest_path_length(G, start_room)
 
     # Find the node with maximum shortest path length
@@ -370,18 +408,41 @@ def farthest_node(G, start_room):
 
     return farthest_node
 
-'''
-Generates links between rooms as normal or door link.
-'''
+
 def generate_doors(G):
+    """
+    Generates links between rooms, setting graph edges as normal or door link.
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    """
     door_probability = 0.4
     for u, v in G.edges():
         G[u][v]['type'] = random.choices(['normal', 'door'], weights=[1-door_probability, door_probability], k=1)[0]
 
-'''
-Generates keys in rooms and returns rooms with key
-'''
+
 def generate_keys(G, start_room, exit_room):
+    """
+    Generates keys in rooms and returns a list of rooms with key
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    :param exit_room: Selected exit room
+    :type exit_room: int
+
+    Returns
+    -------
+    :returns: List of rooms with key
+    :rtype: list
+    """
     key_rooms = []
     visited = set()
     queue = [start_room]
@@ -408,10 +469,27 @@ def generate_keys(G, start_room, exit_room):
 
     return key_rooms
 
-'''
-Generates treasures in rooms and returns rooms with treasure
-'''
+
 def generate_treasures(G, start_room, num_treasure_rooms):
+    """
+    Generates treasures in rooms and returns rooms with treasure
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    :param num_treasure_rooms: Desired number of rooms with treasure
+    :type exit_room: int
+
+    Returns
+    -------
+    :returns: Dict of rooms with treasure [format: {room : treasure_value}]
+    :rtype: dict
+    """
     treasure_rooms = {}
     treasures_value = [10, 20, 30, 40]
     rooms_list = list(G)
@@ -425,19 +503,50 @@ def generate_treasures(G, start_room, num_treasure_rooms):
     
     return treasure_rooms
 
-'''
-Generates loot goal
-'''
+
 def generate_loot_goal(treasure_rooms, loot_rate):
+    """
+    Generates loot goal and returns rooms loot goal
+    
+    Parameters
+    ----------
+    :param treasure_rooms: Dict of rooms with treasure
+    :type treasure_rooms: dict
+    
+    :param loot_rate: Selected loot rate
+    :type loot_rate: float
+
+    Returns
+    -------
+    :returns: Loot goal value
+    :rtype: int
+    """
     sum = 0
     for room in treasure_rooms:
         sum += treasure_rooms[room]
     return (int)(sum * loot_rate)
 
-'''
-Generates enemies in rooms and returns rooms with enemy 
-'''
+
 def generate_enemies(G, start_room, num_enemy_rooms):
+    """
+    Generates enemies in rooms and returns rooms with enemy 
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    :param num_enemy_rooms: Desired number of rooms with enemy
+    :type exit_room: int
+
+    Returns
+    -------
+    :returns: Dict of rooms with enemy [format: {room : enemy_value(life/strength)}]
+    :rtype: dict
+    """
     enemy_rooms = {}
     enemies_value = [30, 50, 70, 90]
     room_list = list(G)
@@ -451,10 +560,27 @@ def generate_enemies(G, start_room, num_enemy_rooms):
     
     return enemy_rooms
 
-'''
-Generates weapons in rooms and returns rooms with weapon
-'''
+
 def generate_weapons(G, start_room, enemy_rooms):
+    """
+    Generates weapons in rooms and returns rooms with weapon
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    :param num_enemy_rooms: Number of rooms with enemy
+    :type exit_room: int
+
+    Returns
+    -------
+    :returns: Dict of rooms with weapon [format: {room : weapon_strength}]
+    :rtype: dict
+    """
     weapons_rooms = {}
     rooms_list = list(G)
     
@@ -469,10 +595,27 @@ def generate_weapons(G, start_room, enemy_rooms):
 
     return weapons_rooms 
 
-'''
-Generates potions in rooms and returns rooms with potion 
-'''
+
 def generate_potions(G, start_room, num_potion_rooms):
+    """
+    Generates potions in rooms and returns rooms with potion
+    
+    Parameters
+    ----------
+    :param G: Graph on which calculate farthest node from start_room
+    :type G: networkx Graph
+    
+    :param start_room: Selected starting room
+    :type start_room: int
+
+    :param num_potion_rooms: Desired number of rooms with potion
+    :type exit_room: int
+
+    Returns
+    -------
+    :returns: Dict of rooms with potion [format: {room : potion_value}]
+    :rtype: dict
+    """
     potion_rooms = {}
     potions_value = [10, 30, 50]
     room_list = list(G)
@@ -486,10 +629,21 @@ def generate_potions(G, start_room, num_potion_rooms):
     
     return potion_rooms   
 
-'''
-Choices yes or not (y/n) 
-'''
+
 def yes_or_no(question):
+    """
+    Choices between yes or not (y/n) 
+    
+    Parameters
+    ----------
+    :param question: A yes or no question 
+    :type question: str
+
+    Returns
+    -------
+    :returns: True if yes chosen, False otherwise
+    :rtype: bool
+    """
     incorrect_entry = True
     while incorrect_entry:
         choice = input(question + ' (y/n) ')
@@ -501,6 +655,7 @@ def yes_or_no(question):
             return False
         else:
              print(colored('Incorrect entry! Type \'y\' or \'n\'', 'light_red'))
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
@@ -514,9 +669,11 @@ def parse_arguments():
         print( ";;Setting seed to {0}\n".format(args.random_seed) )
     return args
 
+
 def Main():
     args = parse_arguments()
     generate_instance('instance_'+str(args.num_rooms)+'_'+str(args.random_seed), int(args.num_rooms))
+
 
 if __name__ == "__main__":
     Main()
