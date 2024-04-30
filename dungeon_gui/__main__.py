@@ -1,23 +1,26 @@
 import pygame
 import sys
-from classes.room import Room
+
 from classes.player import Player
-from classes.loot import Loot
-from classes.potion import Potion
-from classes.key import Key
+from classes.room import Room
 from classes.weapon import Weapon
-from classes.enemy  import Enemy
-from classes.hud import HUD
+from classes.key import Key
+from classes.loot import Loot
+from classes.enemy import Enemy
+from classes.potion import Potion
+from classes.HUD import HUD
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
 
 # Initialize pygame
 pygame.init()
+
 
 # Set up the display
 WIDTH, HEIGHT = 1270, 720
 
 
 # Main loop
-def main():
+def Main():
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Dungeon")
@@ -45,17 +48,24 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            # Create custom event
-            if event.type == pygame.USEREVENT:
+            if event.type == PLAYER_GET_DAMAGE:
                 player.blink_counter += 1
-                player.health_bar.blink_counter = player.blink_counter
-                if player.blink_counter >=6:
+                player.health_bar.blink_counter += 1
+                if player.blink_counter >= 6:
                     player.taking_damage = False
-                    player.healed = False
                     player.health_bar.blinking = False
                     player.blink_counter = 0
                     player.health_bar.blink_counter = 0
-                    pygame.time.set_timer(pygame.USEREVENT, 0)  # Stop the timer
+                    pygame.time.set_timer(PLAYER_GET_DAMAGE, 0)
+            if event.type == PLAYER_GET_HEAL:
+                player.blink_counter += 1
+                player.health_bar.blink_counter += 1
+                if player.blink_counter >= 6:
+                    player.taking_heal = False
+                    player.health_bar.blinking = False
+                    player.blink_counter = 0
+                    player.health_bar.blink_counter = 0
+                    pygame.time.set_timer(PLAYER_GET_HEAL, 0)
 
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
@@ -70,4 +80,4 @@ def main():
         pygame.display.flip()
 
 if __name__ == "__main__":
-    main()
+    Main()

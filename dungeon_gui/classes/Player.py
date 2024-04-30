@@ -1,5 +1,6 @@
 import pygame
 from classes.health_bar import HealthBar
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
 
 character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
 
@@ -15,7 +16,7 @@ class Player():
         self.player_pos_x, self.player_pos_y = (4.5, 8)
         
         self.taking_damage = False
-        self.healed = False
+        self.taking_heal = False
         self.blink_counter = 0
 
         # Setting up the health bar
@@ -29,7 +30,7 @@ class Player():
             red_surface= scaled_player_surface.copy() # Create a copy of the sprite
             red_surface.fill((255, 0, 0), special_flags=pygame.BLEND_RGBA_MULT)  # Tint the copy red
             screen.blit(red_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))  # Draw the tinted sprite
-        elif self.healed and self.blink_counter % 2 == 0:
+        elif self.taking_heal and self.blink_counter % 2 == 0:
             green_surface= scaled_player_surface.copy() # Create a copy of the sprite
             green_surface.fill((0, 255, 0), special_flags=pygame.BLEND_RGBA_MULT)
             screen.blit(green_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))
@@ -60,8 +61,7 @@ class Player():
             
         self.taking_damage = True
         self.update_health(new_health)
-        pygame.time.set_timer(pygame.USEREVENT, 300)  # Start a timer for 300ms
-
+        pygame.time.set_timer(PLAYER_GET_DAMAGE, 300)  # Start a timer for 300ms
 
 
     def get_heal(self, heal):
@@ -69,6 +69,6 @@ class Player():
         if new_health > self.max_health:
             new_health = self.max_health
         
-        self.healed = True
+        self.taking_heal = True
         self.update_health(new_health)
-        pygame.time.set_timer(pygame.USEREVENT, 300)  # Start a timer for 300ms
+        pygame.time.set_timer(PLAYER_GET_HEAL, 300)  # Start a timer for 300ms

@@ -1,14 +1,16 @@
 import pygame
-from .health_bar import HealthBar
+from classes.health_bar import HealthBar
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
+
+FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
 class HUD():
     def __init__(self, hero_loot=0, keys=0, potions=0, id=20):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
-        self.font = pygame.font.Font("dungeon_Resolver/dungeon_gui/Minecraft.ttf", 36)
+        self.font = pygame.font.Font(FONT_PATH, 36)
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
         self.loot_text_rect = self.loot_text.get_rect()
         self.loot_text_rect.x = 50
@@ -81,18 +83,18 @@ class HUD():
         self.health_icon_rect.y = 130 - 7.5
 
         # Setting up the room id HUD
-        self.id_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/Minecraft.ttf", 250)
+        self.id_font = pygame.font.Font(FONT_PATH, 250)
         self.id = id
-        self.id_text = self.id_font.render(f"{self.id}", True, (37, 19, 26))
+        self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
 
         # Create a new surface with the same size as the id_text
         self.id_text_alpha = pygame.Surface(self.id_text.get_size(), pygame.SRCALPHA)
 
         # Fill the new surface with the desired color
-        self.id_text_alpha.fill((37, 19, 26))
+        self.id_text_alpha.fill((255, 255, 255))
 
         # Set the alpha of the new surface
-        self.id_text_alpha.set_alpha(50)  # Set the alpha to a low value to make the text barely visible
+        self.id_text_alpha.set_alpha(100)  # Set the alpha to a low value to make the text barely visible
 
         # Blit the id_text onto the new surface with a blending mode
         self.id_text_alpha.blit(self.id_text, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
