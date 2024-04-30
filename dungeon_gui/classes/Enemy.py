@@ -13,11 +13,11 @@ class Enemy():
         self.alpha = 255
         self.killed = False
 
-        if self.damage == 10:
+        if self.damage == 30:
             self.enemy_tile_x, self.enemy_tile_y = (0, 12)
-        elif self.damage == 20:
+        elif self.damage == 50:
             self.enemy_tile_x, self.enemy_tile_y = (1, 12)
-        elif self.damage == 30:
+        elif self.damage == 70:
             self.enemy_tile_x, self.enemy_tile_y = (2, 12)
         else:
             self.enemy_tile_x, self.enemy_tile_y = (3, 12)
