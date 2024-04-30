@@ -34,16 +34,16 @@ class Weapon(Collectable):
     def update_weapon(self, damage):
         self.damage = damage
 
-        if self.damage == 10:
+        if self.damage == 30:
             self.weapon_tile_x, self.weapon_tile_y = (9, 0)
             self.visible = True
-        elif self.damage == 20:
+        elif self.damage == 50:
             self.weapon_tile_x, self.weapon_tile_y = (10, 0)
             self.visible = True
-        elif self.damage == 30:
+        elif self.damage == 70:
             self.weapon_tile_x, self.weapon_tile_y = (11, 0)
             self.visible = True
-        elif self.damage == 40:
+        elif self.damage == 90:
             self.weapon_tile_x, self.weapon_tile_y = (9, 1)
             self.visible = True
         else :

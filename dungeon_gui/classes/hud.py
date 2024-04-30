@@ -7,7 +7,7 @@ SCALE_FACTOR = 2
 FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
 class HUD():
-    def __init__(self, hero_loot=0, keys=0, potions=0, id=20):
+    def __init__(self, hero_loot=0, keys=0, potions=0, id=0):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.font = pygame.font.Font(FONT_PATH, 36)
@@ -123,6 +123,10 @@ class HUD():
         self.hero_loot = hero_loot
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
     
+    def update_hero_loot(self, hero_loot):
+        self.hero_loot = hero_loot
+        self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
+
     def update_keys(self, keys):
         self.keys = keys
         self.keys_text = self.font.render(f"Keys: {self.keys}", True, (255, 255, 255))
@@ -133,4 +137,4 @@ class HUD():
     
     def update_id(self, id):
         self.id = id
-        self.id_text = self.id_font.render(f"{self.id}", True, (37, 19, 26))        
+        self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))   

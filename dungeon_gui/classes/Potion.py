@@ -6,7 +6,7 @@ potion_tileset = pygame.image.load("Dungeon_Resolver/dungeon_gui/assets/0x72_16x
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
-
+# Remember to change tile basing to the value
 class Potion(Collectable):
     def __init__(self, potion_value:int, potion_tileset=potion_tileset):
         super().__init__()
