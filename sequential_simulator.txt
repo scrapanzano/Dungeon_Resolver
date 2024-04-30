@@ -1,78 +1,55 @@
 Initial life = 100
 Initial strength = 0
 Initial loot = 0 - Loot goal >= 112
-Applied action 1: move(r0, r2). Life: 100 - Strength: 0 - Loot: 0
-Applied action 2: move(r2, r3). Life: 100 - Strength: 0 - Loot: 0
-Applied action 3: move(r3, r4). Life: 100 - Strength: 0 - Loot: 0
-Applied action 4: move(r4, r6). Life: 100 - Strength: 0 - Loot: 0
-Applied action 5: move(r6, r12). Life: 100 - Strength: 0 - Loot: 0
-Applied action 6: move(r12, r13). Life: 100 - Strength: 0 - Loot: 0
-Applied action 7: collect_weapon(w2, r13). Life: 100 - Strength: 90 - Loot: 0
-Applied action 8: move(r13, r14). Life: 100 - Strength: 90 - Loot: 0
-Applied action 9: collect_treasure(t3, r14). Life: 100 - Strength: 90 - Loot: 10
-Applied action 10: move(r14, r13). Life: 100 - Strength: 90 - Loot: 10
-Applied action 11: move(r13, r12). Life: 100 - Strength: 90 - Loot: 10
-Applied action 12: move(r12, r6). Life: 100 - Strength: 90 - Loot: 10
-Applied action 13: move(r6, r5). Life: 100 - Strength: 90 - Loot: 10
-Applied action 14: collect_treasure(t2, r5). Life: 100 - Strength: 90 - Loot: 50
-Applied action 15: move(r5, r6). Life: 100 - Strength: 90 - Loot: 50
-Applied action 16: move(r6, r12). Life: 100 - Strength: 90 - Loot: 50
-Applied action 17: collect_key(r12). Life: 100 - Strength: 90 - Loot: 50
-Applied action 18: move(r12, r10). Life: 100 - Strength: 90 - Loot: 50
-Applied action 19: collect_weapon(w11, r10). Life: 100 - Strength: 90 - Loot: 50
-Applied action 20: move(r10, r12). Life: 100 - Strength: 90 - Loot: 50
-Applied action 21: move(r12, r6). Life: 100 - Strength: 90 - Loot: 50
-Applied action 22: move(r6, r5). Life: 100 - Strength: 90 - Loot: 50
-Applied action 23: open_door(r5, r3). Life: 100 - Strength: 90 - Loot: 50
-Applied action 24: defeat_enemy(e1, r5). Life: 30 - Strength: 90 - Loot: 50
-Applied action 25: collect_potion(p9, r5). Life: 30 - Strength: 90 - Loot: 50
-Applied action 26: drink_potion(p9). Life: 60 - Strength: 90 - Loot: 50
-Applied action 27: move(r5, r3). Life: 60 - Strength: 90 - Loot: 50
-Applied action 28: defeat_enemy(e4, r3). Life: 30 - Strength: 90 - Loot: 50
-Applied action 29: move(r3, r4). Life: 30 - Strength: 90 - Loot: 50
-Applied action 30: move(r4, r6). Life: 30 - Strength: 90 - Loot: 50
-Applied action 31: move(r6, r12). Life: 30 - Strength: 90 - Loot: 50
-Applied action 32: move(r12, r11). Life: 30 - Strength: 90 - Loot: 50
-Applied action 33: collect_treasure(t6, r11). Life: 30 - Strength: 90 - Loot: 60
-Applied action 34: move(r11, r12). Life: 30 - Strength: 90 - Loot: 60
-Applied action 35: move(r12, r6). Life: 30 - Strength: 90 - Loot: 60
-Applied action 36: move(r6, r4). Life: 30 - Strength: 90 - Loot: 60
-Applied action 37: collect_key(r4). Life: 30 - Strength: 90 - Loot: 60
-Applied action 38: move(r4, r6). Life: 30 - Strength: 90 - Loot: 60
-Applied action 39: move(r6, r12). Life: 30 - Strength: 90 - Loot: 60
-Applied action 40: move(r12, r10). Life: 30 - Strength: 90 - Loot: 60
-Applied action 41: open_door(r10, r9). Life: 30 - Strength: 90 - Loot: 60
-Applied action 42: move(r10, r12). Life: 30 - Strength: 90 - Loot: 60
-Applied action 43: move(r12, r6). Life: 30 - Strength: 90 - Loot: 60
-Applied action 44: collect_weapon(w10, r6). Life: 30 - Strength: 30 - Loot: 60
-Applied action 45: move(r6, r12). Life: 30 - Strength: 30 - Loot: 60
-Applied action 46: collect_weapon(w4, r12). Life: 30 - Strength: 30 - Loot: 60
-Applied action 47: move(r12, r10). Life: 30 - Strength: 30 - Loot: 60
-Applied action 48: move(r10, r9). Life: 30 - Strength: 30 - Loot: 60
-Applied action 49: collect_key(r9). Life: 30 - Strength: 30 - Loot: 60
-Applied action 50: open_door(r9, r7). Life: 30 - Strength: 30 - Loot: 60
-Applied action 51: move(r9, r7). Life: 30 - Strength: 30 - Loot: 60
-Applied action 52: collect_potion(p2, r7). Life: 30 - Strength: 30 - Loot: 60
-Applied action 53: move(r7, r9). Life: 30 - Strength: 30 - Loot: 60
-Applied action 54: collect_weapon(w5, r9). Life: 30 - Strength: 70 - Loot: 60
-Applied action 55: collect_potion(p4, r9). Life: 30 - Strength: 70 - Loot: 60
-Applied action 56: move(r9, r8). Life: 30 - Strength: 70 - Loot: 60
-Applied action 57: collect_key(r8). Life: 30 - Strength: 70 - Loot: 60
-Applied action 58: drink_potion(p4). Life: 80 - Strength: 70 - Loot: 60
-Applied action 59: collect_weapon(w6, r8). Life: 80 - Strength: 90 - Loot: 60
-Applied action 60: move(r8, r10). Life: 80 - Strength: 90 - Loot: 60
-Applied action 61: move(r10, r12). Life: 80 - Strength: 90 - Loot: 60
-Applied action 62: move(r12, r13). Life: 80 - Strength: 90 - Loot: 60
-Applied action 63: move(r13, r15). Life: 80 - Strength: 90 - Loot: 60
-Applied action 64: open_door(r15, r17). Life: 80 - Strength: 90 - Loot: 60
-Applied action 65: move(r15, r13). Life: 80 - Strength: 90 - Loot: 60
-Applied action 66: collect_treasure(t9, r13). Life: 80 - Strength: 90 - Loot: 100
-Applied action 67: move(r13, r12). Life: 80 - Strength: 90 - Loot: 100
-Applied action 68: move(r12, r10). Life: 80 - Strength: 90 - Loot: 100
-Applied action 69: move(r10, r9). Life: 80 - Strength: 90 - Loot: 100
-Applied action 70: move(r9, r7). Life: 80 - Strength: 90 - Loot: 100
-Applied action 71: collect_treasure(t11, r7). Life: 80 - Strength: 90 - Loot: 140
-Applied action 72: move(r7, r9). Life: 80 - Strength: 90 - Loot: 140
-Applied action 73: move(r9, r10). Life: 80 - Strength: 90 - Loot: 140
-Applied action 74: escape_from_dungeon(r10). Life: 80 - Strength: 90 - Loot: 140
+Applied action 1: move(r0, r1). Life: 100 - Strength: 0 - Loot: 0
+Applied action 2: collect_weapon(w3, r1). Life: 100 - Strength: 70 - Loot: 0
+Applied action 3: move(r1, r3). Life: 100 - Strength: 70 - Loot: 0
+Applied action 4: defeat_enemy(e4, r3). Life: 70 - Strength: 70 - Loot: 0
+Applied action 5: move(r3, r4). Life: 70 - Strength: 70 - Loot: 0
+Applied action 6: collect_key(r4). Life: 70 - Strength: 70 - Loot: 0
+Applied action 7: move(r4, r7). Life: 70 - Strength: 70 - Loot: 0
+Applied action 8: collect_potion(p2, r7). Life: 70 - Strength: 70 - Loot: 0
+Applied action 9: drink_potion(p2). Life: 80 - Strength: 70 - Loot: 0
+Applied action 10: move(r7, r5). Life: 80 - Strength: 70 - Loot: 0
+Applied action 11: defeat_enemy(e1, r5). Life: 10 - Strength: 70 - Loot: 0
+Applied action 12: move(r5, r6). Life: 10 - Strength: 70 - Loot: 0
+Applied action 13: move(r6, r12). Life: 10 - Strength: 70 - Loot: 0
+Applied action 14: collect_weapon(w4, r12). Life: 10 - Strength: 30 - Loot: 0
+Applied action 15: move(r12, r10). Life: 10 - Strength: 30 - Loot: 0
+Applied action 16: collect_weapon(w11, r10). Life: 10 - Strength: 90 - Loot: 0
+Applied action 17: move(r10, r8). Life: 10 - Strength: 90 - Loot: 0
+Applied action 18: collect_key(r8). Life: 10 - Strength: 90 - Loot: 0
+Applied action 19: move(r8, r10). Life: 10 - Strength: 90 - Loot: 0
+Applied action 20: open_door(r10, r9). Life: 10 - Strength: 90 - Loot: 0
+Applied action 21: move(r10, r12). Life: 10 - Strength: 90 - Loot: 0
+Applied action 22: open_door(r12, r14). Life: 10 - Strength: 90 - Loot: 0
+Applied action 23: move(r12, r13). Life: 10 - Strength: 90 - Loot: 0
+Applied action 24: collect_weapon(w2, r13). Life: 10 - Strength: 90 - Loot: 0
+Applied action 25: move(r13, r12). Life: 10 - Strength: 90 - Loot: 0
+Applied action 26: collect_key(r12). Life: 10 - Strength: 90 - Loot: 0
+Applied action 27: move(r12, r10). Life: 10 - Strength: 90 - Loot: 0
+Applied action 28: move(r10, r9). Life: 10 - Strength: 90 - Loot: 0
+Applied action 29: open_door(r9, r7). Life: 10 - Strength: 90 - Loot: 0
+Applied action 30: collect_key(r9). Life: 10 - Strength: 90 - Loot: 0
+Applied action 31: collect_potion(p4, r9). Life: 10 - Strength: 90 - Loot: 0
+Applied action 32: move(r9, r7). Life: 10 - Strength: 90 - Loot: 0
+Applied action 33: collect_treasure(t11, r7). Life: 10 - Strength: 90 - Loot: 40
+Applied action 34: move(r7, r9). Life: 10 - Strength: 90 - Loot: 40
+Applied action 35: move(r9, r10). Life: 10 - Strength: 90 - Loot: 40
+Applied action 36: open_door(r10, r11). Life: 10 - Strength: 90 - Loot: 40
+Applied action 37: move(r10, r11). Life: 10 - Strength: 90 - Loot: 40
+Applied action 38: collect_treasure(t6, r11). Life: 10 - Strength: 90 - Loot: 50
+Applied action 39: collect_weapon(w1, r11). Life: 10 - Strength: 70 - Loot: 50
+Applied action 40: move(r11, r12). Life: 10 - Strength: 70 - Loot: 50
+Applied action 41: move(r12, r13). Life: 10 - Strength: 70 - Loot: 50
+Applied action 42: drink_potion(p4). Life: 60 - Strength: 70 - Loot: 50
+Applied action 43: collect_treasure(t9, r13). Life: 60 - Strength: 70 - Loot: 90
+Applied action 44: move(r13, r12). Life: 60 - Strength: 70 - Loot: 90
+Applied action 45: move(r12, r6). Life: 60 - Strength: 70 - Loot: 90
+Applied action 46: move(r6, r5). Life: 60 - Strength: 70 - Loot: 90
+Applied action 47: collect_treasure(t2, r5). Life: 60 - Strength: 70 - Loot: 130
+Applied action 48: move(r5, r7). Life: 60 - Strength: 70 - Loot: 130
+Applied action 49: move(r7, r9). Life: 60 - Strength: 70 - Loot: 130
+Applied action 50: move(r9, r10). Life: 60 - Strength: 70 - Loot: 130
+Applied action 51: escape_from_dungeon(r10). Life: 60 - Strength: 70 - Loot: 130
 Goal reached!

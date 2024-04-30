@@ -37,7 +37,8 @@
     ${weapons_strength}
     ;Potions position and value
     ${potions_location} 
-    ${potions_value} 
+    ${potions_value}
+    ${potion_counter}
     ;Hero initial stats 
     ${hero_life}
     ${max_hero_life}

@@ -1,14 +1,14 @@
 import pygame
 import sys
 
-from classes.player import Player
-from classes.room import Room
-from classes.weapon import Weapon
-from classes.key import Key
-from classes.loot import Loot
-from classes.enemy import Enemy
-from classes.potion import Potion
-from classes.HUD import HUD
+from classes.Player import Player
+from classes.Room import Room
+from classes.Weapon import Weapon
+from classes.Key import Key
+from classes.Loot import Loot
+from classes.Enemy import Enemy
+from classes.Potion import Potion
+from classes.hud import HUD
 from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
 
 # Initialize pygame

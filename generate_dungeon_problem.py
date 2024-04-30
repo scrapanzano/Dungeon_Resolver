@@ -16,6 +16,8 @@ import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 from termcolor import colored
+from dungeon_gui.classes.Room import Room
+from dungeon_gui.classes.Key import Key
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
@@ -51,6 +53,12 @@ def generate_instance(instance_name, num_rooms):
     # Generate exit room
     exit_room = farthest_node(G, start_room)
 
+    # Create Room Object for each node in the graph (dungeon_gui)
+    rooms = []
+    for node in G.nodes():
+        node = Room(id=node)
+        rooms.append(node)
+        
     # Generate doors (graph edges)
     generate_doors(G)
 
@@ -150,6 +158,7 @@ def generate_instance(instance_name, num_rooms):
 
     for key_room in key_rooms:
         keys_location += '(key_at R' + str(key_room) + ') '
+        rooms[key_room].set_key(Key()) # Set a Key for Room Object in rooms with key (dungeon_gui)
 
     # Creating the string that containts the treasures location and value
     treasures_location = ''
@@ -162,6 +171,7 @@ def generate_instance(instance_name, num_rooms):
         treasures_location += '(treasure_at ' + treasure_name + ' R' + str(room) + ') '
         treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
         t_index += 1
+        rooms[room].set_loot(treasure_value) # Set a Treasure for Room Object in rooms with treasure (dungeon_gui)
 
     # Creating the string that containts the enemies location, life and strength
     enemies_location = ''
@@ -176,6 +186,7 @@ def generate_instance(instance_name, num_rooms):
         enemies_life += '(= (enemy_life ' + enemy_name + ') ' + str(enemy_value) +') '
         enemies_strength += '(= (enemy_strength ' + enemy_name + ') ' + str(enemy_value) +') '
         e_index += 1
+        rooms[room].set_enemy(enemy_value) # Set a Enemy for Room Object in rooms with enemy (dungeon_gui)
     
     # Creating the string that containts the weapons location and strength
     weapons_location = ''
@@ -188,6 +199,7 @@ def generate_instance(instance_name, num_rooms):
         weapons_location += '(weapon_at ' + weapon_name + ' R' + str(room) + ') '
         weapons_strength += '(= (weapon_strength ' + weapon_name + ') ' + str(weapon_value) +') '
         w_index += 1
+        rooms[room].set_weapon(weapon_value) # Set a Weapon for Room Object in rooms with weapon (dungeon_gui)
 
     # Creating the string that containts the potions location and value
     potions_location = ''
@@ -200,6 +212,7 @@ def generate_instance(instance_name, num_rooms):
         potions_location += '(potion_at ' + potion_name + ' R' + str(room) + ') '
         potions_value += '(= (potion_value ' + potion_name + ') ' + str(potion_value) +') '
         p_index += 1
+        rooms[room].set_potion(potion_value) # Set a Potion for Room Object in rooms with potion (dungeon_gui)
 
     # Populate template
     template_mapping = dict()
@@ -228,6 +241,7 @@ def generate_instance(instance_name, num_rooms):
     template_mapping['weapons_strength'] = weapons_strength
     template_mapping['potions_location'] = potions_location
     template_mapping['potions_value'] = potions_value
+    template_mapping['potion_counter'] = '(= (potion_counter) 0)'
     template_mapping['hero_life'] = '(= (hero_life) 100)'
     template_mapping['max_hero_life'] = '(= (max_hero_life) 100)'
     template_mapping['hero_strength'] = '(= (hero_strength) 0)'
@@ -421,7 +435,7 @@ def generate_doors(G):
     door_probability = 0.4
     for u, v in G.edges():
         G[u][v]['type'] = random.choices(['normal', 'door'], weights=[1-door_probability, door_probability], k=1)[0]
-
+    
 
 def generate_keys(G, start_room, exit_room):
     """

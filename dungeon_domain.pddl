@@ -67,6 +67,7 @@
     ;Weapons strength
     (weapon_strength ?w - weapon)
     ;Potions value
+    (potion_counter)
     (potion_value ?p - potion)
 )
    
@@ -75,35 +76,35 @@
 ;Move between rooms if they are connected (possible door between rooms open) and starting room safe (no enemies inside)
 (:action move
     :parameters (?x ?y - room)
-    :precondition (and (at ?x) (connected ?x ?y))
+    :precondition (and (at ?x) (connected ?x ?y) (room_safe ?x))
     :effect (and (at ?y) (not (at ?x)))
 )
 
 ;Escape from dungeon if exit_room reached
 (:action escape_from_dungeon
     :parameters (?x - room)
-    :precondition (and (at ?x) (exit_room ?x))
+    :precondition (and (at ?x) (exit_room ?x) (room_safe ?x))
     :effect (and (not (at ?x)) (escape))
 )
 
 ;Collect key from safe room (no enemies inside): key_counter increased by 1
 (:action collect_key
     :parameters (?x - room)
-    :precondition (and (at ?x) (key_at ?x))
+    :precondition (and (at ?x) (key_at ?x) (room_safe ?x))
     :effect (and (not (key_at ?x)) (increase (key_counter) 1))
 )
 
 ;Open door between 2 rooms using key (two rooms with door between them are initially not connected): key_counter decreased by 1
 (:action open_door
     :parameters (?x ?y - room)
-    :precondition (and (at ?x) (closed_door ?x ?y) (>= (key_counter) 1))
+    :precondition (and (at ?x) (closed_door ?x ?y) (>= (key_counter) 1) (room_safe ?x))
     :effect (and (not (closed_door ?x ?y)) (connected ?x ?y) (connected ?y ?x) (decrease (key_counter) 1))
 )
 
 ;Collect treasures from room: hero_loot increased by treasure_value
 (:action collect_treasure
     :parameters (?t - treasure ?x - room)
-    :precondition (and (at ?x) (treasure_at ?t ?x))
+    :precondition (and (at ?x) (treasure_at ?t ?x) (room_safe ?x))
     :effect (and (not (treasure_at ?t ?x)) (increase (hero_loot) (treasure_value ?t)))
 )
 
@@ -118,14 +119,14 @@
 (:action collect_potion
     :parameters (?p - potion ?x - room)
     :precondition (and (at ?x) (potion_at ?p ?x) (room_safe ?x))
-    :effect (and (not (potion_at ?p ?x)) (own_potion ?p))
+    :effect (and (not (potion_at ?p ?x)) (own_potion ?p) (increase (potion_counter) 1))
 )
 
 ;Drink potions if hero_life <= max_hero_life - potion_value; hero_life increased by potion_value
 (:action drink_potion
     :parameters (?p - potion)
     :precondition (and (own_potion ?p) (<= (hero_life) (- (max_hero_life) (potion_value ?p))) (not (escape)))
-    :effect (and (not (own_potion ?p)) (increase (hero_life) (potion_value ?p)))
+    :effect (and (not (own_potion ?p)) (increase (hero_life) (potion_value ?p)) (decrease (potion_counter) 1))
 )
 
 ;Collect weapon: assign weapon_value at hero_stregth

@@ -159,3 +159,17 @@ class Room():
             if self.enemy.alpha <= 0:
                 self.enemy = None
     
+    def set_key(self, key):
+        self.key = key
+
+    def set_loot(self, loot):
+        self.loot = loot
+
+    def set_enemy(self, enemy):
+        self.loot = enemy
+
+    def set_weapon(self, weapon):
+        self.weapon = weapon
+    
+    def set_potion(self, potion):
+        self.potion = potion
