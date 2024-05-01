@@ -1,14 +1,23 @@
 import pygame
 
 class HealthBar():
-    def __init__(self, blink_counter, x=50, y=130, max_health=100):
+    def __init__(self, blink_counter, x=50, y=130, max_health=100, current_health=100):
         self.x = x
         self.y = y
         self.max_health = max_health
-        self.current_health = max_health
+        self.current_health = current_health
         self.blink_counter = blink_counter
         self.blinking = False
-        
+
+        self.hp_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf", 20)
+        self.hp_text = self.hp_font.render(f"{self.current_health}/{self.max_health}", True, (37, 19, 26))
+        self.hp_text_rect = self.hp_text.get_rect()
+        center_x = 100
+        center_y = 140
+
+        self.hp_text_rect.x = center_x - self.hp_text_rect.width / 2
+        self.hp_text_rect.y = (center_y - self.hp_text_rect.height / 2) + 2
+
 
     def draw(self, screen):
         if self.blinking and self.blink_counter % 2 == 0:
@@ -23,8 +32,12 @@ class HealthBar():
             pygame.draw.rect(screen, (255, 0, 0), pygame.Rect(self.x, self.y, self.max_health, 20))
             # Draw the current health
             pygame.draw.rect(screen, (0, 255, 0), pygame.Rect(self.x, self.y, self.current_health, 20))
+            # Draw the health text
+            screen.blit(self.hp_text, self.hp_text_rect)
+
 
 
     def update_health(self, health):
         self.current_health = health
         self.blinking = True
+        self.hp_text = self.hp_font.render(f"{self.current_health}/{self.max_health}", True, (37, 19, 26))
