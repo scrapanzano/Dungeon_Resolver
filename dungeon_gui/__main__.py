@@ -10,7 +10,7 @@ from classes.Loot import Loot
 from classes.Enemy import Enemy
 from classes.Potion import Potion
 from classes.hud import HUD
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
@@ -25,10 +25,6 @@ pygame.init()
 WIDTH, HEIGHT = 1270, 720
 
 
-START_ENTER_POSITION = (4.5, 12)
-END_ENTER_POSITION = (4.5, 8)
-MOVE_SPEED = 0.5
-
 # Main loop
 def Main():
 
@@ -40,12 +36,12 @@ def Main():
 
     room0 = Room(id = 0, key=None, loot=None, enemy=None, weapon=None, potion=None, has_door=False)
     room1 = Room(id = 1, key=None, loot=None, enemy=Enemy(50), weapon=None, potion=None, has_door=False)
-    room2 = Room(id = 2, key=None, loot=Loot(40), enemy=None, weapon=Weapon(50), potion=None, has_door=False)
+    room2 = Room(id = 2, key=None, loot=Loot(40), enemy=None, weapon=Weapon(damage=50, weapon_pos_x=6.1, weapon_pos_y=7.6), potion=None, has_door=False)
     room3 = Room(id = 3, key=None, loot=None, enemy=Enemy(50), weapon=None, potion=None, has_door=False)
     room4 = Room(id = 4, key=None, loot=Loot(40), enemy=None, weapon=None, potion=Potion(10), has_door=False)
-    room5 = Room(id = 5, key=None, loot=Loot(30), enemy=None, weapon=Weapon(50), potion=Potion(30), has_door=False)
+    room5 = Room(id = 5, key=None, loot=Loot(30), enemy=None, weapon=Weapon(50, weapon_pos_x=6.1, weapon_pos_y=7.6), potion=Potion(30), has_door=False)
     room6 = Room(id = 6, key=None, loot=None, enemy=Enemy(70), weapon=None, potion=Potion(50), has_door=False)
-    room7 = Room(id = 7, key=None, loot=None, enemy=None, weapon=Weapon(70), potion=None, has_door=False)
+    room7 = Room(id = 7, key=None, loot=None, enemy=None, weapon=Weapon(70, weapon_pos_x=6.1, weapon_pos_y=7.6), potion=None, has_door=False)
 
     rooms = [room0, room1, room2, room3, room4, room5, room6, room7]
 
@@ -86,7 +82,7 @@ def Main():
     initial_max_hero_life = fluent_to_int(state, max_hero_life)
     initial_weapon_damage = fluent_to_int(state, hero_strength)
 
-    player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage, weapon_pos_x=6.9, weapon_pos_y=10))
+    player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage + 30))
 
     initial_hero_loot = fluent_to_int(state, hero_loot)
     initial_key_counter = fluent_to_int(state, key_counter)
@@ -123,7 +119,7 @@ def Main():
 
         current_time = pygame.time.get_ticks()
 
-        if current_time - last_action_time >= 2000:  # 2000 milliseconds = 2 seconds
+        if current_time - last_action_time >= 2000 and not player.is_moving:  # 2000 milliseconds = 2 seconds
             if action_number < len(result.plan.actions):
                 ai = result.plan.actions[action_number]
                 state = simulator.apply(state, ai)
@@ -175,11 +171,25 @@ def Main():
             update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
             action_number += 1
             last_action_time = current_time
-        
-        
+
+        if action_number == 0:
+            if not player.is_moving:
+                player.move(PLAYER_ENTER_ENDING_POS[1])
+                player.weapon.move(WEAPON_ENTER_ENDING_POS[1])
+            player.update()
+            player.weapon.update()
+        elif last_action_name == "move":
+            if not player.is_moving:
+                player.move(PLAYER_EXIT_ENDING_POS[1])
+                player.weapon.move(WEAPON_EXIT_ENDING_POS[1])
+            player.update()
+            player.weapon.update()
+    
+
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
+        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
         hud.render(screen)
 
         pygame.display.flip()
@@ -194,6 +204,5 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id
     hud.update_id(actual_room_id)
 
         
-
 if __name__ == "__main__":
     Main()

@@ -95,7 +95,7 @@ class Room():
 
         for collectable in self.collectables:
             if collectable is not None:
-                collectable.render_collectable(screen, self.x, self.y, self.scale_factor)
+                collectable.render_collectable(screen, self.scale_factor)
 
         if self.enemy is not None:
           self.enemy.render_enemy(screen, self.x, self.y, self.scale_factor)

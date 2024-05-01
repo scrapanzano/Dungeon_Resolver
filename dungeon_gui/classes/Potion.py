@@ -12,7 +12,7 @@ class Potion(Collectable):
         super().__init__()
         self.potion_value = potion_value
         self.potion_tileset = potion_tileset
-        self.potion_pos_x, self.potion_pos_y = (8, 3)
+        self.potion_pos_x, self.potion_pos_y = (12.95, 3.1)
 
         if self.potion_value == 10:
             self.potion_tile_x, self.potion_tile_y = (12, 11)
@@ -21,7 +21,7 @@ class Potion(Collectable):
         else:
             self.potion_tile_x, self.potion_tile_y = (12, 13)
 
-    def render_collectable(self, screen, room_x, room_y, scale_factor):
+    def render_collectable(self, screen, scale_factor):
         potion_surface = self.potion_tileset.subsurface(pygame.Rect(self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_potion_surface = pygame.transform.scale(potion_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
@@ -31,4 +31,4 @@ class Potion(Collectable):
         elif self.alpha <= 0:
             return
         
-        screen.blit(scaled_potion_surface, (self.potion_pos_x * TILE_SIZE * scale_factor + room_x, self.potion_pos_y * TILE_SIZE * scale_factor + room_y))
+        screen.blit(scaled_potion_surface, (self.potion_pos_x * TILE_SIZE * scale_factor, self.potion_pos_y * TILE_SIZE * scale_factor))

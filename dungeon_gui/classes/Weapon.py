@@ -7,18 +7,23 @@ weapon_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x
 TILE_SIZE_X = 16
 TILE_SIZE_Y = 32
 
+WEAPON_START_ENTER_POSITION = (13.5, 18.5)
+
+SPEED = 0.04
 
 class Weapon(Collectable):
-    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=1.15, weapon_pos_y=7.5):
+    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=WEAPON_START_ENTER_POSITION[0], weapon_pos_y=WEAPON_START_ENTER_POSITION[1]):
         super().__init__()
         self.weapon_tileset = weapon_tileset
         self.pos_x = weapon_pos_x
         self.pos_y = weapon_pos_y
+        self.target_y = weapon_pos_y
+
         self.visible = False
 
         self.update_damage(damage)
 
-    def render_collectable(self, screen, room_x, room_y, scale_factor):
+    def render_collectable(self, screen, scale_factor):
         if self.visible:
             weapon_surface = self.weapon_tileset.subsurface(pygame.Rect(self.weapon_tile_x * TILE_SIZE_X, self.weapon_tile_y * TILE_SIZE_Y, TILE_SIZE_X, TILE_SIZE_Y))
             scaled_weapon_surface = pygame.transform.scale(weapon_surface, (TILE_SIZE_X * (scale_factor - 1), TILE_SIZE_Y * (scale_factor - 1)))
@@ -29,7 +34,13 @@ class Weapon(Collectable):
             elif self.alpha <= 0:
                 return
         
-            screen.blit(scaled_weapon_surface, (self.pos_x * TILE_SIZE_X * scale_factor + room_x, self.pos_y * TILE_SIZE_X * scale_factor + room_y))
+            screen.blit(scaled_weapon_surface, (self.pos_x * TILE_SIZE_X * scale_factor, self.pos_y * TILE_SIZE_X * scale_factor))
+
+    def move(self, target_y):
+        self.target_y = target_y
+    
+    def update(self):
+        self.pos_y = pygame.math.lerp(self.pos_y, self.target_y, SPEED)
 
     def update_damage(self, damage):
         self.damage = damage
