@@ -44,6 +44,7 @@
     (= (hero_strength) 0)
     (= (hero_loot) 0)
     (= (defeated_enemy_counter) 0)
+    (= (potion_counter) 0)
   )
 
   ;Goal condition

@@ -25,6 +25,10 @@ pygame.init()
 WIDTH, HEIGHT = 1270, 720
 
 
+START_ENTER_POSITION = (4.5, 12)
+END_ENTER_POSITION = (4.5, 8)
+MOVE_SPEED = 0.5
+
 # Main loop
 def Main():
 
@@ -45,15 +49,10 @@ def Main():
 
     rooms = [room0, room1, room2, room3, room4, room5, room6, room7]
 
-    # player_weapon = Weapon(damage=40, weapon_pos_x=6.8, weapon_pos_y=10)
-    player = Player(max_health=100, weapon=Weapon())
-
-    actual_room = rooms[3]
+    actual_room = rooms[0]
 
     actual_room.x = (WIDTH  - actual_room.width) // 2
     actual_room.y = (HEIGHT - actual_room.height) // 2
-
-    hud = HUD(id=actual_room.id)
 
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
@@ -68,26 +67,34 @@ def Main():
         print("%s returned: %s\n" % (planner.name, result.plan))
 
     # Invoke unified-planning sequential simulator
-    #life = FluentExp(problem.fluent("hero_life"))
-    #strength = FluentExp(problem.fluent("hero_strength"))
-    loot = FluentExp(problem.fluent("hero_loot"))
-
-    keys = FluentExp(problem.fluent("key_counter"))
+    hero_life = FluentExp(problem.fluent("hero_life"))
+    max_hero_life = FluentExp(problem.fluent("max_hero_life"))
+    hero_strength = FluentExp(problem.fluent("hero_strength"))
+    hero_loot = FluentExp(problem.fluent("hero_loot"))
+    key_counter = FluentExp(problem.fluent("key_counter"))
+    potion_counter = FluentExp(problem.fluent("potion_counter"))
 
     simulator = SequentialSimulator(problem)
-
-    travel = False
-
-    damaged = False
-    healed = False
-
-    clock = pygame.time.Clock()
 
     state = simulator.get_initial_state()
 
     action_number = 0
-
     last_action_time = pygame.time.get_ticks()
+    last_action_name = ""
+
+    initial_hero_life = fluent_to_int(state, hero_life)
+    initial_max_hero_life = fluent_to_int(state, max_hero_life)
+    initial_weapon_damage = fluent_to_int(state, hero_strength)
+
+    player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage, weapon_pos_x=6.9, weapon_pos_y=10))
+
+    initial_hero_loot = fluent_to_int(state, hero_loot)
+    initial_key_counter = fluent_to_int(state, key_counter)
+    initial_potion_counter = fluent_to_int(state, potion_counter)
+
+    hud = HUD(hero_loot=initial_hero_loot, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id)
+
+    clock = pygame.time.Clock()
 
     while True and not simulator.is_goal(state):
         clock.tick(60)
@@ -114,28 +121,79 @@ def Main():
                     player.health_bar.blink_counter = 0
                     pygame.time.set_timer(PLAYER_GET_HEAL, 0)
 
+        current_time = pygame.time.get_ticks()
 
+        if current_time - last_action_time >= 2000:  # 2000 milliseconds = 2 seconds
+            if action_number < len(result.plan.actions):
+                ai = result.plan.actions[action_number]
+                state = simulator.apply(state, ai)
+                action = str(ai)
+
+                if action.startswith("move"):
+                    # Remove 'move(' from the start and ')' from the end
+                    args_str = action[len('move('):-1]
+                    # Split the remaining string into weapon and room
+                    room1, room2 = args_str.split(', ')
+                    new_room_id = room2[1]
+                    actual_room = rooms[int(new_room_id)]
+                    last_action_name = "move"
+
+                elif action.startswith("collect_weapon"):
+                    player.update_weapon(actual_room.weapon.damage)
+                    actual_room.collect_weapon()
+                    last_action_name = "collect_weapon"
+
+                elif action.startswith("collect_treasure"):
+                    actual_room.collect_treasure()
+                    last_action_name = "collect_treasure"
+                
+                elif action.startswith("collect_key"):
+                    actual_room.collect_key()
+                    last_action_name = "collect_key"
+                
+                elif action.startswith("collect_potion"):
+                    actual_room.collect_potion()
+                    last_action_name = "collect_potion"
+
+                elif action.startswith("defeat_enemy"):
+                    actual_room.defeat_enemy()
+                    player.get_damage(actual_room.enemy.damage)
+                    last_action_name = "defeat_enemy"
+
+                elif action.startswith("drink_potion"):
+                    player.get_heal(actual_room.potion.potion_value)
+                    last_action_name = "drink_potion"
+            
+                elif action.startswith("open_door"):
+                    last_action_name = "open_door"
+                    pass
+
+                elif action.startswith("escape_from_dungeon"):
+                    last_action_name = "escape_from_dungeon"
+                    pass
+
+            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
+            action_number += 1
+            last_action_time = current_time
+        
+        
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
         hud.render(screen)
 
-        current_time = pygame.time.get_ticks()
-        if current_time - last_action_time >= 2000:  # 2000 milliseconds = 2 seconds
-            if action_number < len(result.plan.actions):
-                ai = result.plan.actions[action_number]
-                state = simulator.apply(state, ai)
-                hud.update_hero_loot(state.get_value(loot))
-                hud.update_keys(state.get_value(keys))
-                hud.update_id(actual_room.id)
-                action_number += 1
-            last_action_time = current_time
-
-         
-
         pygame.display.flip()
 
+def fluent_to_int(state, fluent):
+    return int(str(state.get_value(fluent)))
+
+def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id):
+    hud.update_hero_loot(state.get_value(hero_loot))
+    hud.update_keys(state.get_value(key_counter))
+    hud.update_potions(state.get_value(potion_counter))
+    hud.update_id(actual_room_id)
+
         
-        
+
 if __name__ == "__main__":
     Main()

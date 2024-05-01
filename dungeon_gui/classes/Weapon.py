@@ -16,7 +16,7 @@ class Weapon(Collectable):
         self.pos_y = weapon_pos_y
         self.visible = False
 
-        self.update_weapon(damage)
+        self.update_damage(damage)
 
     def render_collectable(self, screen, room_x, room_y, scale_factor):
         if self.visible:
@@ -31,7 +31,7 @@ class Weapon(Collectable):
         
             screen.blit(scaled_weapon_surface, (self.pos_x * TILE_SIZE_X * scale_factor + room_x, self.pos_y * TILE_SIZE_X * scale_factor + room_y))
 
-    def update_weapon(self, damage):
+    def update_damage(self, damage):
         self.damage = damage
 
         if self.damage == 30:

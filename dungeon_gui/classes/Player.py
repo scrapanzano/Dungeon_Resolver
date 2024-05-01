@@ -41,15 +41,7 @@ class Player():
             self.weapon.render_collectable(screen, room_x + self.player_pos_x, room_y + self.player_pos_y, scale_factor - 1)
 
         self.health_bar.draw(screen)
-    
-    def travel(self, target_y):
-        speed = 0.05
-        self.player_pos_y -= speed
 
-        self.weapon.pos_y -= speed + 0.015
-
-        if self.player_pos_y < target_y:
-            return True
         
     def update_health(self, health):
         self.current_health = health
@@ -73,3 +65,6 @@ class Player():
         self.taking_heal = True
         self.update_health(new_health)
         pygame.time.set_timer(PLAYER_GET_HEAL, 300)  # Start a timer for 300ms
+
+    def update_weapon(self, new_damage):
+        self.weapon.update_damage(new_damage)

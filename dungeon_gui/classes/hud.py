@@ -7,7 +7,7 @@ SCALE_FACTOR = 2
 FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
 class HUD():
-    def __init__(self, hero_loot=0, keys=0, potions=0, id=0):
+    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.font = pygame.font.Font(FONT_PATH, 36)
@@ -32,7 +32,7 @@ class HUD():
         self.loot_icon_rect.y = self.loot_text_rect.y - 7.5
 
         # Setting up the keys HUD
-        self.keys = keys
+        self.keys = key_counter
         self.keys_text = self.font.render(f"Keys: {self.keys}", True, (255, 255, 255))
         self.keys_text_rect = self.keys_text.get_rect()
         self.keys_text_rect.x = 50
@@ -53,7 +53,7 @@ class HUD():
         self.keys_icon_rect.y = self.keys_text_rect.y - 7.5
 
         # Setting up the potions HUD
-        self.potions = potions
+        self.potions = potion_counter
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
         self.potions_text_rect = self.potions_text.get_rect()
         self.potions_text_rect.x = 50
@@ -84,7 +84,7 @@ class HUD():
 
         # Setting up the room id HUD
         self.id_font = pygame.font.Font(FONT_PATH, 250)
-        self.id = id
+        self.id = room_id
         self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
 
         # Create a new surface with the same size as the id_text
@@ -135,6 +135,30 @@ class HUD():
         self.potions = potions
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
     
-    def update_id(self, id):
-        self.id = id
-        self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))   
+    def create_alpha_surface(self, text_surface, alpha_value):
+        # Create a new surface with the same size as the text_surface
+        alpha_surface = pygame.Surface(text_surface.get_size(), pygame.SRCALPHA)
+    
+        # Fill the new surface with the desired color
+        alpha_surface.fill((255, 255, 255))
+    
+        # Set the alpha of the new surface
+        alpha_surface.set_alpha(alpha_value)  # Set the alpha to a low value to make the text barely visible
+    
+        # Blit the text_surface onto the new surface with a blending mode
+        alpha_surface.blit(text_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
+    
+        return alpha_surface
+    
+    def update_id(self, new_id):
+        self.id = new_id
+        self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
+        self.id_text_alpha = self.create_alpha_surface(self.id_text, 100)
+    
+        self.id_text_rect = self.id_text.get_rect()
+        center_x = 1100
+        center_y = 400
+        self.id_text_rect.x = center_x - self.id_text_rect.width / 2
+        self.id_text_rect.y = center_y - self.id_text_rect.height / 2
+ 
+           
