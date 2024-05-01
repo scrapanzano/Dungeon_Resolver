@@ -6,14 +6,20 @@ potion_tileset = pygame.image.load("Dungeon_Resolver/dungeon_gui/assets/0x72_16x
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
-# Remember to change tile basing to the value
+# TODO Remember to change tile basing to the value
 class Potion(Collectable):
     def __init__(self, potion_value:int, potion_tileset=potion_tileset):
         super().__init__()
         self.potion_value = potion_value
         self.potion_tileset = potion_tileset
         self.potion_pos_x, self.potion_pos_y = (8, 3)
-        self.potion_tile_x, self.potion_tile_y = (12, 11)
+
+        if self.potion_value == 10:
+            self.potion_tile_x, self.potion_tile_y = (12, 11)
+        elif self.potion_value == 30:
+            self.potion_tile_x, self.potion_tile_y = (12, 12)
+        else:
+            self.potion_tile_x, self.potion_tile_y = (12, 13)
 
     def render_collectable(self, screen, room_x, room_y, scale_factor):
         potion_surface = self.potion_tileset.subsurface(pygame.Rect(self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
