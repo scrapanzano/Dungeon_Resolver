@@ -7,9 +7,9 @@ character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_e
 TILE_SIZE = 16
 
 class Player():
-    def __init__(self, max_health=100, character_tileset=character_tileset, weapon=None):
+    def __init__(self, current_health=100, max_health=100, character_tileset=character_tileset, weapon=None):
+        self.current_health = current_health
         self.max_health = max_health
-        self.current_health = max_health
         self.character_tileset = character_tileset
         self.weapon = weapon
         self.player_tile_x, self.player_tile_y = (0, 0)
@@ -20,7 +20,7 @@ class Player():
         self.blink_counter = 0
 
         # Setting up the health bar
-        self.health_bar = HealthBar(blink_counter=self.blink_counter, max_health=max_health)
+        self.health_bar = HealthBar(blink_counter=self.blink_counter, max_health=self.max_health, current_health=self.current_health)
 
     def render_player(self, screen, room_x, room_y, scale_factor):
         player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
