@@ -1,14 +1,12 @@
 import pygame
 from classes.health_bar import HealthBar
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
 
 
 character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
 
 TILE_SIZE = 16
 
-PLAYER_ENTER_STARTING_POS = (4.5, 16)
-PLAYER_ENTER_ENDING_POS = (4.5, 8)
 SPEED = 0.03
 
 
@@ -32,20 +30,20 @@ class Player():
         # Setting up the health bar
         self.health_bar = HealthBar(blink_counter=self.blink_counter, max_health=self.max_health, current_health=self.current_health)
 
-    def render_player(self, screen, room_x, room_y, scale_factor):
+    def render_player(self, screen, scale_factor):
         player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_player_surface = pygame.transform.scale(player_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
         if self.taking_damage and self.blink_counter % 2 == 0:
             red_surface= scaled_player_surface.copy() # Create a copy of the sprite
             red_surface.fill((255, 0, 0), special_flags=pygame.BLEND_RGBA_MULT)  # Tint the copy red
-            screen.blit(red_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))  # Draw the tinted sprite
+            screen.blit(red_surface, (self.player_pos_x * TILE_SIZE * scale_factor, self.player_pos_y * TILE_SIZE * scale_factor))  # Draw the tinted sprite
         elif self.taking_heal and self.blink_counter % 2 == 0:
             green_surface= scaled_player_surface.copy() # Create a copy of the sprite
             green_surface.fill((0, 255, 0), special_flags=pygame.BLEND_RGBA_MULT)
-            screen.blit(green_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))
+            screen.blit(green_surface, (self.player_pos_x * TILE_SIZE * scale_factor, self.player_pos_y * TILE_SIZE * scale_factor))
         else:
-            screen.blit(scaled_player_surface, (self.player_pos_x * TILE_SIZE * scale_factor + room_x, self.player_pos_y * TILE_SIZE * scale_factor + room_y))
+            screen.blit(scaled_player_surface, (self.player_pos_x * TILE_SIZE * scale_factor, self.player_pos_y * TILE_SIZE * scale_factor))
         
         # if self.weapon is not None:
         #     self.weapon.render_collectable(screen, room_x + self.player_pos_x, room_y + self.player_pos_y, scale_factor - 1)

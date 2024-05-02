@@ -178,42 +178,50 @@ def Main():
 
 
         if last_action_name == "move":
-            print("Starting movement")
-            target_y = PLAYER_EXIT_ENDING_POS[1]
-            player.is_moving = True
-            while player.is_moving:
-                screen.fill((37, 19, 26))
-                old_room.render(screen)
-                hud.render(screen)
-                player.player_pos_y = pygame.math.lerp(player.player_pos_y, target_y, 0.05)
-                if abs(player.player_pos_y - target_y) < 0.01:
-                    player.player_pos_y = target_y
-                    player.is_moving = False
-                player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)  
-                pygame.display.flip()
-            player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
-            target_y = PLAYER_ENTER_ENDING_POS[1]
-            player.is_moving = True
-            while player.is_moving:
-                screen.fill((37, 19, 26))
-                actual_room.render(screen)
-                hud.render(screen)
-                player.player_pos_y = pygame.math.lerp(player.player_pos_y, target_y, 0.05)
-                if abs(player.player_pos_y - target_y) < 0.01:
-                    player.player_pos_y = target_y
-                    player.is_moving = False
-                player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
-                pygame.display.flip()
+            exit_room(player, screen, old_room, hud)
+            pygame.time.wait(1000)
+            enter_room(player, screen, actual_room, hud)
             last_action_name = ""
-            print("Ending movement")
     
         update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
-        player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
+        player.render_player(screen, actual_room.scale_factor)
         player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
         hud.render(screen)
 
+        pygame.display.flip()
+
+def exit_room(player, screen, old_room, hud):
+    print("Starting exit room animation...")
+    player_target_y = PLAYER_EXIT_ENDING_POS[1]
+    player.is_moving = True
+    while player.is_moving:
+        screen.fill((37, 19, 26))
+        old_room.render(screen)
+        hud.render(screen)
+        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.05)
+        if abs(player.player_pos_y - player_target_y) < 0.01:
+            player.player_pos_y = player_target_y
+            player.is_moving = False
+        player.render_player(screen, old_room.scale_factor)  
+        pygame.display.flip()
+
+
+def enter_room(player, screen, actual_room, hud):
+    print("Starting enter room animation...")
+    player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
+    player_target_y = PLAYER_ENTER_ENDING_POS[1]
+    player.is_moving = True
+    while player.is_moving:
+        screen.fill((37, 19, 26))
+        actual_room.render(screen)
+        hud.render(screen)
+        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.05)
+        if abs(player.player_pos_y - player_target_y) < 0.01:
+            player.player_pos_y = player_target_y
+            player.is_moving = False
+        player.render_player(screen, actual_room.scale_factor)
         pygame.display.flip()
 
 def fluent_to_int(state, fluent):
