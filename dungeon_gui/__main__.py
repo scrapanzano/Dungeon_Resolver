@@ -10,7 +10,7 @@ from classes.Loot import Loot
 from classes.Enemy import Enemy
 from classes.Potion import Potion
 from classes.hud import HUD
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
@@ -131,6 +131,8 @@ def Main():
                     # Split the remaining string into weapon and room
                     room1, room2 = args_str.split(', ')
                     new_room_id = room2[1]
+                    #Hanno delle posizioni diverse
+                    old_room = actual_room
                     actual_room = rooms[int(new_room_id)]
                     last_action_name = "move"
 
@@ -168,24 +170,41 @@ def Main():
                     last_action_name = "escape_from_dungeon"
                     pass
 
-            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
             action_number += 1
             last_action_time = current_time
 
-        if action_number == 0:
-            if not player.is_moving:
-                player.move(PLAYER_ENTER_ENDING_POS[1])
-                player.weapon.move(WEAPON_ENTER_ENDING_POS[1])
-            player.update()
-            player.weapon.update()
-        elif last_action_name == "move":
-            if not player.is_moving:
-                player.move(PLAYER_EXIT_ENDING_POS[1])
-                player.weapon.move(WEAPON_EXIT_ENDING_POS[1])
-            player.update()
-            player.weapon.update()
-    
 
+        if last_action_name == "move":
+            print("Starting movement")
+            target_y = PLAYER_EXIT_ENDING_POS[1]
+            player.is_moving = True
+            while player.is_moving:
+                screen.fill((37, 19, 26))
+                old_room.render(screen)
+                hud.render(screen)
+                player.player_pos_y = pygame.math.lerp(player.player_pos_y, target_y, 0.05)
+                if abs(player.player_pos_y - target_y) < 0.01:
+                    player.player_pos_y = target_y
+                    player.is_moving = False
+                player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)  
+                pygame.display.flip()
+            player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
+            target_y = PLAYER_ENTER_ENDING_POS[1]
+            player.is_moving = True
+            while player.is_moving:
+                screen.fill((37, 19, 26))
+                actual_room.render(screen)
+                hud.render(screen)
+                player.player_pos_y = pygame.math.lerp(player.player_pos_y, target_y, 0.05)
+                if abs(player.player_pos_y - target_y) < 0.01:
+                    player.player_pos_y = target_y
+                    player.is_moving = False
+                player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)
+                pygame.display.flip()
+            last_action_name = ""
+            print("Ending movement")
+    
+        update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.x, actual_room.y, actual_room.scale_factor)

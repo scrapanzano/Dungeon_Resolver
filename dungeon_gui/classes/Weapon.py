@@ -7,12 +7,13 @@ weapon_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x
 TILE_SIZE_X = 16
 TILE_SIZE_Y = 32
 
-WEAPON_START_ENTER_POSITION = (13.5, 18.5)
+WEAPON_START_ENTER_POS = (13.5, 18.5)
+WEAPON_ENTER_ENDING_POS = (13.5, 10.5)
 
-SPEED = 0.04
+SPEED = 0.03
 
 class Weapon(Collectable):
-    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=WEAPON_START_ENTER_POSITION[0], weapon_pos_y=WEAPON_START_ENTER_POSITION[1]):
+    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=WEAPON_ENTER_ENDING_POS[0], weapon_pos_y=WEAPON_ENTER_ENDING_POS[1]):
         super().__init__()
         self.weapon_tileset = weapon_tileset
         self.pos_x = weapon_pos_x
@@ -41,6 +42,8 @@ class Weapon(Collectable):
     
     def update(self):
         self.pos_y = pygame.math.lerp(self.pos_y, self.target_y, SPEED)
+        if abs(self.pos_y - self.target_y) < 0.01:
+            self.pos_y = self.target_y
 
     def update_damage(self, damage):
         self.damage = damage
