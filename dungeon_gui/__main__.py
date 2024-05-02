@@ -10,12 +10,15 @@ from classes.Loot import Loot
 from classes.Enemy import Enemy
 from classes.Potion import Potion
 from classes.hud import HUD
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
 import networkx as nx
+
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL
+
 
 # Initialize pygame
 pygame.init()

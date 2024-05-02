@@ -36,8 +36,10 @@
     (weapon_at W0 R7) (weapon_at W1 R5) (weapon_at W2 R2)  
     (= (weapon_strength W0) 70) (= (weapon_strength W1) 50) (= (weapon_strength W2) 50) 
     ;Potions position and value
-    (potion_at P0 R5) (potion_at P1 R4) (potion_at P2 R6)  
-    (= (potion_value P0) 30) (= (potion_value P1) 10) (= (potion_value P2) 50)  
+    (potion_at P0 R23) (potion_at P1 R29) (potion_at P2 R7) (potion_at P3 R27) (potion_at P4 R9) (potion_at P5 R15) (potion_at P6 R28) (potion_at P7 R17) (potion_at P8 R14) (potion_at P9 R5) (potion_at P10 R3) (potion_at P11 R20)  
+    (= (potion_value P0) 30) (= (potion_value P1) 50) (= (potion_value P2) 10) (= (potion_value P3) 50) (= (potion_value P4) 50) (= (potion_value P5) 30) (= (potion_value P6) 30) (= (potion_value P7) 50) (= (potion_value P8) 30) (= (potion_value P9) 30) (= (potion_value P10) 10) (= (potion_value P11) 10) 
+    (= (potion_counter) 0)
+
     ;Hero initial stats 
     (= (hero_life) 100)
     (= (max_hero_life) 100)
