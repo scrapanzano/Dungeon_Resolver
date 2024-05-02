@@ -1,6 +1,6 @@
 import pygame
 
-from classes.collectable import Collectable
+from dungeon_gui.classes.collectable import Collectable
 
 weapon_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
 

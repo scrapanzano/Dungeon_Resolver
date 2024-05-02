@@ -18,6 +18,11 @@ from unified_planning.io import PDDLReader
 from termcolor import colored
 from dungeon_gui.classes.Room import Room
 from dungeon_gui.classes.Key import Key
+from dungeon_gui.classes.Loot import Loot
+from dungeon_gui.classes.Enemy import Enemy
+from dungeon_gui.classes.Weapon import Weapon
+from dungeon_gui.classes.Potion import Potion
+from GUI import GUI
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
@@ -171,7 +176,7 @@ def generate_instance(instance_name, num_rooms):
         treasures_location += '(treasure_at ' + treasure_name + ' R' + str(room) + ') '
         treasures_value += '(= (treasure_value ' + treasure_name + ') ' + str(treasure_value) +') '
         t_index += 1
-        rooms[room].set_loot(treasure_value) # Set a Treasure for Room Object in rooms with treasure (dungeon_gui)
+        rooms[room].set_loot(Loot(treasure_value)) # Set a Treasure for Room Object in rooms with treasure (dungeon_gui)
 
     # Creating the string that containts the enemies location, life and strength
     enemies_location = ''
@@ -186,7 +191,7 @@ def generate_instance(instance_name, num_rooms):
         enemies_life += '(= (enemy_life ' + enemy_name + ') ' + str(enemy_value) +') '
         enemies_strength += '(= (enemy_strength ' + enemy_name + ') ' + str(enemy_value) +') '
         e_index += 1
-        rooms[room].set_enemy(enemy_value) # Set a Enemy for Room Object in rooms with enemy (dungeon_gui)
+        rooms[room].set_enemy(Enemy(enemy_value)) # Set a Enemy for Room Object in rooms with enemy (dungeon_gui)
     
     # Creating the string that containts the weapons location and strength
     weapons_location = ''
@@ -199,7 +204,7 @@ def generate_instance(instance_name, num_rooms):
         weapons_location += '(weapon_at ' + weapon_name + ' R' + str(room) + ') '
         weapons_strength += '(= (weapon_strength ' + weapon_name + ') ' + str(weapon_value) +') '
         w_index += 1
-        rooms[room].set_weapon(weapon_value) # Set a Weapon for Room Object in rooms with weapon (dungeon_gui)
+        rooms[room].set_weapon(Weapon(weapon_value, weapon_pos_x=6.1, weapon_pos_y=7.6)) # Set a Weapon for Room Object in rooms with weapon (dungeon_gui)
 
     # Creating the string that containts the potions location and value
     potions_location = ''
@@ -212,7 +217,7 @@ def generate_instance(instance_name, num_rooms):
         potions_location += '(potion_at ' + potion_name + ' R' + str(room) + ') '
         potions_value += '(= (potion_value ' + potion_name + ') ' + str(potion_value) +') '
         p_index += 1
-        rooms[room].set_potion(potion_value) # Set a Potion for Room Object in rooms with potion (dungeon_gui)
+        rooms[room].set_potion(Potion(potion_value)) # Set a Potion for Room Object in rooms with potion (dungeon_gui)
 
     # Populate template
     template_mapping = dict()
@@ -266,9 +271,9 @@ def generate_instance(instance_name, num_rooms):
     # Invoke unified-planning planner enhsp
     up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
     
-    choice = yes_or_no('Do you want enhsp optimal version?')
+    planner_choice = yes_or_no('Do you want enhsp optimal version?')
     print()
-    if choice:
+    if planner_choice:
         selected_planner = 'enhsp-opt'
     else:
         selected_planner = 'enhsp'
@@ -277,34 +282,31 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
-    # Invoke unified-planning sequential simulator
-    life = FluentExp(problem.fluent("hero_life"))
-    strength = FluentExp(problem.fluent("hero_strength"))
-    loot = FluentExp(problem.fluent("hero_loot"))
-    n_action = 1
+    gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
+    print()
+    if gui_choice:
+        # Lancia dungeon_gui
+        gui = GUI(problem, result, rooms)
+        gui.run()
+    else:
+        # Invoke unified-planning sequential simulator
+        life = FluentExp(problem.fluent("hero_life"))
+        strength = FluentExp(problem.fluent("hero_strength"))
+        loot = FluentExp(problem.fluent("hero_loot"))
+        n_action = 1
 
-    txt = open('./dungeon_resolver/sequential_simulator.txt', 'w') # Open file where save SequentialSimulator
-
-    with SequentialSimulator(problem) as simulator: 
-        state = simulator.get_initial_state()
-        print(colored(f"Initial life = {state.get_value(life)}", 'green'))
-        txt.write(f"Initial life = {state.get_value(life)}" + '\n')
-        print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-        txt.write(f"Initial strength = {state.get_value(strength)}" + '\n')
-        print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
-        txt.write(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}" + '\n')
-        for ai in result.plan.actions:
-            state = simulator.apply(state, ai)
-            print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
-            txt.write(f"Applied action {n_action}: {ai}. ")
-            print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
-            txt.write(f"Life: {state.get_value(life)} - Strength: {state.get_value(strength)} - Loot: {state.get_value(loot)}\n")
-            n_action += 1
-        if simulator.is_goal(state):
-            print(colored("Goal reached!", 'magenta'))
-            txt.write("Goal reached!")
-
-    txt.close()
+        with SequentialSimulator(problem) as simulator: 
+            state = simulator.get_initial_state()
+            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+            print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+            for ai in result.plan.actions:
+                state = simulator.apply(state, ai)
+                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                n_action += 1
+            if simulator.is_goal(state):
+                print(colored("Goal reached!", 'magenta'))
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['xkcd:olive' if G[u][v]['type'] == 'normal' else 'xkcd:red' for u, v in G.edges()]
