@@ -7,9 +7,6 @@ character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_e
 
 TILE_SIZE = 16
 
-SPEED = 0.03
-
-
 class Player():
     def __init__(self, current_health=100, max_health=100, pos_x=PLAYER_ENTER_ENDING_POS[0], pos_y=PLAYER_ENTER_ENDING_POS[1], character_tileset=character_tileset, weapon=None):
         self.current_health = current_health

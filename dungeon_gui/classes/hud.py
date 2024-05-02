@@ -7,7 +7,7 @@ SCALE_FACTOR = 2
 FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
 class HUD():
-    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0):
+    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0, action=""):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.font = pygame.font.Font(FONT_PATH, 36)
@@ -105,6 +105,13 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
 
+        # Setting up the action text HUD
+        self.action = action
+        self.action_font = pygame.font.Font(FONT_PATH, 36)
+        self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
+        self.action_text_rect = self.action_text.get_rect()
+        self.action_text_rect.x = 50
+        self.action_text_rect.y = 650
 
 
     def render(self, screen):
@@ -116,13 +123,9 @@ class HUD():
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
         screen.blit(self.id_text_alpha, self.id_text_rect)
+        screen.blit(self.action_text, self.action_text_rect)
        
 
-
-    def update(self, hero_loot):
-        self.hero_loot = hero_loot
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
-    
     def update_hero_loot(self, hero_loot):
         self.hero_loot = hero_loot
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
@@ -161,4 +164,6 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
  
-           
+    def update_action(self, action):
+        self.action = action
+        self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))

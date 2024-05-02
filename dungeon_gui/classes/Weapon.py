@@ -13,7 +13,7 @@ WEAPON_ENTER_ENDING_POS = (13.5, 10.5)
 SPEED = 0.03
 
 class Weapon(Collectable):
-    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=WEAPON_ENTER_ENDING_POS[0], weapon_pos_y=WEAPON_ENTER_ENDING_POS[1]):
+    def __init__(self, damage=0, weapon_tileset=weapon_tileset, weapon_pos_x=WEAPON_START_ENTER_POS[0], weapon_pos_y=WEAPON_START_ENTER_POS[1]):
         super().__init__()
         self.weapon_tileset = weapon_tileset
         self.pos_x = weapon_pos_x
