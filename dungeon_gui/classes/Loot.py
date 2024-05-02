@@ -11,7 +11,7 @@ class Loot(Collectable):
         super().__init__()
         self.loot_value = loot_value
         self.loot_tileset = loot_tileset
-        self.loot_pos_x, self.loot_pos_y = (1, 3)
+        self.loot_pos_x, self.loot_pos_y = (5.96, 3.2)
 
         if self.loot_value == 10:
             self.loot_tile_x, self.loot_tile_y = (5, 8)
@@ -22,7 +22,7 @@ class Loot(Collectable):
         else:
             self.loot_tile_x, self.loot_tile_y = (4, 8)
 
-    def render_collectable(self, screen, room_x, room_y, scale_factor):
+    def render_collectable(self, screen, scale_factor):
         loot_surface = self.loot_tileset.subsurface(pygame.Rect(self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_loot_surface = pygame.transform.scale(loot_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
@@ -32,4 +32,4 @@ class Loot(Collectable):
         elif self.alpha <= 0:
             return
         
-        screen.blit(scaled_loot_surface, (self.loot_pos_x * TILE_SIZE * scale_factor + room_x, self.loot_pos_y * TILE_SIZE * scale_factor + room_y))
+        screen.blit(scaled_loot_surface, (self.loot_pos_x * TILE_SIZE * scale_factor, self.loot_pos_y * TILE_SIZE * scale_factor))

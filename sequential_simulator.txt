@@ -1,5 +1,6 @@
 Initial life = 100
 Initial strength = 0
+
 Initial loot = 0 - Loot goal >= 112
 Applied action 1: move(r0, r1). Life: 100 - Strength: 0 - Loot: 0
 Applied action 2: collect_weapon(w3, r1). Life: 100 - Strength: 70 - Loot: 0
@@ -52,4 +53,5 @@ Applied action 48: move(r5, r7). Life: 60 - Strength: 70 - Loot: 130
 Applied action 49: move(r7, r9). Life: 60 - Strength: 70 - Loot: 130
 Applied action 50: move(r9, r10). Life: 60 - Strength: 70 - Loot: 130
 Applied action 51: escape_from_dungeon(r10). Life: 60 - Strength: 70 - Loot: 130
+
 Goal reached!

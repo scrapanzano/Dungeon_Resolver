@@ -95,7 +95,7 @@ class Room():
 
         for collectable in self.collectables:
             if collectable is not None:
-                collectable.render_collectable(screen, self.x, self.y, self.scale_factor)
+                collectable.render_collectable(screen, self.scale_factor)
 
         if self.enemy is not None:
           self.enemy.render_enemy(screen, self.x, self.y, self.scale_factor)
@@ -138,7 +138,7 @@ class Room():
             self.key = None
         
 
-    def collect_loot(self):
+    def collect_treasure(self):
         if self.loot is not None:
             self.loot.collect()
             self.loot = None
@@ -153,7 +153,7 @@ class Room():
             self.potion.collect()
             self.potion = None
 
-    def kill_enemy(self):
+    def defeat_enemy(self):
         if self.enemy is not None:
             self.enemy.kill()
             if self.enemy.alpha <= 0:

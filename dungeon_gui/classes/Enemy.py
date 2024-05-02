@@ -9,15 +9,15 @@ class Enemy():
         self.enemy_tileset = enemy_tileset
         self.damage = damage
         self.enemy_tileset = enemy_tileset
-        self.pos_x, self.pos_y = (4.5, 5)
+        self.pos_x, self.pos_y = (4.5, 5.5)
         self.alpha = 255
         self.killed = False
 
-        if self.damage == 10:
+        if self.damage == 30:
             self.enemy_tile_x, self.enemy_tile_y = (0, 12)
-        elif self.damage == 20:
+        elif self.damage == 50:
             self.enemy_tile_x, self.enemy_tile_y = (1, 12)
-        elif self.damage == 30:
+        elif self.damage == 70:
             self.enemy_tile_x, self.enemy_tile_y = (2, 12)
         else:
             self.enemy_tile_x, self.enemy_tile_y = (3, 12)
