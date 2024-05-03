@@ -15,7 +15,7 @@ class HUD():
     """
     This class describes the representation of the HUD 
     """
-    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0):
+    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0, action=""):
 
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
