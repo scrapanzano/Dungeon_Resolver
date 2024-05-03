@@ -267,8 +267,6 @@ def generate_instance(instance_name, num_rooms):
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
-
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
     problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", "./dungeon_resolver/dungeon_problem.pddl")
@@ -651,7 +649,43 @@ def generate_potions(G, start_room, num_potion_rooms):
     
     return potion_rooms   
 
+def invoke_unified_planning(path):
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", path)
+    
+    # Invoke unified-planning planner enhsp
+    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+    
+    planner_choice = yes_or_no('Do you want enhsp optimal version?')
+    print()
+    if planner_choice:
+        selected_planner = 'enhsp-opt'
+    else:
+        selected_planner = 'enhsp'
 
+    with OneshotPlanner(name=selected_planner) as planner:
+        result = planner.solve(problem)
+    
+    # Invoke unified-planning sequential simulator
+        life = FluentExp(problem.fluent("hero_life"))
+        strength = FluentExp(problem.fluent("hero_strength"))
+        loot = FluentExp(problem.fluent("hero_loot"))
+        n_action = 1
+
+        with SequentialSimulator(problem) as simulator: 
+            state = simulator.get_initial_state()
+            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+            print(colored(f"Initial loot = {state.get_value(loot)}", 'yellow'))
+            for ai in result.plan.actions:
+                state = simulator.apply(state, ai)
+                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                n_action += 1
+            if simulator.is_goal(state):
+                print(colored("Goal reached!", 'magenta'))
+    
 def yes_or_no(question):
     """
     Choices between yes or not (y/n) 
@@ -679,17 +713,17 @@ def yes_or_no(question):
              print(colored('Incorrect entry! Type \'y\' or \'n\'', 'light_red'))
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
-    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "8")
+# def parse_arguments():
+#     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
+#     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
+#     parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "8")
 
-    args = parser.parse_args()
-    args.random_seed = int(args.random_seed)
-    if args.random_seed != None:
-        random.seed( args.random_seed )
-        print( ";;Setting seed to {0}\n".format(args.random_seed) )
-    return args
+#     args = parser.parse_args()
+#     args.random_seed = int(args.random_seed)
+#     if args.random_seed != None:
+#         random.seed( args.random_seed )
+#         print( ";;Setting seed to {0}\n".format(args.random_seed) )
+#     return args
 
 
 def Main():
@@ -698,10 +732,19 @@ def Main():
     while go_on:
         choice = menu.choose()
         if choice == 1:
-            args = parse_arguments()
-            generate_instance('instance_'+str(args.num_rooms)+'_'+str(args.random_seed), int(args.num_rooms))
+            #args = parse_arguments()
+            random_seed = 1229
+            num_rooms = 8
+            args_choice = yes_or_no(f'Do you want to set problem arguments? (DEFAULT: seed = {random_seed}, num_rooms = {num_rooms})')
+            if args_choice:
+                random_seed = int(input('Insert random seed: '))
+                num_rooms = int(input("Insert number of rooms: "))
+            random.seed(random_seed )
+            print(f'Setting seed = {random_seed}, rooms = {num_rooms}')
+            generate_instance('instance_'+str(num_rooms)+'_'+str(random_seed), num_rooms)
         elif choice == 2:
-            print('TODO: lettura istanza esistente')
+            path = input('Enter the problem instance path: ')
+            invoke_unified_planning(path)
         else:
             print('\n' + GOODBYE + '\n')
             go_on = False
