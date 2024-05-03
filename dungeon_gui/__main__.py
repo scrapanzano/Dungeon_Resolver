@@ -11,7 +11,7 @@ from classes.Enemy import Enemy
 from classes.Potion import Potion
 from classes.hud import HUD
 
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
+from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 
@@ -95,6 +95,8 @@ def Main():
 
     clock = pygame.time.Clock()
 
+    action = ""
+
     while True and not simulator.is_goal(state):
         clock.tick(60)
         for event in pygame.event.get():
@@ -120,7 +122,7 @@ def Main():
                     player.health_bar.blink_counter = 0
                     pygame.time.set_timer(PLAYER_GET_HEAL, 0)
 
-        current_time = pygame.time.get_ticks()
+        current_time = pygame.time.get_ticks()  
 
         if current_time - last_action_time >= 2000 and not player.is_moving:  # 2000 milliseconds = 2 seconds
             if action_number < len(result.plan.actions):
@@ -176,14 +178,19 @@ def Main():
             action_number += 1
             last_action_time = current_time
 
+        if action_number == 0:
+            enter_room(player, screen, actual_room, hud)
+            pygame.time.wait(500)
 
         if last_action_name == "move":
+            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
             exit_room(player, screen, old_room, hud)
-            pygame.time.wait(1000)
+            pygame.time.wait(500)
             enter_room(player, screen, actual_room, hud)
+            pygame.time.wait(1000)
             last_action_name = ""
     
-        update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id)
+        update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
         screen.fill((37, 19, 26))  
         actual_room.render(screen)
         player.render_player(screen, actual_room.scale_factor)
@@ -192,46 +199,61 @@ def Main():
 
         pygame.display.flip()
 
+
 def exit_room(player, screen, old_room, hud):
-    print("Starting exit room animation...")
     player_target_y = PLAYER_EXIT_ENDING_POS[1]
+    weapon_target_y = WEAPON_EXIT_ENDING_POS[1]
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
         old_room.render(screen)
         hud.render(screen)
-        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.05)
+        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
+        player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
+
+        if abs(player.weapon.pos_y - weapon_target_y) < 0.01:
+            player.weapon.pos_y = weapon_target_y
+
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
         player.render_player(screen, old_room.scale_factor)  
+        player.weapon.render_collectable(screen, old_room.scale_factor - 1)
         pygame.display.flip()
 
 
 def enter_room(player, screen, actual_room, hud):
-    print("Starting enter room animation...")
     player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
+    player.weapon.pos_y = WEAPON_ENTER_STARTING_POS[1]
     player_target_y = PLAYER_ENTER_ENDING_POS[1]
+    weapon_target_y = WEAPON_ENTER_ENDING_POS[1]
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
         actual_room.render(screen)
         hud.render(screen)
-        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.05)
+        player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
+        player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
+        
+        if abs(player.weapon.pos_y - weapon_target_y) < 0.01:
+            player.weapon.pos_y = weapon_target_y
+
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
         player.render_player(screen, actual_room.scale_factor)
+        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
         pygame.display.flip()
 
 def fluent_to_int(state, fluent):
     return int(str(state.get_value(fluent)))
 
-def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id):
+def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id, action):
     hud.update_hero_loot(state.get_value(hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id)
+    hud.update_action(action)
 
         
 if __name__ == "__main__":

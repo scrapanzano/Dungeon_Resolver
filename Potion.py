@@ -1,6 +1,8 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
+
 
 import pygame
 
@@ -15,6 +17,7 @@ class Potion(Collectable):
     """
     This class describes the representation of the Potion Object 
     """
+
     def __init__(self, potion_value:int, potion_tileset=potion_tileset):
         super().__init__()
         self.potion_value = potion_value
@@ -40,6 +43,7 @@ class Potion(Collectable):
         :param scale_factor: Object scale factor 
         :param type: scale_factor: int
         """
+
         potion_surface = self.potion_tileset.subsurface(pygame.Rect(self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_potion_surface = pygame.transform.scale(potion_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         

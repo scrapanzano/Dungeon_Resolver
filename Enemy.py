@@ -1,6 +1,8 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
+
 
 import pygame
 
@@ -12,6 +14,7 @@ class Enemy():
     """
     This class describes the representation of the Enemy Object 
     """
+
     def __init__(self, damage, enemy_tileset=enemy_tileset):
         self.enemy_tileset = enemy_tileset
         self.damage = damage
@@ -45,6 +48,7 @@ class Enemy():
         :param scale_factor: Object scale factor 
         :param type: scale_factor: int
         """
+        
         enemy_surface = self.enemy_tileset.subsurface(pygame.Rect(self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_enemy_surface = pygame.transform.scale(enemy_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
@@ -57,8 +61,10 @@ class Enemy():
         screen.blit(scaled_enemy_surface, (self.pos_x * TILE_SIZE * scale_factor + room_x, self.pos_y * TILE_SIZE * scale_factor + room_y))
 
 
+
     def kill(self):
         """
         Sets the killed attribute to True
         """
+
         self.killed = True

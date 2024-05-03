@@ -391,8 +391,8 @@ def generate_instance(instance_name, num_rooms):
     ]
     plt.legend(legend_elements, legend_labels, fontsize = 12)
 
-    plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
-    plt.show()
+    #plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
+    #plt.show()
 
 
 def farthest_node(G, start_room):

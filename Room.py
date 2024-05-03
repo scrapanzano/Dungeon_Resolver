@@ -1,3 +1,4 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
@@ -11,21 +12,8 @@ SCALE_FACTOR = 4
 room_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
 
-# Create a list of layout for every different state of the room
+# Create the room layout which will change based on the state of the room
 
-# room_layout = [
-#     "....  ....",
-#     "....  ....",
-#     "LWWTDdTWWR",
-#     "L        R",
-#     "L        R",
-#     "L        R",
-#     "L        R",
-#     "L        R",
-#     "lwww  wwwr",
-#     "....  ....",
-#     "....  ....",
-# ]
 
 room_layout = [
     "...L  R...",
@@ -47,6 +35,7 @@ class Room():
     """
     This class describes the representation of the Room 
     """
+
     def __init__(self, id:int, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
         self.id = id
         self.key = key
@@ -62,13 +51,11 @@ class Room():
         self.scale_factor = SCALE_FACTOR
         self.tile_mapping = self.generate_tile_mapping()
 
-        self.collectables = [key, loot, weapon, potion]
-
+        self.collectables = []
 
         self.surface = pygame.Surface((self.width, self.height))
         self.surface.fill((37, 19, 26))
     
-
     def render(self, screen):
         """
         Rendering of the Room Object on the screen using a tile set
@@ -78,6 +65,7 @@ class Room():
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         """
+
         for y, row in enumerate(room_layout):
             for x, tile in enumerate(row):
                 if tile in self.tile_mapping:
@@ -118,6 +106,7 @@ class Room():
 
 
     def generate_tile_mapping(self):
+
         """
         Generates a tile mapping for the room representation
         
@@ -126,18 +115,6 @@ class Room():
         :returns: A dict containing the tile mapping
         :rtype: dict
         """
-        # tile_mapping = {
-        #     "L" : (0,0),
-        #     "R" : (5,0), 
-        #     "l" : (0,4),
-        #     "r" : (5,4),
-        #     "W" : (1,0), 
-        #     "w" : (1,5),
-        #     "T" : (0,9),
-        #     "D" : (6,6) if self.has_door else (1,1),
-        #     "d" : (7,6) if self.has_door else (1,1),
-        #     " " : (1,1)
-        # }
 
         tile_mapping = {
             "L" : (0,0),
@@ -156,20 +133,21 @@ class Room():
 
         return tile_mapping
 
-
     def collect_key(self):
         """
         Calls the function to set key's collected attribute
         """
+
         if self.key is not None:
             self.key.collect()
             self.key = None
         
-
     def collect_treasure(self):
+
         """
         Calls the function to set treasure's collected attribute
         """        
+        
         if self.loot is not None:
             self.loot.collect()
             self.loot = None
@@ -179,6 +157,7 @@ class Room():
         """
         Calls the function to set weapon's collected attribute
         """        
+
         if self.weapon is not None:
             self.weapon.collect()
             self.weapon = None
@@ -188,6 +167,7 @@ class Room():
         """
         Calls the function to set potion's collected attribute
         """
+
         if self.potion is not None:
             self.potion.collect()
             self.potion = None
@@ -197,12 +177,12 @@ class Room():
         """
         Calls the function to set enemy's killed attribute
         """
+
         if self.enemy is not None:
             self.enemy.kill()
             if self.enemy.alpha <= 0:
                 self.enemy = None
     
-
     def set_key(self, key):
         """
         Sets the value of key
@@ -212,8 +192,9 @@ class Room():
         :param key: Key Object to set
         :type key: Key
         """
+    
         self.key = key
-
+        self.collectables.append(key)
 
     def set_loot(self, loot):
         """
@@ -224,8 +205,9 @@ class Room():
         :param loot: Loot Object to set
         :type loot: Loot
         """
+      
         self.loot = loot
-
+        self.collectables.append(loot)
 
     def set_enemy(self, enemy):
         """
@@ -236,8 +218,8 @@ class Room():
         :param enemy: Enemy Object to set
         :type enemy: Enemy
         """
-        self.loot = enemy
-
+      
+        self.enemy = enemy        
 
     def set_weapon(self, weapon):
         """
@@ -248,9 +230,10 @@ class Room():
         :param weapon: Weapon Object to set
         :type weapon: Weapon
         """
+      
         self.weapon = weapon
+        self.collectables.append(weapon)
     
-
     def set_potion(self, potion):
         """
         Sets the value of potion
@@ -260,4 +243,6 @@ class Room():
         :param potion: Potion Object to set
         :type potion: Potion
         """
+      
         self.potion = potion
+        self.collectables.append(potion)

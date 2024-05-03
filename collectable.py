@@ -1,3 +1,4 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
@@ -6,6 +7,7 @@ class Collectable():
     """
     This is the superclass for all Collectable Objects
     """
+
     def __init__(self):
         self.alpha = 255
         self.collected = False

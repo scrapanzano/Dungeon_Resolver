@@ -1,3 +1,4 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
@@ -15,6 +16,7 @@ class HUD():
     This class describes the representation of the HUD 
     """
     def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0):
+
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.font = pygame.font.Font(FONT_PATH, 36)
@@ -112,6 +114,14 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
 
+        # Setting up the action text HUD
+        self.action = action
+        self.action_font = pygame.font.Font(FONT_PATH, 36)
+        self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
+        self.action_text_rect = self.action_text.get_rect()
+        self.action_text_rect.x = 50
+        self.action_text_rect.y = 650
+
 
     def render(self, screen):
         """
@@ -122,6 +132,7 @@ class HUD():
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         """
+
         screen.blit(self.loot_icon, self.loot_icon_rect)
         screen.blit(self.keys_icon, self.keys_icon_rect)
         screen.blit(self.potions_icon, self.potions_icon_rect)
@@ -130,8 +141,8 @@ class HUD():
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
         screen.blit(self.id_text_alpha, self.id_text_rect)
-    
-
+        screen.blit(self.action_text, self.action_text_rect)
+          
     def update_hero_loot(self, hero_loot):
         """
         Updates hero_loot attribute and its HUD representation
@@ -187,6 +198,7 @@ class HUD():
         :returns: A Surface for the room id in HUD 
         :rtype: pygame Surface
         """
+
         # Create a new surface with the same size as the text_surface
         alpha_surface = pygame.Surface(text_surface.get_size(), pygame.SRCALPHA)
     
@@ -200,7 +212,6 @@ class HUD():
         alpha_surface.blit(text_surface, (0, 0), special_flags=pygame.BLEND_RGBA_MULT)
     
         return alpha_surface
-    
 
     def update_id(self, new_id):
         """
@@ -211,6 +222,7 @@ class HUD():
         :param new_id: Number of room visited
         :type new_id: int
         """        
+
         self.id = new_id
         self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
         self.id_text_alpha = self.create_alpha_surface(self.id_text, 100)
@@ -221,4 +233,7 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
  
-           
+
+    def update_action(self, action):
+        self.action = action
+        self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))

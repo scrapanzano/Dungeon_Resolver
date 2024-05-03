@@ -1,3 +1,4 @@
+
 """
 This module is part of the dungeon_gui package, for the graphical representation of the dungeon
 """
@@ -14,6 +15,7 @@ class Loot(Collectable):
     """
     This class describes the representation of the Treasure Object 
     """
+
     def __init__(self, loot_value:int, loot_tileset=loot_tileset):
         super().__init__()
         self.loot_value = loot_value
@@ -41,6 +43,7 @@ class Loot(Collectable):
         :param scale_factor: Object scale factor 
         :param type: scale_factor: int
         """
+
         loot_surface = self.loot_tileset.subsurface(pygame.Rect(self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_loot_surface = pygame.transform.scale(loot_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
