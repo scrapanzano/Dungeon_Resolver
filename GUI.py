@@ -7,24 +7,15 @@ from termcolor import colored
 
 import pygame
 import sys
-import time
 
 from dungeon_gui.Player import Player
-from dungeon_gui.Room import Room
 from dungeon_gui.Weapon import Weapon
-from dungeon_gui.Key import Key
-from dungeon_gui.Loot import Loot
-from dungeon_gui.Enemy import Enemy
-from dungeon_gui.Potion import Potion
 from dungeon_gui.hud import HUD
 
 from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
-from unified_planning.io import PDDLReader
 
-import networkx as nx
-
-import ctypes
+import re
 
 
 # Set up the display
@@ -72,6 +63,21 @@ class GUI():
         hero_loot = FluentExp(self.problem.fluent("hero_loot"))
         key_counter = FluentExp(self.problem.fluent("key_counter"))
         potion_counter = FluentExp(self.problem.fluent("potion_counter"))
+        defeated_enemy_counter = FluentExp(self.problem.fluent("defeated_enemy_counter"))
+
+        # Extract the goals
+        goals = str(self.problem.goals)
+        # Using re.findall() to find all sequences of digits in the string
+        goals_values_str = re.findall(r'\d+', goals)
+        # Converts the goals_value to a list of integers
+        goals_values = list(map(int, goals_values_str))
+
+        # Extract the goals
+        hero_loot_goal = goals_values[0]
+        hero_life_goal = goals_values[1]
+        defeated_enemy_counter_goal = goals_values[2]
+
+        
 
         # Invoke unified-planning sequential simulator
         simulator = SequentialSimulator(self.problem)
@@ -92,15 +98,16 @@ class GUI():
         initial_weapon_damage = fluent_to_int(state, hero_strength)
 
         # Create a player object
-        player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage + 30))
+        player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage))
 
         # Set up the HUD attributes based on the initial state
         initial_hero_loot = fluent_to_int(state, hero_loot)
         initial_key_counter = fluent_to_int(state, key_counter)
         initial_potion_counter = fluent_to_int(state, potion_counter)
+        initial_defeated_enemy_counter = fluent_to_int(state, defeated_enemy_counter)
 
         # Create a HUD object
-        hud = HUD(hero_loot=initial_hero_loot, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id)
+        hud = HUD(hero_loot=initial_hero_loot, hero_loot_goal=hero_loot_goal, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id, defeated_enemy_counter=initial_defeated_enemy_counter, defeated_enemy_counter_goal=defeated_enemy_counter_goal)
 
         # Set up the clock
         clock = pygame.time.Clock()
@@ -219,15 +226,15 @@ class GUI():
             # If the last action was a move action, the player has to exit the room
             # and then enter the new room
             if last_action_name == "move":
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action, defeated_enemy_counter)
                 exit_room(player, screen, old_room, hud)
                 pygame.time.wait(500)
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action, defeated_enemy_counter)
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(1000)
                 last_action_name = ""
 
-            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
+            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action, defeated_enemy_counter)
             screen.fill((37, 19, 26))  
             actual_room.render(screen)
             player.render_player(screen, actual_room.scale_factor)
@@ -362,7 +369,7 @@ def fluent_to_int(state, fluent):
     return int(str(state.get_value(fluent)))
 
 
-def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action):
+def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None):
     """
     TODO: add docs
 
@@ -384,4 +391,6 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id)
     hud.update_action(action)
+    if defeated_enemy_counter is not None:
+        hud.update_defeated_enemy_counter(state.get_value(defeated_enemy_counter))
 
