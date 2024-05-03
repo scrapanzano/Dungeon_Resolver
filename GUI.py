@@ -1,6 +1,9 @@
+"""
+This module manages the project dungeon_gui
+"""
+
 from unified_planning.shortcuts import *
 from termcolor import colored
-
 
 import pygame
 import sys
@@ -27,6 +30,9 @@ WIDTH, HEIGHT = 1270, 720
 
 
 class GUI():
+    """
+    This class manages the project GUI
+    """
     def __init__(self, problem, result, rooms):
         self.problem = problem
         self.result = result
@@ -35,8 +41,11 @@ class GUI():
         #Initialize pygame
         pygame.init()
 
+
     def run(self):
-        
+        """
+        TODO: add docs
+        """
         # Set up the display
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         # Set up the displayed name
@@ -211,6 +220,18 @@ class GUI():
 
 
 def exit_room(player, screen, old_room, hud):
+    """
+    TODO: add docs
+
+    Parameters
+    ----------
+    :param screen: Screen where dungeon_gui runs
+    :type screen: pygame Surface
+    :param old_room: TODO
+    :type old_room: TODO
+    :param hud: TODO
+    :type hud: TODO
+    """
     player_target_y = PLAYER_EXIT_ENDING_POS[1]
     weapon_target_y = WEAPON_EXIT_ENDING_POS[1]
     player.is_moving = True
@@ -233,6 +254,18 @@ def exit_room(player, screen, old_room, hud):
 
 
 def enter_room(player, screen, actual_room, hud):
+    """
+    TODO: add docs
+
+    Parameters
+    ----------
+    :param screen: Screen where dungeon_gui runs
+    :type screen: pygame Surface
+    :param actual_room: TODO
+    :type actual_room: TODO
+    :param hud: TODO
+    :type hud: TODO
+    """
     player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
     player.weapon.pos_y = WEAPON_ENTER_STARTING_POS[1]
     player_target_y = PLAYER_ENTER_ENDING_POS[1]
@@ -255,10 +288,43 @@ def enter_room(player, screen, actual_room, hud):
         player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
         pygame.display.flip()
 
+
 def fluent_to_int(state, fluent):
+    """
+    TODO: add docs
+
+    Parameters
+    ----------
+    :param state: TODO
+    :type state: TODO
+    :param fluent: TODO
+    :type fluent: TODO
+    
+    Returns
+    -------
+    :returns: TODO
+    :rtype: int
+    """
     return int(str(state.get_value(fluent)))
 
-def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id, action):
+
+def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action):
+    """
+    TODO: add docs
+
+    Parameters
+    ----------
+    :param state: TODO
+    :type state: TODO
+    :param hero_loot: TODO
+    :type hero_loot: int
+    :param potion_counter: TODO
+    :type potion_counter: int
+    :param actual_room_id: TODO
+    :type actual_room_id: TODO
+    :param action: TODO
+    :type action: TODO
+    """
     hud.update_hero_loot(state.get_value(hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))

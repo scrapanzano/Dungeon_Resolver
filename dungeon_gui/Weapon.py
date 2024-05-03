@@ -41,7 +41,7 @@ class Weapon(Collectable):
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         :param scale_factor: Object scale factor 
-        :param type: scale_factor: int
+        :type: scale_factor: int
         """
 
         if self.visible:

@@ -1,6 +1,7 @@
 """
-This module creates a random dungeon pddl problem file, that describe
-the specific instance of the dungeon problem
+This module allows to create a random dungeon pddl problem file, that describe the specific instance of
+the dungeon problem, or to import an existing dungeon pddl problem file, and to resolve them with the
+unified_plannig library
 """
 
 import sys
@@ -504,7 +505,7 @@ def generate_treasures(G, start_room, num_treasure_rooms):
     :type start_room: int
 
     :param num_treasure_rooms: Desired number of rooms with treasure
-    :type exit_room: int
+    :type num_treasure_rooms: int
 
     Returns
     -------
@@ -527,7 +528,7 @@ def generate_treasures(G, start_room, num_treasure_rooms):
 
 def generate_loot_goal(treasure_rooms, loot_rate):
     """
-    Generates loot goal and returns rooms loot goal
+    Generates and returns loot goal
     
     Parameters
     ----------
@@ -561,7 +562,7 @@ def generate_enemies(G, start_room, num_enemy_rooms):
     :type start_room: int
 
     :param num_enemy_rooms: Desired number of rooms with enemy
-    :type exit_room: int
+    :type num_enemy_rooms: int
 
     Returns
     -------
@@ -595,7 +596,7 @@ def generate_weapons(G, start_room, enemy_rooms):
     :type start_room: int
 
     :param num_enemy_rooms: Number of rooms with enemy
-    :type exit_room: int
+    :type num_enemy_rooms: int
 
     Returns
     -------
@@ -630,7 +631,7 @@ def generate_potions(G, start_room, num_potion_rooms):
     :type start_room: int
 
     :param num_potion_rooms: Desired number of rooms with potion
-    :type exit_room: int
+    :type num_potion_rooms: int
 
     Returns
     -------
@@ -650,7 +651,16 @@ def generate_potions(G, start_room, num_potion_rooms):
     
     return potion_rooms   
 
+
 def invoke_unified_planning(path):
+    """
+    Invokes unified_planning to read and solve the instance file specified in path
+    
+    Parameters
+    ----------
+    :param path: Pddl problem instance file path
+    :type path: str
+    """
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
     problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", path)
@@ -687,6 +697,7 @@ def invoke_unified_planning(path):
             if simulator.is_goal(state):
                 print(colored("Goal reached!", 'magenta'))
     
+
 def yes_or_no(question):
     """
     Choices between yes or not (y/n) 
@@ -728,6 +739,12 @@ def yes_or_no(question):
 
 
 def Main():
+    """
+    Main function: generates and manages a user menu.
+    It's possible to:
+        - Generate and solve a random problem instance, also invoking the GUI
+        - Read and solve a specified problem instance
+    """
     menu = Menu(MENU_TITLE, MENU_ITEMS)
     go_on = True
     while go_on:
@@ -752,6 +769,7 @@ def Main():
         else:
             print(colored('\n' + GOODBYE + '\n', 'light_cyan'))
             go_on = False
+
 
 if __name__ == "__main__":
     Main()

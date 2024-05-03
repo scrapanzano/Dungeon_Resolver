@@ -149,7 +149,7 @@ class HUD():
         Parameters
         ----------
         :param hero_loot: Hero loot value
-        :type damage: int
+        :type hero_loot: int
         """
         self.hero_loot = hero_loot
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
