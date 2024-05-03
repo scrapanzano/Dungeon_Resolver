@@ -4,7 +4,6 @@ This module is part of the dungeon_gui package, for the graphical representation
 """
 
 import pygame
-from health_bar import HealthBar
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
@@ -150,7 +149,7 @@ class HUD():
         Parameters
         ----------
         :param hero_loot: Hero loot value
-        :type damage: int
+        :type hero_loot: int
         """
         self.hero_loot = hero_loot
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))

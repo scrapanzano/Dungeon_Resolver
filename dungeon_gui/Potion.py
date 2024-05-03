@@ -6,7 +6,7 @@ This module is part of the dungeon_gui package, for the graphical representation
 
 import pygame
 
-from collectable import Collectable
+from dungeon_gui.collectable import Collectable
 
 potion_tileset = pygame.image.load("Dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
 
@@ -41,7 +41,7 @@ class Potion(Collectable):
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         :param scale_factor: Object scale factor 
-        :param type: scale_factor: int
+        :type: scale_factor: int
         """
 
         potion_surface = self.potion_tileset.subsurface(pygame.Rect(self.potion_tile_x * TILE_SIZE, self.potion_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

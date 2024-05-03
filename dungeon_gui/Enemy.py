@@ -46,7 +46,7 @@ class Enemy():
         :param room_y: Y Room position on the screen
         :type room_y: int
         :param scale_factor: Object scale factor 
-        :param type: scale_factor: int
+        :type: scale_factor: int
         """
         
         enemy_surface = self.enemy_tileset.subsurface(pygame.Rect(self.enemy_tile_x * TILE_SIZE, self.enemy_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
@@ -59,7 +59,6 @@ class Enemy():
             return
         
         screen.blit(scaled_enemy_surface, (self.pos_x * TILE_SIZE * scale_factor + room_x, self.pos_y * TILE_SIZE * scale_factor + room_y))
-
 
 
     def kill(self):

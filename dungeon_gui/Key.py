@@ -5,7 +5,7 @@ This module is part of the dungeon_gui package, for the graphical representation
 
 import pygame
 
-from collectable import Collectable
+from dungeon_gui.collectable import Collectable
 
 key_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
@@ -32,7 +32,7 @@ class Key(Collectable):
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         :param scale_factor: Object scale factor 
-        :param type: scale_factor: int
+        :type scale_factor: int
         """
 
         key_surface = key_tileset.subsurface(pygame.Rect(self.key_tile_x * TILE_SIZE, self.key_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

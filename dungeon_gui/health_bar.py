@@ -53,6 +53,7 @@ class HealthBar():
             # Draw the health text
             screen.blit(self.hp_text, self.hp_text_rect)
 
+
     def update_health(self, health):
         """
         Updates current_health, blinking and hp_text attributes

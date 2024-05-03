@@ -1,6 +1,7 @@
 """
-This module creates a random dungeon pddl problem file, that describe
-the specific instance of the dungeon problem
+This module allows to create a random dungeon pddl problem file, that describe the specific instance of
+the dungeon problem, or to import an existing dungeon pddl problem file, and to resolve them with the
+unified_plannig library
 """
 
 import sys
@@ -16,13 +17,18 @@ import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 from termcolor import colored
-from Room import Room
-from Key import Key
-from Loot import Loot
-from Enemy import Enemy
-from Weapon import Weapon
-from Potion import Potion
+from dungeon_gui.Room import Room
+from dungeon_gui.Key import Key
+from dungeon_gui.Loot import Loot
+from dungeon_gui.Enemy import Enemy
+from dungeon_gui.Weapon import Weapon
+from dungeon_gui.Potion import Potion
 from GUI import GUI
+from utility.menu import Menu
+
+MENU_TITLE = 'Welcome to the Dungeon Resolver!'
+MENU_ITEMS = ['Generate and solve a new random Dungeon instance', 'Solve an existing Dungeon instance']
+GOODBYE = 'Thanks for using Dungeon Resolver! \nGoodbye!'
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
@@ -262,8 +268,6 @@ def generate_instance(instance_name, num_rooms):
     f.write(str(template.substitute(template_mapping)))
     f.close()
 
-    # os.system("java -jar Dungeon_Resolver/enhsp.jar -o dungeon_resolver/simple_dungeon_domain.pddl -f dungeon_resolver/simple_dungeon_problem.pddl -planner opt-hrmax")
-
     # Using unified-planning for reading the domain and instance files
     reader = PDDLReader()
     problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", "./dungeon_resolver/dungeon_problem.pddl")
@@ -282,32 +286,33 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
-    # Choose if run dungeon_gui
-    gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
-    print()
-    if gui_choice:
-        # Run dungeon_gui
-        gui = GUI(problem, result, rooms)
-        gui.run()
-    else:
-        # Invoke unified-planning sequential simulator
-        life = FluentExp(problem.fluent("hero_life"))
-        strength = FluentExp(problem.fluent("hero_strength"))
-        loot = FluentExp(problem.fluent("hero_loot"))
-        n_action = 1
+    if result.plan != None:
+        # Choose if run dungeon_gui
+        gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
+        print()
+        if gui_choice:
+            # Run dungeon_gui
+            gui = GUI(problem, result, rooms)
+            gui.run()
+        else:
+            # Invoke unified-planning sequential simulator
+            life = FluentExp(problem.fluent("hero_life"))
+            strength = FluentExp(problem.fluent("hero_strength"))
+            loot = FluentExp(problem.fluent("hero_loot"))
+            n_action = 1
 
-        with SequentialSimulator(problem) as simulator: 
-            state = simulator.get_initial_state()
-            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
-            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-            print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
-            for ai in result.plan.actions:
-                state = simulator.apply(state, ai)
-                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
-                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
-                n_action += 1
-            if simulator.is_goal(state):
-                print(colored("Goal reached!", 'magenta'))
+            with SequentialSimulator(problem) as simulator: 
+                state = simulator.get_initial_state()
+                print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+                print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+                print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+                for ai in result.plan.actions:
+                    state = simulator.apply(state, ai)
+                    print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                    print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                    n_action += 1
+                if simulator.is_goal(state):
+                    print(colored("Goal reached!", 'magenta'))
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['xkcd:olive' if G[u][v]['type'] == 'normal' else 'xkcd:red' for u, v in G.edges()]
@@ -391,8 +396,8 @@ def generate_instance(instance_name, num_rooms):
     ]
     plt.legend(legend_elements, legend_labels, fontsize = 12)
 
-    #plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
-    #plt.show()
+    plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
+    plt.show()
 
 
 def farthest_node(G, start_room):
@@ -500,7 +505,7 @@ def generate_treasures(G, start_room, num_treasure_rooms):
     :type start_room: int
 
     :param num_treasure_rooms: Desired number of rooms with treasure
-    :type exit_room: int
+    :type num_treasure_rooms: int
 
     Returns
     -------
@@ -523,7 +528,7 @@ def generate_treasures(G, start_room, num_treasure_rooms):
 
 def generate_loot_goal(treasure_rooms, loot_rate):
     """
-    Generates loot goal and returns rooms loot goal
+    Generates and returns loot goal
     
     Parameters
     ----------
@@ -557,7 +562,7 @@ def generate_enemies(G, start_room, num_enemy_rooms):
     :type start_room: int
 
     :param num_enemy_rooms: Desired number of rooms with enemy
-    :type exit_room: int
+    :type num_enemy_rooms: int
 
     Returns
     -------
@@ -591,7 +596,7 @@ def generate_weapons(G, start_room, enemy_rooms):
     :type start_room: int
 
     :param num_enemy_rooms: Number of rooms with enemy
-    :type exit_room: int
+    :type num_enemy_rooms: int
 
     Returns
     -------
@@ -626,7 +631,7 @@ def generate_potions(G, start_room, num_potion_rooms):
     :type start_room: int
 
     :param num_potion_rooms: Desired number of rooms with potion
-    :type exit_room: int
+    :type num_potion_rooms: int
 
     Returns
     -------
@@ -646,6 +651,52 @@ def generate_potions(G, start_room, num_potion_rooms):
     
     return potion_rooms   
 
+
+def invoke_unified_planning(path):
+    """
+    Invokes unified_planning to read and solve the instance file specified in path
+    
+    Parameters
+    ----------
+    :param path: Pddl problem instance file path
+    :type path: str
+    """
+    # Using unified-planning for reading the domain and instance files
+    reader = PDDLReader()
+    problem = reader.parse_problem("./dungeon_resolver/dungeon_domain.pddl", path)
+    
+    # Invoke unified-planning planner enhsp
+    up.shortcuts.get_environment().credits_stream = None # Disable printing of planning engine credits
+    
+    planner_choice = yes_or_no('Do you want enhsp optimal version?')
+    print()
+    if planner_choice:
+        selected_planner = 'enhsp-opt'
+    else:
+        selected_planner = 'enhsp'
+
+    with OneshotPlanner(name=selected_planner) as planner:
+        result = planner.solve(problem)
+    
+    # Invoke unified-planning sequential simulator
+        life = FluentExp(problem.fluent("hero_life"))
+        strength = FluentExp(problem.fluent("hero_strength"))
+        loot = FluentExp(problem.fluent("hero_loot"))
+        n_action = 1
+
+        with SequentialSimulator(problem) as simulator: 
+            state = simulator.get_initial_state()
+            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+            print(colored(f"Initial loot = {state.get_value(loot)}", 'yellow'))
+            for ai in result.plan.actions:
+                state = simulator.apply(state, ai)
+                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                n_action += 1
+            if simulator.is_goal(state):
+                print(colored("Goal reached!", 'magenta'))
+    
 
 def yes_or_no(question):
     """
@@ -674,22 +725,50 @@ def yes_or_no(question):
              print(colored('Incorrect entry! Type \'y\' or \'n\'', 'light_red'))
 
 
-def parse_arguments():
-    parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
-    parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-    parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "8")
+# def parse_arguments():
+#     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
+#     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
+#     parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "8")
 
-    args = parser.parse_args()
-    args.random_seed = int(args.random_seed)
-    if args.random_seed != None:
-        random.seed( args.random_seed )
-        print( ";;Setting seed to {0}\n".format(args.random_seed) )
-    return args
+#     args = parser.parse_args()
+#     args.random_seed = int(args.random_seed)
+#     if args.random_seed != None:
+#         random.seed( args.random_seed )
+#         print( ";;Setting seed to {0}\n".format(args.random_seed) )
+#     return args
 
 
 def Main():
-    args = parse_arguments()
-    generate_instance('instance_'+str(args.num_rooms)+'_'+str(args.random_seed), int(args.num_rooms))
+    """
+    Main function: generates and manages a user menu.
+    It's possible to:
+        - Generate and solve a random problem instance, also invoking the GUI
+        - Read and solve a specified problem instance
+    """
+    menu = Menu(MENU_TITLE, MENU_ITEMS)
+    go_on = True
+    while go_on:
+        choice = menu.choose()
+        if choice == 1:
+            #args = parse_arguments()
+            random_seed = 1229
+            num_rooms = 8
+            args_choice = yes_or_no(f'Do you want to set problem arguments? (DEFAULT: seed = {random_seed}, num_rooms = {num_rooms})')
+            if args_choice:
+                random_seed = int(input('Insert random seed: '))
+                num_rooms = int(input("Insert number of rooms: "))
+            random.seed(random_seed )
+            print(f'Setting seed = {random_seed}, rooms = {num_rooms}')
+            generate_instance('instance_'+str(num_rooms)+'_'+str(random_seed), num_rooms)
+        elif choice == 2:
+            path = input('Enter the problem instance path: ')
+            try:
+                invoke_unified_planning(path)
+            except FileNotFoundError:
+                print(colored('\nAttention! File path not found!\n', 'light_red'))
+        else:
+            print(colored('\n' + GOODBYE + '\n', 'light_cyan'))
+            go_on = False
 
 
 if __name__ == "__main__":

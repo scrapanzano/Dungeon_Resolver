@@ -4,8 +4,8 @@ This module is part of the dungeon_gui package, for the graphical representation
 """
 
 import pygame
-from health_bar import HealthBar
-from constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
+from dungeon_gui.health_bar import HealthBar
+from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
 
 
 character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
@@ -46,7 +46,7 @@ class Player():
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         :param scale_factor: Object scale factor 
-        :param type: scale_factor: int
+        :type: scale_factor: int
         """
 
         player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
@@ -123,7 +123,7 @@ class Player():
         Parameters
         ----------
         :param new_damage: Weapon damage value
-        :type damage: int
+        :type new_damage: int
         """
 
         self.weapon.update_damage(new_damage)
