@@ -55,7 +55,7 @@ class Room():
         self.scale_factor = SCALE_FACTOR
         self.tile_mapping = self.generate_tile_mapping()
 
-        self.collectables = [key, loot, weapon, potion]
+        self.collectables = []
 
 
         self.surface = pygame.Surface((self.width, self.height))
@@ -161,15 +161,19 @@ class Room():
     
     def set_key(self, key):
         self.key = key
+        self.collectables.append(key)
 
     def set_loot(self, loot):
         self.loot = loot
+        self.collectables.append(loot)
 
     def set_enemy(self, enemy):
-        self.loot = enemy
+        self.enemy = enemy        
 
     def set_weapon(self, weapon):
         self.weapon = weapon
+        self.collectables.append(weapon)
     
     def set_potion(self, potion):
         self.potion = potion
+        self.collectables.append(potion)

@@ -1,5 +1,5 @@
 import pygame
-from classes.health_bar import HealthBar
+from health_bar import HealthBar
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2

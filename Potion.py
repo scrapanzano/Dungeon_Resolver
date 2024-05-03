@@ -1,6 +1,6 @@
 import pygame
 
-from classes.collectable import Collectable
+from collectable import Collectable
 
 potion_tileset = pygame.image.load("Dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
 
