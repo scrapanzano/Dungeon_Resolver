@@ -14,15 +14,16 @@ class HUD():
     """
     This class describes the representation of the HUD 
     """
-    def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0, action=""):
+    def __init__(self, hero_loot=0, hero_loot_goal=0, key_counter=0, potion_counter=0, room_id=0, defeated_enemy_counter=0, defeated_enemy_counter_goal=0, action=""):
 
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
+        self.hero_loot_goal = hero_loot_goal
         self.font = pygame.font.Font(FONT_PATH, 36)
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
+        self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
         self.loot_text_rect = self.loot_text.get_rect()
         self.loot_text_rect.x = 50
-        self.loot_text_rect.y = 10
+        self.loot_text_rect.y = 130
 
         loot_tile_x = 6
         loot_tile_y = 8
@@ -88,7 +89,7 @@ class HUD():
 
         self.health_icon_rect = self.health_icon.get_rect()
         self.health_icon_rect.x = 10
-        self.health_icon_rect.y = 130 - 7.5
+        self.health_icon_rect.y = 170 - 7.5
 
         # Setting up the room id HUD
         self.id_font = pygame.font.Font(FONT_PATH, 250)
@@ -113,6 +114,29 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
 
+        # Setting up the defeated enemy counter HUD
+        self.defeated_enemy_counter = defeated_enemy_counter
+        self.defeated_enemy_counter_goal = defeated_enemy_counter_goal
+        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
+        self.defeated_enemy_counter_text_rect = self.defeated_enemy_counter_text.get_rect()
+        self.defeated_enemy_counter_text_rect.x = 50
+        self.defeated_enemy_counter_text_rect.y = 10
+
+        enemies_tile_x = 1
+        enemies_tile_y = 3
+
+        enemies_pixel_x = enemies_tile_x * TILE_SIZE
+        enemies_pixel_y = enemies_tile_y * TILE_SIZE
+
+        self.enemy_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
+        self.enemy_icon = self.enemy_icon.subsurface(pygame.Rect(enemies_pixel_x, enemies_pixel_y, TILE_SIZE, TILE_SIZE))
+        self.enemy_icon = pygame.transform.scale(self.enemy_icon, (40, 40))
+        
+        self.enemy_icon_rect = self.enemy_icon.get_rect()
+        self.enemy_icon_rect.x = 5
+        self.enemy_icon_rect.y = self.defeated_enemy_counter_text_rect.y - 7.5
+
+        
         # Setting up the action text HUD
         self.action = action
         self.action_font = pygame.font.Font(FONT_PATH, 36)
@@ -136,9 +160,11 @@ class HUD():
         screen.blit(self.keys_icon, self.keys_icon_rect)
         screen.blit(self.potions_icon, self.potions_icon_rect)
         screen.blit(self.health_icon, self.health_icon_rect)
+        screen.blit(self.enemy_icon, self.enemy_icon_rect)
         screen.blit(self.loot_text, self.loot_text_rect)
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
+        screen.blit(self.defeated_enemy_counter_text, self.defeated_enemy_counter_text_rect)
         screen.blit(self.id_text_alpha, self.id_text_rect)
         screen.blit(self.action_text, self.action_text_rect)
           
@@ -152,7 +178,7 @@ class HUD():
         :type hero_loot: int
         """
         self.hero_loot = hero_loot
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
+        self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
 
 
     def update_keys(self, keys):
@@ -179,6 +205,18 @@ class HUD():
         """
         self.potions = potions
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
+
+    def update_defeated_enemy_counter(self, defeated_enemy_counter):
+        """
+        Updates defeated_enemy_counter attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param defeated_enemy_counter: Number of defeated enemies
+        :type defeated_enemy_counter: int
+        """
+        self.defeated_enemy_counter = defeated_enemy_counter
+        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
     
 
     def create_alpha_surface(self, text_surface, alpha_value):
