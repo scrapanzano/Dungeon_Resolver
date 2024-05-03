@@ -24,6 +24,8 @@ from unified_planning.io import PDDLReader
 
 import networkx as nx
 
+import ctypes
+
 
 # Set up the display
 WIDTH, HEIGHT = 1270, 720
@@ -108,6 +110,8 @@ class GUI():
 
         # Game loop
 
+        entered = False
+
         while True and not simulator.is_goal(state):
             clock.tick(60)
             # Check for events
@@ -150,7 +154,18 @@ class GUI():
                         args_str = action[len('move('):-1]
                         # Split the remaining string into weapon and room
                         room1, room2 = args_str.split(', ')
+                        
+                        # Get the old room id
+                        old_room_id = room1[1]
+                        # If the room id has more than 2 characters, then the room id is a double digit number
+                        if len(room1) > 2:
+                            old_room_id += room1[2]
+
+                        # Get the new room id
                         new_room_id = room2[1]
+                        # If the room id has more than 2 characters, then the room id is a double digit number
+                        if len(room2) > 2:
+                            new_room_id += room2[2]
 
                         old_room = actual_room
                         actual_room = self.rooms[int(new_room_id)]
@@ -170,6 +185,7 @@ class GUI():
                         last_action_name = "collect_key"
                 
                     elif action.startswith("collect_potion"):
+                        player.collect_potion(actual_room.potion)
                         actual_room.collect_potion()
                         last_action_name = "collect_potion"
 
@@ -179,7 +195,7 @@ class GUI():
                         last_action_name = "defeat_enemy"
 
                     elif action.startswith("drink_potion"):
-                        player.get_heal(actual_room.potion.potion_value)
+                        player.get_heal()
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
@@ -188,23 +204,25 @@ class GUI():
 
                     elif action.startswith("escape_from_dungeon"):
                         last_action_name = "escape_from_dungeon"
-                        pass
+                        exit_room(player, screen, old_room, hud)
                 
                 # Update the action number and the last action time
                 action_number += 1
                 last_action_time = current_time
             
             # First entrance in the room
-            if action_number == 0:
+            if action_number == 0 and not entered:
+                entered = True
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(500)
 
             # If the last action was a move action, the player has to exit the room
             # and then enter the new room
             if last_action_name == "move":
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action)
                 exit_room(player, screen, old_room, hud)
                 pygame.time.wait(500)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action)
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(1000)
                 last_action_name = ""
@@ -217,6 +235,42 @@ class GUI():
             hud.render(screen)
 
             pygame.display.flip()
+
+        # Load the font for the text
+        big_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf", 100)
+        # Create the text surface
+        big_text = big_font.render("Mission Complete", True, (255, 255, 255))
+        # Create a rect for the text surface
+        big_text_rect = big_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
+
+        # Load the font for the text
+        small_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf", 30)
+        # Create the text surface
+        small_text = small_font.render("press q or top right cross to quit", True, (255, 255, 255))
+        # Create a rect for the text surface
+        small_text_rect = small_text.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + small_text.get_height() * 2))
+
+
+        # Create a semi-transparent surface
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))  # RGBA color, the last value is the alpha (transparency)
+
+        while True:
+            # Redraw the screen to be visible behind the semi-transparent surface
+            screen.fill((37, 19, 26))  
+            actual_room.render(screen)
+            hud.render(screen)
+            player.render_player(screen, actual_room.scale_factor)
+            # Draw the semi-transparent surface and the text on the screen
+            screen.blit(overlay, (0, 0))
+            # Draw the text on the screen
+            screen.blit(big_text, big_text_rect)
+            screen.blit(small_text, small_text_rect)
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+                    pygame.quit()
+                    sys.exit()
 
 
 def exit_room(player, screen, old_room, hud):
