@@ -16,13 +16,18 @@ import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 from termcolor import colored
-from Room import Room
-from Key import Key
-from Loot import Loot
-from Enemy import Enemy
-from Weapon import Weapon
-from Potion import Potion
+from dungeon_gui.Room import Room
+from dungeon_gui.Key import Key
+from dungeon_gui.Loot import Loot
+from dungeon_gui.Enemy import Enemy
+from dungeon_gui.Weapon import Weapon
+from dungeon_gui.Potion import Potion
 from GUI import GUI
+from utility.menu import Menu
+
+MENU_TITLE = 'Welcome to the Dungeon Resolver!'
+MENU_ITEMS = ['Generate and solve a new random Dungeon instance', 'Solve an existing Dungeon instance']
+GOODBYE = 'Thanks for using Dungeon Resolver! \nGoodbye!'
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
@@ -391,8 +396,8 @@ def generate_instance(instance_name, num_rooms):
     ]
     plt.legend(legend_elements, legend_labels, fontsize = 12)
 
-    #plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
-    #plt.show()
+    plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
+    plt.show()
 
 
 def farthest_node(G, start_room):
@@ -688,9 +693,18 @@ def parse_arguments():
 
 
 def Main():
-    args = parse_arguments()
-    generate_instance('instance_'+str(args.num_rooms)+'_'+str(args.random_seed), int(args.num_rooms))
-
+    menu = Menu(MENU_TITLE, MENU_ITEMS)
+    go_on = True
+    while go_on:
+        choice = menu.choose()
+        if choice == 1:
+            args = parse_arguments()
+            generate_instance('instance_'+str(args.num_rooms)+'_'+str(args.random_seed), int(args.num_rooms))
+        elif choice == 2:
+            print('TODO: lettura istanza esistente')
+        else:
+            print('\n' + GOODBYE + '\n')
+            go_on = False
 
 if __name__ == "__main__":
     Main()

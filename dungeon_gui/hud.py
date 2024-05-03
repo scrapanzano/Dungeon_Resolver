@@ -4,7 +4,6 @@ This module is part of the dungeon_gui package, for the graphical representation
 """
 
 import pygame
-from health_bar import HealthBar
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2

@@ -6,7 +6,7 @@ This module is part of the dungeon_gui package, for the graphical representation
 
 import pygame
 
-from collectable import Collectable
+from dungeon_gui.collectable import Collectable
 
 potion_tileset = pygame.image.load("Dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
 

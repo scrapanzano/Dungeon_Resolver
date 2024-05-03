@@ -6,16 +6,16 @@ import pygame
 import sys
 import time
 
-from Player import Player
-from Room import Room
-from Weapon import Weapon
-from Key import Key
-from Loot import Loot
-from Enemy import Enemy
-from Potion import Potion
-from hud import HUD
+from dungeon_gui.Player import Player
+from dungeon_gui.Room import Room
+from dungeon_gui.Weapon import Weapon
+from dungeon_gui.Key import Key
+from dungeon_gui.Loot import Loot
+from dungeon_gui.Enemy import Enemy
+from dungeon_gui.Potion import Potion
+from dungeon_gui.hud import HUD
 
-from constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
+from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 

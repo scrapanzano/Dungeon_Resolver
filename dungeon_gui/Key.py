@@ -5,7 +5,7 @@ This module is part of the dungeon_gui package, for the graphical representation
 
 import pygame
 
-from collectable import Collectable
+from dungeon_gui.collectable import Collectable
 
 key_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 

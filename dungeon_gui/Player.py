@@ -4,8 +4,8 @@ This module is part of the dungeon_gui package, for the graphical representation
 """
 
 import pygame
-from health_bar import HealthBar
-from constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
+from dungeon_gui.health_bar import HealthBar
+from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
 
 
 character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
