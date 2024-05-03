@@ -398,7 +398,7 @@ def generate_instance(instance_name, num_rooms):
 
     plt.get_current_fig_manager().full_screen_toggle() # Toggle fullscreen mode
     plt.show()
-
+    
 
 def farthest_node(G, start_room):
     """
@@ -758,7 +758,7 @@ def Main():
                 random_seed = int(input('Insert random seed: '))
                 num_rooms = int(input("Insert number of rooms: "))
             random.seed(random_seed )
-            print(f'Setting seed = {random_seed}, rooms = {num_rooms}')
+            print(colored(f'Setting seed = {random_seed}, rooms = {num_rooms}', 'light_green'))
             generate_instance('instance_'+str(num_rooms)+'_'+str(random_seed), num_rooms)
         elif choice == 2:
             path = input('Enter the problem instance path: ')
