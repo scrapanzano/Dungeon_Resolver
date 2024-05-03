@@ -118,8 +118,8 @@ class HUD():
         self.action_font = pygame.font.Font(FONT_PATH, 36)
         self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
         self.action_text_rect = self.action_text.get_rect()
-        self.action_text_rect.x = 50
-        self.action_text_rect.y = 650
+        self.action_text_rect.x = 20
+        self.action_text_rect.y = 660
 
 
     def render(self, screen):
