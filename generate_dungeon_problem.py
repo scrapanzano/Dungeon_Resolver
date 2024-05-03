@@ -745,9 +745,12 @@ def Main():
             generate_instance('instance_'+str(num_rooms)+'_'+str(random_seed), num_rooms)
         elif choice == 2:
             path = input('Enter the problem instance path: ')
-            invoke_unified_planning(path)
+            try:
+                invoke_unified_planning(path)
+            except FileNotFoundError:
+                print(colored('\nAttention! File path not found!\n', 'light_red'))
         else:
-            print('\n' + GOODBYE + '\n')
+            print(colored('\n' + GOODBYE + '\n', 'light_cyan'))
             go_on = False
 
 if __name__ == "__main__":
