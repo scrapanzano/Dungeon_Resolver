@@ -1,6 +1,7 @@
 from unified_planning.shortcuts import *
 from termcolor import colored
 
+
 import pygame
 import sys
 import time
@@ -24,11 +25,13 @@ import networkx as nx
 # Set up the display
 WIDTH, HEIGHT = 1270, 720
 
+
 class GUI():
     def __init__(self, problem, result, rooms):
         self.problem = problem
         self.result = result
         self.rooms = rooms
+
         #Initialize pygame
         pygame.init()
 
@@ -261,3 +264,4 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room_id
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id)
     hud.update_action(action)
+

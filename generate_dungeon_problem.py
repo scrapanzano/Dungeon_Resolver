@@ -282,10 +282,11 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
+    # Choose if run dungeon_gui
     gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
     print()
     if gui_choice:
-        # Lancia dungeon_gui
+        # Run dungeon_gui
         gui = GUI(problem, result, rooms)
         gui.run()
     else:

@@ -18,7 +18,7 @@ def extract_rooms(str):
     rooms = re.findall("r[0-9][0-9]|r[0-9]", str)
     return rooms
 
-def extract_room_numbers(str): #da sistemare, estrarre numero
+def extract_room_numbers(str): 
     numbers = []
     rooms = extract_rooms(str)
     for room in rooms:

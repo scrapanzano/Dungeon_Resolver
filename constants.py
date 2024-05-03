@@ -1,3 +1,9 @@
+
+"""
+This module is part of the dungeon_gui package, for the graphical representation of the dungeon.
+Collects some useful constants for other modules.
+"""
+
 import pygame
 
 # Custom events
