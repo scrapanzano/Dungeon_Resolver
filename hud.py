@@ -1,5 +1,9 @@
+"""
+This module is part of the dungeon_gui package, for the graphical representation of the dungeon
+"""
+
 import pygame
-from classes.health_bar import HealthBar
+from health_bar import HealthBar
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
@@ -7,6 +11,9 @@ SCALE_FACTOR = 2
 FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
 class HUD():
+    """
+    This class describes the representation of the HUD 
+    """
     def __init__(self, hero_loot=0, key_counter=0, potion_counter=0, room_id=0):
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
@@ -106,8 +113,15 @@ class HUD():
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
 
 
-
     def render(self, screen):
+        """
+        Rendering all HUD Object elements on the screen using a tile set
+        
+        Parameters
+        ----------
+        :param screen: Screen where dungeon_gui runs
+        :type screen: pygame Surface
+        """
         screen.blit(self.loot_icon, self.loot_icon_rect)
         screen.blit(self.keys_icon, self.keys_icon_rect)
         screen.blit(self.potions_icon, self.potions_icon_rect)
@@ -116,26 +130,63 @@ class HUD():
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
         screen.blit(self.id_text_alpha, self.id_text_rect)
-       
-
-
-    def update(self, hero_loot):
-        self.hero_loot = hero_loot
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
     
+
     def update_hero_loot(self, hero_loot):
+        """
+        Updates hero_loot attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param hero_loot: Hero loot value
+        :type damage: int
+        """
         self.hero_loot = hero_loot
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}", True, (255, 255, 255))
+
 
     def update_keys(self, keys):
+        """
+        Updates keys attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param keys: Number of keys owned
+        :type keys: int
+        """
         self.keys = keys
         self.keys_text = self.font.render(f"Keys: {self.keys}", True, (255, 255, 255))
 
+
     def update_potions(self, potions):
+        """
+        Updates potions attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param potions: Number of potions owned
+        :type potions: int
+        """
         self.potions = potions
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
     
+
     def create_alpha_surface(self, text_surface, alpha_value):
+        """
+        Creates an alpha surface for HUD id representation
+
+        Parameters
+        ----------
+        :param text_surface: Text Surface
+        :type text_surface: pygame Surface
+        :param alpha_value: Alpha value for the Surface
+        :type alpha_value: int
+        
+        Returns
+        -------
+        :returns: A Surface for the room id in HUD 
+        :rtype: pygame Surface
+        """
         # Create a new surface with the same size as the text_surface
         alpha_surface = pygame.Surface(text_surface.get_size(), pygame.SRCALPHA)
     
@@ -150,7 +201,16 @@ class HUD():
     
         return alpha_surface
     
+
     def update_id(self, new_id):
+        """
+        Updates id attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param new_id: Number of room visited
+        :type new_id: int
+        """        
         self.id = new_id
         self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
         self.id_text_alpha = self.create_alpha_surface(self.id_text, 100)

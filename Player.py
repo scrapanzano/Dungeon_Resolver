@@ -1,6 +1,10 @@
+"""
+This module is part of the dungeon_gui package, for the graphical representation of the dungeon
+"""
+
 import pygame
-from classes.health_bar import HealthBar
-from classes.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
+from health_bar import HealthBar
+from constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_ENDING_POS, PLAYER_ENTER_STARTING_POS
 
 
 character_tileset = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/npc_elf.png")
@@ -11,6 +15,9 @@ SPEED = 0.03
 
 
 class Player():
+    """
+    This class describes the representation of the Hero Player 
+    """    
     def __init__(self, current_health=100, max_health=100, pos_x=PLAYER_ENTER_ENDING_POS[0], pos_y=PLAYER_ENTER_ENDING_POS[1], character_tileset=character_tileset, weapon=None):
         self.current_health = current_health
         self.max_health = max_health
@@ -30,7 +37,18 @@ class Player():
         # Setting up the health bar
         self.health_bar = HealthBar(blink_counter=self.blink_counter, max_health=self.max_health, current_health=self.current_health)
 
+
     def render_player(self, screen, scale_factor):
+        """
+        Rendering of the Player Object on the screen using a tile set
+
+        Parameters
+        ---------- 
+        :param screen: Screen where dungeon_gui runs
+        :type screen: pygame Surface
+        :param scale_factor: Object scale factor 
+        :param type: scale_factor: int
+        """
         player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_player_surface = pygame.transform.scale(player_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
@@ -61,11 +79,29 @@ class Player():
     #             self.player_pos_y = self.target_y  # Ensure the player's position is exactly the target position
     #             self.is_moving = False
 
+
     def update_health(self, health):
+        """
+        Updates current_health attribute and health_bar
+       
+        Parameters
+        ----------
+        :param health: Hero healt value
+        :type healt: int
+        """
         self.current_health = health
         self.health_bar.update_health(health)
 
+
     def get_damage(self, damage):
+        """
+        Manages the damage taken by the hero, updating his health
+       
+        Parameters
+        ----------
+        :param damage: Damage value
+        :type damage: int
+        """
         new_health = self.current_health - damage
         if new_health <= 0:
             new_health = 0
@@ -76,6 +112,14 @@ class Player():
 
 
     def get_heal(self, heal):
+        """
+        Manages the hero's health, when healing himself
+       
+        Parameters
+        ----------
+        :param heal: Heal value
+        :type heal: int
+        """
         new_health = self.current_health + heal
         if new_health > self.max_health:
             new_health = self.max_health
@@ -84,5 +128,14 @@ class Player():
         self.update_health(new_health)
         pygame.time.set_timer(PLAYER_GET_HEAL, 300)  # Start a timer for 300ms
 
+
     def update_weapon(self, new_damage):
+        """
+        Calls the function to update the weapon's damage
+       
+        Parameters
+        ----------
+        :param new_damage: Weapon damage value
+        :type damage: int
+        """
         self.weapon.update_damage(new_damage)

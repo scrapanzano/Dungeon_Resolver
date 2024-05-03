@@ -16,12 +16,12 @@ import matplotlib.lines as lines
 from unified_planning.shortcuts import *
 from unified_planning.io import PDDLReader
 from termcolor import colored
-from dungeon_gui.classes.Room import Room
-from dungeon_gui.classes.Key import Key
-from dungeon_gui.classes.Loot import Loot
-from dungeon_gui.classes.Enemy import Enemy
-from dungeon_gui.classes.Weapon import Weapon
-from dungeon_gui.classes.Potion import Potion
+from Room import Room
+from Key import Key
+from Loot import Loot
+from Enemy import Enemy
+from Weapon import Weapon
+from Potion import Potion
 from GUI import GUI
 
 template_name = "./dungeon_resolver/dungeon_template.pddl"
@@ -282,10 +282,11 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
+    # Choose if run dungeon_gui
     gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
     print()
     if gui_choice:
-        # Lancia dungeon_gui
+        # Run dungeon_gui
         gui = GUI(problem, result, rooms)
         gui.run()
     else:

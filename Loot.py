@@ -1,12 +1,19 @@
+"""
+This module is part of the dungeon_gui package, for the graphical representation of the dungeon
+"""
+
 import pygame
 
-from dungeon_gui.classes.collectable import Collectable
+from collectable import Collectable
 
 loot_tileset = pygame.image.load("dungeon_resolver/dungeon_gui/assets/dungeon_tileset.png")
 
 TILE_SIZE = 16
 
 class Loot(Collectable):
+    """
+    This class describes the representation of the Treasure Object 
+    """
     def __init__(self, loot_value:int, loot_tileset=loot_tileset):
         super().__init__()
         self.loot_value = loot_value
@@ -22,7 +29,18 @@ class Loot(Collectable):
         else:
             self.loot_tile_x, self.loot_tile_y = (4, 8)
 
+
     def render_collectable(self, screen, scale_factor):
+        """
+        Rendering of the Treasure Object on the screen using a tile set
+
+        Parameters
+        ---------- 
+        :param screen: Screen where dungeon_gui runs
+        :type screen: pygame Surface
+        :param scale_factor: Object scale factor 
+        :param type: scale_factor: int
+        """
         loot_surface = self.loot_tileset.subsurface(pygame.Rect(self.loot_tile_x * TILE_SIZE, self.loot_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
         scaled_loot_surface = pygame.transform.scale(loot_surface, (TILE_SIZE * scale_factor, TILE_SIZE * scale_factor))
         
