@@ -285,32 +285,33 @@ def generate_instance(instance_name, num_rooms):
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
 
-    # Choose if run dungeon_gui
-    gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
-    print()
-    if gui_choice:
-        # Run dungeon_gui
-        gui = GUI(problem, result, rooms)
-        gui.run()
-    else:
-        # Invoke unified-planning sequential simulator
-        life = FluentExp(problem.fluent("hero_life"))
-        strength = FluentExp(problem.fluent("hero_strength"))
-        loot = FluentExp(problem.fluent("hero_loot"))
-        n_action = 1
+    if result.plan != None:
+        # Choose if run dungeon_gui
+        gui_choice = yes_or_no('Do you want run the Dungeon GUI?')
+        print()
+        if gui_choice:
+            # Run dungeon_gui
+            gui = GUI(problem, result, rooms)
+            gui.run()
+        else:
+            # Invoke unified-planning sequential simulator
+            life = FluentExp(problem.fluent("hero_life"))
+            strength = FluentExp(problem.fluent("hero_strength"))
+            loot = FluentExp(problem.fluent("hero_loot"))
+            n_action = 1
 
-        with SequentialSimulator(problem) as simulator: 
-            state = simulator.get_initial_state()
-            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
-            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-            print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
-            for ai in result.plan.actions:
-                state = simulator.apply(state, ai)
-                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
-                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
-                n_action += 1
-            if simulator.is_goal(state):
-                print(colored("Goal reached!", 'magenta'))
+            with SequentialSimulator(problem) as simulator: 
+                state = simulator.get_initial_state()
+                print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+                print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+                print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+                for ai in result.plan.actions:
+                    state = simulator.apply(state, ai)
+                    print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                    print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                    n_action += 1
+                if simulator.is_goal(state):
+                    print(colored("Goal reached!", 'magenta'))
 
     # Draw the graph with different colors for different types of edges
     edge_colors = ['xkcd:olive' if G[u][v]['type'] == 'normal' else 'xkcd:red' for u, v in G.edges()]
