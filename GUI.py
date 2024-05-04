@@ -127,7 +127,7 @@ class GUI():
             clock.tick(60)
             # Check for events
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     pygame.quit()
                     sys.exit()
                 if event.type == PLAYER_GET_DAMAGE:
@@ -173,6 +173,7 @@ class GUI():
                             if len(room1) > 2:
                                 old_room_id += room1[2]
                         else:
+                            # If the last action was open_door, then the old room id is the transition room id
                             old_room_id = transition_room.id
 
                         # Get the new room id
@@ -213,7 +214,9 @@ class GUI():
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
+                        # Exit room animation
                         exit_room(player, screen, actual_room, hud)
+                        # Entering in the transition room
                         enter_room(player, screen, transition_room, hud)
                         update_hud(hud, state, hero_loot, key_counter, potion_counter,transition_room.id, action, defeated_enemy_counter)
                         
@@ -230,6 +233,7 @@ class GUI():
                         pygame.display.flip()
                         
                         pygame.time.wait(1000)
+                        # Set the transition room has_door attribute to False
                         transition_room.has_door = False
                         actual_room = transition_room
                         
@@ -318,16 +322,15 @@ class GUI():
 
 def exit_room(player, screen, room, hud):
     """
-    TODO: add docs
 
     Parameters
     ----------
     :param screen: Screen where dungeon_gui runs
     :type screen: pygame Surface
-    :param old_room: TODO
-    :type old_room: TODO
-    :param hud: TODO
-    :type hud: TODO
+    :param actual_room: Room the player is exiting
+    :type actual_room: Room object
+    :param hud: HUD object
+
     """
     player_target_y = PLAYER_EXIT_ENDING_POS[1]
     weapon_target_y = WEAPON_EXIT_ENDING_POS[1]
@@ -352,16 +355,15 @@ def exit_room(player, screen, room, hud):
 
 def enter_room(player, screen, room, hud):
     """
-    TODO: add docs
 
-    Parameters
+    Parameters  
     ----------
     :param screen: Screen where dungeon_gui runs
     :type screen: pygame Surface
-    :param actual_room: TODO
-    :type actual_room: TODO
-    :param hud: TODO
-    :type hud: TODO
+    :param actual_room: Room the player is entering
+    :type actual_room: Room object
+    :param hud: HUD object
+
     """
     player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
     player.weapon.pos_y = WEAPON_ENTER_STARTING_POS[1]
@@ -388,39 +390,39 @@ def enter_room(player, screen, room, hud):
 
 def fluent_to_int(state, fluent):
     """
-    TODO: add docs
 
     Parameters
     ----------
-    :param state: TODO
-    :type state: TODO
-    :param fluent: TODO
-    :type fluent: TODO
+    :param state: Object representing the state of the problem
+    :type state: unified_planning.shortcuts.State
+    :param fluent: Object representing a fluent
+    :type fluent: unified_planning.shortcuts.FluentExp
     
     Returns
     -------
-    :returns: TODO
+    :returns: The value of the fluent as an integer
     :rtype: int
+
     """
     return int(str(state.get_value(fluent)))
 
 
 def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None):
     """
-    TODO: add docs
 
     Parameters
     ----------
-    :param state: TODO
-    :type state: TODO
-    :param hero_loot: TODO
+    :param state: Object representing the state of the problem
+    :type state: unified_planning.shortcuts.State
+    :param hero_loot: Fluent representing the hero loot
     :type hero_loot: int
-    :param potion_counter: TODO
+    :param potion_counter: Fluent representing the potion counter
     :type potion_counter: int
-    :param actual_room_id: TODO
-    :type actual_room_id: TODO
-    :param action: TODO
-    :type action: TODO
+    :param actual_room_id: The id of the actual room
+    :type actual_room_id: int or str
+    :param action: The last action executed
+    :type action: str
+
     """
     hud.update_hero_loot(state.get_value(hero_loot))
     hud.update_keys(state.get_value(key_counter))
