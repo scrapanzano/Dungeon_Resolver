@@ -10,7 +10,7 @@ class HealthBar():
     This class describes the representation of the Health Bar Object 
     """
 
-    def __init__(self, blink_counter, x=50, y=130, max_health=100, current_health=100):
+    def __init__(self, blink_counter, x=50, y=170, max_health=100, current_health=100):
         self.x = x
         self.y = y
         self.max_health = max_health
@@ -22,7 +22,7 @@ class HealthBar():
         self.hp_text = self.hp_font.render(f"{self.current_health}/{self.max_health}", True, (37, 19, 26))
         self.hp_text_rect = self.hp_text.get_rect()
         center_x = 100
-        center_y = 140
+        center_y = 180
 
         self.hp_text_rect.x = center_x - self.hp_text_rect.width / 2
         self.hp_text_rect.y = (center_y - self.hp_text_rect.height / 2) + 2

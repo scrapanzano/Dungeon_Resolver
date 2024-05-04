@@ -36,7 +36,7 @@ class Room():
     This class describes the representation of the Room 
     """
 
-    def __init__(self, id:int, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
+    def __init__(self, id, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
         self.id = id
         self.key = key
         self.loot = loot
@@ -80,8 +80,9 @@ class Room():
                         # Render tile ' ' first
                         tile_space_x, tile_space_y = self.tile_mapping[' ']
                         self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_space_x * TILE_SIZE, tile_space_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
-                        # Then render tile 'C' above it
-                        self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
+                        if self.has_door:
+                            # Then render tile 'D' or 'd' above it
+                            self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
                     else:
                         # Render other tiles normally
                         self.surface.blit(room_tileset, (x * TILE_SIZE, y * TILE_SIZE), (tile_x * TILE_SIZE, tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))

@@ -18,11 +18,12 @@ class Player():
     This class describes the representation of the Hero Player 
     """    
 
-    def __init__(self, current_health=100, max_health=100, pos_x=PLAYER_ENTER_ENDING_POS[0], pos_y=PLAYER_ENTER_ENDING_POS[1], character_tileset=character_tileset, weapon=None):
+    def __init__(self, current_health=100, max_health=100, pos_x=PLAYER_ENTER_ENDING_POS[0], pos_y=PLAYER_ENTER_ENDING_POS[1], character_tileset=character_tileset, weapon=None, potion = None):
         self.current_health = current_health
         self.max_health = max_health
         self.character_tileset = character_tileset
         self.weapon = weapon
+        self.potion = potion
         self.player_tile_x, self.player_tile_y = (0, 0)
         self.player_pos_x = pos_x
         self.player_pos_y = pos_y
@@ -98,7 +99,7 @@ class Player():
         pygame.time.set_timer(PLAYER_GET_DAMAGE, 300)  # Start a timer for 300ms
 
 
-    def get_heal(self, heal):
+    def get_heal(self):
         """
         Manages the hero's health, when healing himself
        
@@ -108,7 +109,7 @@ class Player():
         :type heal: int
         """
 
-        new_health = self.current_health + heal
+        new_health = self.current_health + self.potion.potion_value
         if new_health > self.max_health:
             new_health = self.max_health
         
@@ -127,3 +128,15 @@ class Player():
         """
 
         self.weapon.update_damage(new_damage)
+
+    def collect_potion(self, potion):
+        """
+        Calls the function to collect the potion
+       
+        Parameters
+        ----------
+        :param potion: Potion object
+        :type potion: Potion
+        """
+
+        self.potion = potion

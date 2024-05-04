@@ -7,22 +7,16 @@ from termcolor import colored
 
 import pygame
 import sys
-import time
 
 from dungeon_gui.Player import Player
-from dungeon_gui.Room import Room
 from dungeon_gui.Weapon import Weapon
-from dungeon_gui.Key import Key
-from dungeon_gui.Loot import Loot
-from dungeon_gui.Enemy import Enemy
-from dungeon_gui.Potion import Potion
 from dungeon_gui.hud import HUD
+from dungeon_gui.Room import Room
 
 from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
-from unified_planning.io import PDDLReader
 
-import networkx as nx
+import re
 
 
 # Set up the display
@@ -70,6 +64,21 @@ class GUI():
         hero_loot = FluentExp(self.problem.fluent("hero_loot"))
         key_counter = FluentExp(self.problem.fluent("key_counter"))
         potion_counter = FluentExp(self.problem.fluent("potion_counter"))
+        defeated_enemy_counter = FluentExp(self.problem.fluent("defeated_enemy_counter"))
+
+        # Extract the goals
+        goals = str(self.problem.goals)
+        # Using re.findall() to find all sequences of digits in the string
+        goals_values_str = re.findall(r'\d+', goals)
+        # Converts the goals_value to a list of integers
+        goals_values = list(map(int, goals_values_str))
+
+        # Extract the goals
+        hero_loot_goal = goals_values[0]
+        hero_life_goal = goals_values[1]
+        defeated_enemy_counter_goal = goals_values[2]
+
+        
 
         # Invoke unified-planning sequential simulator
         simulator = SequentialSimulator(self.problem)
@@ -90,21 +99,27 @@ class GUI():
         initial_weapon_damage = fluent_to_int(state, hero_strength)
 
         # Create a player object
-        player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage + 30))
+        player = Player(current_health=initial_hero_life, max_health=initial_max_hero_life, weapon=Weapon(damage=initial_weapon_damage))
 
         # Set up the HUD attributes based on the initial state
         initial_hero_loot = fluent_to_int(state, hero_loot)
         initial_key_counter = fluent_to_int(state, key_counter)
         initial_potion_counter = fluent_to_int(state, potion_counter)
+        initial_defeated_enemy_counter = fluent_to_int(state, defeated_enemy_counter)
 
         # Create a HUD object
-        hud = HUD(hero_loot=initial_hero_loot, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id)
+        hud = HUD(hero_loot=initial_hero_loot, hero_loot_goal=hero_loot_goal, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id, defeated_enemy_counter=initial_defeated_enemy_counter, defeated_enemy_counter_goal=defeated_enemy_counter_goal)
 
         # Set up the clock
         clock = pygame.time.Clock()
 
         # Set up the action name, usefull for displaying the last action on the screen
         action = ""
+
+        # Flag to check if the player has entered the dungeon for the first time
+        entered = False
+
+        transition_room = Room(id="", has_door=True)
 
         # Game loop
 
@@ -150,7 +165,21 @@ class GUI():
                         args_str = action[len('move('):-1]
                         # Split the remaining string into weapon and room
                         room1, room2 = args_str.split(', ')
+                        
+                        if not last_action_name == "open_door":
+                            # Get the old room id
+                            old_room_id = room1[1]
+                            # If the room id has more than 2 characters, then the room id is a double digit number
+                            if len(room1) > 2:
+                                old_room_id += room1[2]
+                        else:
+                            old_room_id = transition_room.id
+
+                        # Get the new room id
                         new_room_id = room2[1]
+                        # If the room id has more than 2 characters, then the room id is a double digit number
+                        if len(room2) > 2:
+                            new_room_id += room2[2]
 
                         old_room = actual_room
                         actual_room = self.rooms[int(new_room_id)]
@@ -170,6 +199,7 @@ class GUI():
                         last_action_name = "collect_key"
                 
                     elif action.startswith("collect_potion"):
+                        player.collect_potion(actual_room.potion)
                         actual_room.collect_potion()
                         last_action_name = "collect_potion"
 
@@ -179,37 +209,68 @@ class GUI():
                         last_action_name = "defeat_enemy"
 
                     elif action.startswith("drink_potion"):
-                        player.get_heal(actual_room.potion.potion_value)
+                        player.get_heal()
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
-                        last_action_name = "open_door"
-                        pass
+                        exit_room(player, screen, actual_room, hud)
+                        enter_room(player, screen, transition_room, hud)
+                        update_hud(hud, state, hero_loot, key_counter, potion_counter,transition_room.id, action, defeated_enemy_counter)
+                        
+                        hud.render(screen)
+                        pygame.display.flip()
 
+                        actual_room = transition_room
+
+                        screen.fill((37, 19, 26))
+                        actual_room.render(screen)
+                        player.render_player(screen, actual_room.scale_factor)
+                        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+                        hud.render(screen)
+                        pygame.display.flip()
+                        
+                        pygame.time.wait(1000)
+                        transition_room.has_door = False
+                        actual_room = transition_room
+                        
+                        screen.fill((37, 19, 26))  
+                        actual_room.render(screen)
+                        player.render_player(screen, actual_room.scale_factor)
+                        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+                        hud.render(screen)
+
+                        pygame.display.flip()
+                        last_action_name = "open_door"
+                        pygame.time.wait(1000)
+                        
                     elif action.startswith("escape_from_dungeon"):
+                        exit_room(player, screen, actual_room, hud)
                         last_action_name = "escape_from_dungeon"
-                        pass
                 
                 # Update the action number and the last action time
                 action_number += 1
                 last_action_time = current_time
             
             # First entrance in the room
-            if action_number == 0:
+            if action_number == 0 and not entered:
+                entered = True
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(500)
 
             # If the last action was a move action, the player has to exit the room
             # and then enter the new room
             if last_action_name == "move":
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action, defeated_enemy_counter)
                 exit_room(player, screen, old_room, hud)
+                if not transition_room.has_door:
+                    transition_room.has_door = True
                 pygame.time.wait(500)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action, defeated_enemy_counter)
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(1000)
                 last_action_name = ""
 
-            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action)
+            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action, defeated_enemy_counter)
             screen.fill((37, 19, 26))  
             actual_room.render(screen)
             player.render_player(screen, actual_room.scale_factor)
@@ -218,8 +279,44 @@ class GUI():
 
             pygame.display.flip()
 
+        # Load the font for the text
+        big_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf", 100)
+        # Create the text surface
+        big_text = big_font.render("Mission Complete", True, (255, 255, 255))
+        # Create a rect for the text surface
+        big_text_rect = big_text.get_rect(center=(WIDTH // 2, HEIGHT // 2))
 
-def exit_room(player, screen, old_room, hud):
+        # Load the font for the text
+        small_font = pygame.font.Font("dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf", 30)
+        # Create the text surface
+        small_text = small_font.render("press q or top right cross to quit", True, (255, 255, 255))
+        # Create a rect for the text surface
+        small_text_rect = small_text.get_rect(center=(WIDTH // 2, (HEIGHT // 2) + small_text.get_height() * 2))
+
+
+        # Create a semi-transparent surface
+        overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        overlay.fill((0, 0, 0, 128))  # RGBA color, the last value is the alpha (transparency)
+
+        while True:
+            # Redraw the screen to be visible behind the semi-transparent surface
+            screen.fill((37, 19, 26))  
+            actual_room.render(screen)
+            hud.render(screen)
+            player.render_player(screen, actual_room.scale_factor)
+            # Draw the semi-transparent surface and the text on the screen
+            screen.blit(overlay, (0, 0))
+            # Draw the text on the screen
+            screen.blit(big_text, big_text_rect)
+            screen.blit(small_text, small_text_rect)
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+                    pygame.quit()
+                    sys.exit()
+
+
+def exit_room(player, screen, room, hud):
     """
     TODO: add docs
 
@@ -237,7 +334,7 @@ def exit_room(player, screen, old_room, hud):
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
-        old_room.render(screen)
+        room.render(screen)
         hud.render(screen)
         player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
         player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
@@ -248,12 +345,12 @@ def exit_room(player, screen, old_room, hud):
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
-        player.render_player(screen, old_room.scale_factor)  
-        player.weapon.render_collectable(screen, old_room.scale_factor - 1)
+        player.render_player(screen, room.scale_factor)  
+        player.weapon.render_collectable(screen, room.scale_factor - 1)
         pygame.display.flip()
 
 
-def enter_room(player, screen, actual_room, hud):
+def enter_room(player, screen, room, hud):
     """
     TODO: add docs
 
@@ -273,7 +370,7 @@ def enter_room(player, screen, actual_room, hud):
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
-        actual_room.render(screen)
+        room.render(screen)
         hud.render(screen)
         player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
         player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
@@ -284,8 +381,8 @@ def enter_room(player, screen, actual_room, hud):
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
-        player.render_player(screen, actual_room.scale_factor)
-        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+        player.render_player(screen, room.scale_factor)
+        player.weapon.render_collectable(screen, room.scale_factor - 1)
         pygame.display.flip()
 
 
@@ -308,7 +405,7 @@ def fluent_to_int(state, fluent):
     return int(str(state.get_value(fluent)))
 
 
-def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action):
+def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None):
     """
     TODO: add docs
 
@@ -330,4 +427,6 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id)
     hud.update_action(action)
+    if defeated_enemy_counter is not None:
+        hud.update_defeated_enemy_counter(state.get_value(defeated_enemy_counter))
 
