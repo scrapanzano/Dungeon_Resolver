@@ -23,7 +23,7 @@ class HUD():
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
         self.loot_text_rect = self.loot_text.get_rect()
         self.loot_text_rect.x = 50
-        self.loot_text_rect.y = 130
+        self.loot_text_rect.y = 50
 
         loot_tile_x = 6
         loot_tile_y = 8
@@ -45,7 +45,7 @@ class HUD():
         self.keys_text = self.font.render(f"Keys: {self.keys}", True, (255, 255, 255))
         self.keys_text_rect = self.keys_text.get_rect()
         self.keys_text_rect.x = 50
-        self.keys_text_rect.y = 50
+        self.keys_text_rect.y = 130
 
         keys_tile_x = 9
         keys_tile_y = 9
