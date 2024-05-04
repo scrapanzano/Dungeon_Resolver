@@ -51,6 +51,11 @@ python3 .\dungeon_resolver\generate_dungeon_problem.py
 
 4. Follow the on-screen instructions to specify dungeon parameters and visualize the plan.
 
+## UI examples
+![Terminal Ui preview](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/TerminalInterfaceExample.png)
+![GUI preview](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/GUIExample.png)
+
+
 ## Documentation
 The documentation is available [here]().
 
