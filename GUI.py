@@ -18,9 +18,31 @@ from unified_planning.shortcuts import *
 
 import re
 
+#Initialize pygame
+pygame.init()
 
 # Set up the display
 WIDTH, HEIGHT = 1270, 720
+
+soundtrack = pygame.mixer.Sound("dungeon_resolver/sound_effects/soundtrack.wav")
+soundtrack.set_volume(0.1)
+escape_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/escape.wav")
+escape_sound.set_volume(0.1)
+door_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/door_open.wav")
+door_open_sound.set_volume(0.4)
+chest_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/chest_open.wav")
+chest_open_sound.set_volume(0.4)
+enemy_death_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/enemy_death.wav")
+enemy_death_sound.set_volume(0.4)
+out_transition_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/out_transition.wav")
+out_transition_sound.set_volume(0.1)
+in_transition_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/in_transition.wav")
+in_transition_sound.set_volume(0.1)
+collect_sword_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/collect_sword.wav")
+collect_sword_sound.set_volume(0.4)
+drink_potion_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/drink_potion.wav")
+drink_potion_sound.set_volume(0.4)
+
 
 
 class GUI():
@@ -32,14 +54,13 @@ class GUI():
         self.result = result
         self.rooms = rooms
 
-        #Initialize pygame
-        pygame.init()
-
 
     def run(self):
         """
-        TODO: add docs
+        Run the GUI
         """
+        # Play the soundtrack
+        soundtrack.play(-1)
         # Set up the display
         screen = pygame.display.set_mode((WIDTH, HEIGHT))
         # Set up the displayed name
@@ -189,10 +210,12 @@ class GUI():
                     elif action.startswith("collect_weapon"):
                         player.update_weapon(actual_room.weapon.damage)
                         actual_room.collect_weapon()
+                        collect_sword_sound.play()
                         last_action_name = "collect_weapon"
 
                     elif action.startswith("collect_treasure"):
                         actual_room.collect_treasure()
+                        chest_open_sound.play()
                         last_action_name = "collect_treasure"
                 
                     elif action.startswith("collect_key"):
@@ -206,11 +229,13 @@ class GUI():
 
                     elif action.startswith("defeat_enemy"):
                         actual_room.defeat_enemy()
+                        enemy_death_sound.play()
                         player.get_damage(actual_room.enemy.damage)
                         last_action_name = "defeat_enemy"
 
                     elif action.startswith("drink_potion"):
                         player.get_heal()
+                        drink_potion_sound.play()
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
@@ -243,6 +268,7 @@ class GUI():
                         player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
                         hud.render(screen)
 
+                        door_open_sound.play()
                         pygame.display.flip()
                         last_action_name = "open_door"
                         pygame.time.wait(1000)
@@ -303,6 +329,8 @@ class GUI():
         overlay.fill((0, 0, 0, 128))  # RGBA color, the last value is the alpha (transparency)
 
         while True:
+            soundtrack.stop()
+            escape_sound.play()
             # Redraw the screen to be visible behind the semi-transparent surface
             screen.fill((37, 19, 26))  
             actual_room.render(screen)
@@ -318,6 +346,7 @@ class GUI():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     pygame.quit()
                     sys.exit()
+                    
 
 
 def exit_room(player, screen, room, hud):
@@ -332,6 +361,7 @@ def exit_room(player, screen, room, hud):
     :param hud: HUD object
 
     """
+    out_transition_sound.play()
     player_target_y = PLAYER_EXIT_ENDING_POS[1]
     weapon_target_y = WEAPON_EXIT_ENDING_POS[1]
     player.is_moving = True
@@ -365,6 +395,7 @@ def enter_room(player, screen, room, hud):
     :param hud: HUD object
 
     """
+    in_transition_sound.play()
     player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
     player.weapon.pos_y = WEAPON_ENTER_STARTING_POS[1]
     player_target_y = PLAYER_ENTER_ENDING_POS[1]
