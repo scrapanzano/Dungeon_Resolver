@@ -11,6 +11,7 @@ import sys
 from dungeon_gui.Player import Player
 from dungeon_gui.Weapon import Weapon
 from dungeon_gui.hud import HUD
+from dungeon_gui.Room import Room
 
 from dungeon_gui.constants import PLAYER_GET_DAMAGE, PLAYER_GET_HEAL, PLAYER_ENTER_STARTING_POS,PLAYER_ENTER_ENDING_POS, WEAPON_ENTER_STARTING_POS, WEAPON_ENTER_ENDING_POS, PLAYER_EXIT_ENDING_POS, WEAPON_EXIT_ENDING_POS
 from unified_planning.shortcuts import *
@@ -115,9 +116,12 @@ class GUI():
         # Set up the action name, usefull for displaying the last action on the screen
         action = ""
 
-        # Game loop
-
+        # Flag to check if the player has entered the dungeon for the first time
         entered = False
+
+        transition_room = Room(id="", has_door=True)
+
+        # Game loop
 
         while True and not simulator.is_goal(state):
             clock.tick(60)
@@ -162,11 +166,14 @@ class GUI():
                         # Split the remaining string into weapon and room
                         room1, room2 = args_str.split(', ')
                         
-                        # Get the old room id
-                        old_room_id = room1[1]
-                        # If the room id has more than 2 characters, then the room id is a double digit number
-                        if len(room1) > 2:
-                            old_room_id += room1[2]
+                        if not last_action_name == "open_door":
+                            # Get the old room id
+                            old_room_id = room1[1]
+                            # If the room id has more than 2 characters, then the room id is a double digit number
+                            if len(room1) > 2:
+                                old_room_id += room1[2]
+                        else:
+                            old_room_id = transition_room.id
 
                         # Get the new room id
                         new_room_id = room2[1]
@@ -206,12 +213,39 @@ class GUI():
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
-                        last_action_name = "open_door"
-                        pass
-
-                    elif action.startswith("escape_from_dungeon"):
-                        last_action_name = "escape_from_dungeon"
                         exit_room(player, screen, actual_room, hud)
+                        enter_room(player, screen, transition_room, hud)
+                        update_hud(hud, state, hero_loot, key_counter, potion_counter,transition_room.id, action, defeated_enemy_counter)
+                        
+                        hud.render(screen)
+                        pygame.display.flip()
+
+                        actual_room = transition_room
+
+                        screen.fill((37, 19, 26))
+                        actual_room.render(screen)
+                        player.render_player(screen, actual_room.scale_factor)
+                        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+                        hud.render(screen)
+                        pygame.display.flip()
+                        
+                        pygame.time.wait(1000)
+                        transition_room.has_door = False
+                        actual_room = transition_room
+                        
+                        screen.fill((37, 19, 26))  
+                        actual_room.render(screen)
+                        player.render_player(screen, actual_room.scale_factor)
+                        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+                        hud.render(screen)
+
+                        pygame.display.flip()
+                        last_action_name = "open_door"
+                        pygame.time.wait(1000)
+                        
+                    elif action.startswith("escape_from_dungeon"):
+                        exit_room(player, screen, actual_room, hud)
+                        last_action_name = "escape_from_dungeon"
                 
                 # Update the action number and the last action time
                 action_number += 1
@@ -228,6 +262,8 @@ class GUI():
             if last_action_name == "move":
                 update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action, defeated_enemy_counter)
                 exit_room(player, screen, old_room, hud)
+                if not transition_room.has_door:
+                    transition_room.has_door = True
                 pygame.time.wait(500)
                 update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action, defeated_enemy_counter)
                 enter_room(player, screen, actual_room, hud)
@@ -314,7 +350,7 @@ def exit_room(player, screen, room, hud):
         pygame.display.flip()
 
 
-def enter_room(player, screen, actual_room, hud):
+def enter_room(player, screen, room, hud):
     """
     TODO: add docs
 
@@ -334,7 +370,7 @@ def enter_room(player, screen, actual_room, hud):
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
-        actual_room.render(screen)
+        room.render(screen)
         hud.render(screen)
         player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
         player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
@@ -345,8 +381,8 @@ def enter_room(player, screen, actual_room, hud):
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
-        player.render_player(screen, actual_room.scale_factor)
-        player.weapon.render_collectable(screen, actual_room.scale_factor - 1)
+        player.render_player(screen, room.scale_factor)
+        player.weapon.render_collectable(screen, room.scale_factor - 1)
         pygame.display.flip()
 
 
