@@ -211,7 +211,7 @@ class GUI():
 
                     elif action.startswith("escape_from_dungeon"):
                         last_action_name = "escape_from_dungeon"
-                        exit_room(player, screen, old_room, hud)
+                        exit_room(player, screen, actual_room, hud)
                 
                 # Update the action number and the last action time
                 action_number += 1
@@ -280,7 +280,7 @@ class GUI():
                     sys.exit()
 
 
-def exit_room(player, screen, old_room, hud):
+def exit_room(player, screen, room, hud):
     """
     TODO: add docs
 
@@ -298,7 +298,7 @@ def exit_room(player, screen, old_room, hud):
     player.is_moving = True
     while player.is_moving:
         screen.fill((37, 19, 26))
-        old_room.render(screen)
+        room.render(screen)
         hud.render(screen)
         player.player_pos_y = pygame.math.lerp(player.player_pos_y, player_target_y, 0.01)
         player.weapon.pos_y = pygame.math.lerp(player.weapon.pos_y, weapon_target_y, 0.01)
@@ -309,8 +309,8 @@ def exit_room(player, screen, old_room, hud):
         if abs(player.player_pos_y - player_target_y) < 0.01:
             player.player_pos_y = player_target_y
             player.is_moving = False
-        player.render_player(screen, old_room.scale_factor)  
-        player.weapon.render_collectable(screen, old_room.scale_factor - 1)
+        player.render_player(screen, room.scale_factor)  
+        player.weapon.render_collectable(screen, room.scale_factor - 1)
         pygame.display.flip()
 
 
