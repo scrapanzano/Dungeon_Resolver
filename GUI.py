@@ -25,7 +25,7 @@ pygame.init()
 WIDTH, HEIGHT = 1270, 720
 
 soundtrack = pygame.mixer.Sound("dungeon_resolver/sound_effects/soundtrack.wav")
-soundtrack.set_volume(0.1)
+soundtrack.set_volume(0.08)
 escape_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/escape.wav")
 escape_sound.set_volume(0.1)
 door_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/door_open.wav")
@@ -42,6 +42,10 @@ collect_sword_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/collect
 collect_sword_sound.set_volume(0.4)
 drink_potion_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/drink_potion.wav")
 drink_potion_sound.set_volume(0.4)
+collect_key_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/collect_key.wav")
+collect_key_sound.set_volume(0.4)
+collect_potion_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/collect_potion.wav")
+collect_potion_sound.set_volume(0.4)
 
 
 
@@ -220,11 +224,13 @@ class GUI():
                 
                     elif action.startswith("collect_key"):
                         actual_room.collect_key()
+                        collect_key_sound.play()
                         last_action_name = "collect_key"
                 
                     elif action.startswith("collect_potion"):
                         player.collect_potion(actual_room.potion)
                         actual_room.collect_potion()
+                        collect_potion_sound.play()
                         last_action_name = "collect_potion"
 
                     elif action.startswith("defeat_enemy"):
