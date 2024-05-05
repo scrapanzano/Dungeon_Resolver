@@ -64,5 +64,8 @@ The documentation is available [here]().
 - [Davide Leone](https://github.com/scrapanzano)
 - [Mattia Zavaglio](https://github.com/matuz91zava)
 
+## Licenses
+Everything used inside the project is free license!
+
 ## Acknowledgments
 The unified-planning library contributors for providing the planner.
