@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to Dungeon Resolver’s documentation! &mdash; Dungeon Resolver  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Dungeon_Resolver" href="modules.html" /> 
+    <link rel="next" title="Getting Started" href="getting_started.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,9 +45,9 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Dungeon_Resolver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#dungeon-gui">Dungeon_gui</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#utility">Utility</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference.html">API Reference</a></li>
 </ul>
 
         </div>
@@ -75,39 +75,91 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-dungeon-resolver-s-documentation">
-<h1>Welcome to Dungeon Resolver’s documentation!<a class="headerlink" href="#welcome-to-dungeon-resolver-s-documentation" title="Permalink to this heading"></a></h1>
+<h1>Welcome to Dungeon Resolver’s documentation!<a class="headerlink" href="#welcome-to-dungeon-resolver-s-documentation" title="Link to this heading"></a></h1>
+<section id="dungeon-resolver">
+<h2>Dungeon Resolver<a class="headerlink" href="#dungeon-resolver" title="Link to this heading"></a></h2>
+<p>Dungeon Resolver is a project developed initially as a university assignment for the “Intelligent Systems” course, focusing on Automated Planning. The project utilizes the unified-planning library to implement a planner and simulator for resolving randomly generated dungeon instances.</p>
+<section id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h3>
+<p>Automated Planning is a field within Artificial Intelligence (AI) that deals with designing algorithms and systems capable of generating plans to achieve specific goals. In the context of Dungeon Resolver, the objective is to create a system that can navigate through a randomly generated dungeon, overcoming obstacles, enemies, and collecting resources along the way.</p>
+</section>
+<section id="features">
+<h3>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><strong>Random Dungeon Generation</strong>: The program creates random dungeon instances with various rooms containing weapons, enemies, potions, and loot. This ensures each run provides a unique challenge.</p></li>
+<li><p><strong>Unified-Planning Planner</strong>: Dungeon Resolver employs the unified-planning library to implement the planner. The planner, named “enhsp”, is responsible for generating a plan to navigate through the dungeon efficiently.</p></li>
+<li><p><strong>Plan Representation</strong>: Once a plan is generated, it is represented visually using a graphical user interface (GUI). The GUI simulates a 2D top-down game, providing a clear visualization of the plan in action.</p></li>
+</ul>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<p>To use Dungeon Resolver, follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Clone the repository to your local machine.</p></li>
+<li><p>Install the necessary dependencies, including the unified-planning library.</p></li>
+<li><p>Run the program and specify the parameters for dungeon generation.</p></li>
+<li><p>The planner will then generate a plan (if exits) for navigating through the dungeon.</p></li>
+<li><p>At the user’s choice plan will be displayed in the GUI, allowing the user to visualize the execution steps.</p></li>
+<li><p>At the user’s choice the dungeon structure will be plotted using networkx graph.</p></li>
+</ol>
+</section>
+<section id="getting-started">
+<h3>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading"></a></h3>
+<p>To get started with Dungeon Resolver, you can follow these steps:</p>
+<ol class="arabic simple">
+<li><p>Clone the repository:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/scrapanzano/dungeon_resolver.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install dependencies:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>.<span class="se">\d</span>ungeon_resolver
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span><span class="o">[</span>Windows<span class="w"> </span>OS<span class="o">]</span>
+pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span><span class="o">[</span>Mac<span class="w"> </span>OS<span class="o">]</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the program:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>.<span class="se">\d</span>ungeon_resolver<span class="se">\g</span>enerate_dungeon_problem.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Follow the on-screen instructions to specify dungeon parameters and visualize the plan.</p></li>
+</ol>
+</section>
+<section id="ui-examples">
+<h3>UI examples<a class="headerlink" href="#ui-examples" title="Link to this heading"></a></h3>
+<p><img alt="Terminal Ui preview" src="https://github.com/scrapanzano/Dungeon_Resolver/blob/master/TerminalInterfaceExample.png" />
+<img alt="GUI preview" src="https://github.com/scrapanzano/Dungeon_Resolver/blob/master/GUIExample.png" /></p>
+</section>
+<section id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h3>
+<p>The documentation is available <a class="reference external" href="https://raw.githack.com/scrapanzano/Dungeon_Resolver/master/docs/_build/html/index.html">here</a>.</p>
+</section>
+<section id="contributors">
+<h3>Contributors<a class="headerlink" href="#contributors" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/scrapanzano">Davide Leone</a></p></li>
+<li><p><a class="reference external" href="https://github.com/matuz91zava">Mattia Zavaglio</a></p></li>
+</ul>
+</section>
+<section id="licenses">
+<h3>Licenses<a class="headerlink" href="#licenses" title="Link to this heading"></a></h3>
+<p>Everything used inside the project is free license!</p>
+</section>
+<section id="acknowledgments">
+<h3>Acknowledgments<a class="headerlink" href="#acknowledgments" title="Link to this heading"></a></h3>
+<p>The unified-planning library contributors for providing the planner.</p>
+</section>
+</section>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Dungeon_Resolver</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="GUI.html">GUI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generate_dungeon_problem.html">Generate_dungeon_problem</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#dungeon-gui">Dungeon_gui</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="collectable.html">Collectable</a></li>
-<li class="toctree-l2"><a class="reference internal" href="constants.html">Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Enemy.html">Enemy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="health_bar.html">Health_bar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="hud.html">Hud</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Key.html">Key</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Loot.html">Loot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Player.html">Player</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Potion.html">Potion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Room.html">Room</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Weapon.html">Weapon</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#utility">Utility</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="menu.html">Menu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="title.html">Title</a></li>
-</ul>
-</li>
-</ul>
 </div>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
@@ -118,7 +170,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="Dungeon_Resolver" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="getting_started.html" class="btn btn-neutral float-right" title="Getting Started" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

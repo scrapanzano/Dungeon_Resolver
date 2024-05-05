@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generate_dungeon_problem &mdash; Dungeon Resolver  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="GUI" href="GUI.html" />
+    <link rel="prev" title="Installation" href="../dungeon_resolver.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Dungeon Resolver
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../getting_started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../api_reference.html">Installation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../dungeon_resolver.html">Installation</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Generate_dungeon_problem</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.Main"><code class="docutils literal notranslate"><span class="pre">Main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.farthest_node"><code class="docutils literal notranslate"><span class="pre">farthest_node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_doors"><code class="docutils literal notranslate"><span class="pre">generate_doors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_enemies"><code class="docutils literal notranslate"><span class="pre">generate_enemies()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_instance"><code class="docutils literal notranslate"><span class="pre">generate_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_keys"><code class="docutils literal notranslate"><span class="pre">generate_keys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_loot_goal"><code class="docutils literal notranslate"><span class="pre">generate_loot_goal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_potions"><code class="docutils literal notranslate"><span class="pre">generate_potions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_treasures"><code class="docutils literal notranslate"><span class="pre">generate_treasures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.generate_weapons"><code class="docutils literal notranslate"><span class="pre">generate_weapons()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.invoke_unified_planning"><code class="docutils literal notranslate"><span class="pre">invoke_unified_planning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate_dungeon_problem.yes_or_no"><code class="docutils literal notranslate"><span class="pre">yes_or_no()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="GUI.html">GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../dungeon_gui.html">Dungeon GUI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utility.html">Installation</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Dungeon Resolver</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../api_reference.html">Installation</a></li>
+          <li class="breadcrumb-item"><a href="../dungeon_resolver.html">Installation</a></li>
+      <li class="breadcrumb-item active">Generate_dungeon_problem</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/api_reference/dungeon_resolver/generate_dungeon_problem.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-generate_dungeon_problem">
+<span id="generate-dungeon-problem"></span><h1>Generate_dungeon_problem<a class="headerlink" href="#module-generate_dungeon_problem" title="Link to this heading"></a></h1>
+<p>This module allows to create a random dungeon pddl problem file, that describe the specific instance of
+the dungeon problem, or to import an existing dungeon pddl problem file, and to resolve them with the
+unified_plannig library</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.Main">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">Main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.Main" title="Link to this definition"></a></dt>
+<dd><p>Main function: generates and manages a user menu.
+It’s possible to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Generate and solve a random problem instance, also invoking the GUI</p></li>
+<li><p>Read and solve a specified problem instance</p></li>
+</ul>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.farthest_node">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">farthest_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.farthest_node" title="Link to this definition"></a></dt>
+<dd><p>Returns the farthest node from start_room inside the graph G</p>
+<section id="parameters">
+<h2>Parameters<a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Farthest node from start_room</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_doors">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_doors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_doors" title="Link to this definition"></a></dt>
+<dd><p>Generates links between rooms, setting graph edges as normal or door link.</p>
+<section id="id1">
+<h2>Parameters<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_enemies">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_enemies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_enemy_rooms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_enemies" title="Link to this definition"></a></dt>
+<dd><p>Generates enemies in rooms and returns rooms with enemy</p>
+<section id="id2">
+<h2>Parameters<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param num_enemy_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Desired number of rooms with enemy</p>
+</dd>
+<dt class="field-even">type num_enemy_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="id3">
+<h2>Returns<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict of rooms with enemy [format: {room : enemy_value(life/strength)}]</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_instance">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_rooms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_instance" title="Link to this definition"></a></dt>
+<dd><p>Generates a random instance of the dungeon problem, starting from a pddl template file.
+In this function there are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Creation of a graph with networkx representing the dungeon</p></li>
+<li><p>Generation of all elements inside the dungeon (doors, keys, treasures, enemies, weapons, potions)</p></li>
+<li><p>Population and writing of the pddl template file with the previous elements</p></li>
+<li><p>Invocation of unified-planning planner to solve the problem</p></li>
+<li><p>Drawing the schematic representation (graph) of the dungeon whit matplotlib</p></li>
+</ul>
+</div></blockquote>
+<section id="id4">
+<h2>Parameters<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param instance_name<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Instance name for the pddl problem file</p>
+</dd>
+<dt class="field-even">type instance_name<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">param num_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of dungeon rooms</p>
+</dd>
+<dt class="field-even">type num_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_keys">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exit_room</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_keys" title="Link to this definition"></a></dt>
+<dd><p>Generates keys in rooms and returns a list of rooms with key</p>
+<section id="id5">
+<h2>Parameters<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param exit_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected exit room</p>
+</dd>
+<dt class="field-even">type exit_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="id6">
+<h2>Returns<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of rooms with key</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_loot_goal">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_loot_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">treasure_rooms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loot_rate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_loot_goal" title="Link to this definition"></a></dt>
+<dd><p>Generates and returns loot goal</p>
+<section id="id7">
+<h2>Parameters<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param treasure_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict of rooms with treasure</p>
+</dd>
+<dt class="field-even">type treasure_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">param loot_rate<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected loot rate</p>
+</dd>
+<dt class="field-even">type loot_rate<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</section>
+<section id="id8">
+<h2>Returns<a class="headerlink" href="#id8" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Loot goal value</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_potions">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_potions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_potion_rooms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_potions" title="Link to this definition"></a></dt>
+<dd><p>Generates potions in rooms and returns rooms with potion</p>
+<section id="id9">
+<h2>Parameters<a class="headerlink" href="#id9" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param num_potion_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Desired number of rooms with potion</p>
+</dd>
+<dt class="field-even">type num_potion_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="id10">
+<h2>Returns<a class="headerlink" href="#id10" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict of rooms with potion [format: {room : potion_value}]</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_treasures">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_treasures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_treasure_rooms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_treasures" title="Link to this definition"></a></dt>
+<dd><p>Generates treasures in rooms and returns rooms with treasure</p>
+<section id="id11">
+<h2>Parameters<a class="headerlink" href="#id11" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param num_treasure_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Desired number of rooms with treasure</p>
+</dd>
+<dt class="field-even">type num_treasure_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="id12">
+<h2>Returns<a class="headerlink" href="#id12" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict of rooms with treasure [format: {room : treasure_value}]</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.generate_weapons">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">generate_weapons</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_room</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enemy_rooms</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.generate_weapons" title="Link to this definition"></a></dt>
+<dd><p>Generates weapons in rooms and returns rooms with weapon</p>
+<section id="id13">
+<h2>Parameters<a class="headerlink" href="#id13" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param G<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Graph on which calculate farthest node from start_room</p>
+</dd>
+<dt class="field-even">type G<span class="colon">:</span></dt>
+<dd class="field-even"><p>networkx Graph</p>
+</dd>
+<dt class="field-odd">param start_room<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Selected starting room</p>
+</dd>
+<dt class="field-even">type start_room<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+<dt class="field-odd">param num_enemy_rooms<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of rooms with enemy</p>
+</dd>
+<dt class="field-even">type num_enemy_rooms<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</section>
+<section id="id14">
+<h2>Returns<a class="headerlink" href="#id14" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict of rooms with weapon [format: {room : weapon_strength}]</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.invoke_unified_planning">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">invoke_unified_planning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.invoke_unified_planning" title="Link to this definition"></a></dt>
+<dd><p>Invokes unified_planning to read and solve the instance file specified in path</p>
+<section id="id15">
+<h2>Parameters<a class="headerlink" href="#id15" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param path<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Pddl problem instance file path</p>
+</dd>
+<dt class="field-even">type path<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="generate_dungeon_problem.yes_or_no">
+<span class="sig-prename descclassname"><span class="pre">generate_dungeon_problem.</span></span><span class="sig-name descname"><span class="pre">yes_or_no</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">question</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#generate_dungeon_problem.yes_or_no" title="Link to this definition"></a></dt>
+<dd><p>Choices between yes or not (y/n)</p>
+<section id="id16">
+<h2>Parameters<a class="headerlink" href="#id16" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">param question<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A yes or no question</p>
+</dd>
+<dt class="field-even">type question<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</section>
+<section id="id17">
+<h2>Returns<a class="headerlink" href="#id17" title="Link to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if yes chosen, False otherwise</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../dungeon_resolver.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="GUI.html" class="btn btn-neutral float-right" title="GUI" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Davide Leone - Mattia Zavaglio.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

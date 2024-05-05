@@ -1,28 +1,26 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Menu &mdash; Dungeon Resolver  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=92fd9be5" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
 
   
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Title" href="title.html" />
-    <link rel="prev" title="Weapon" href="Weapon.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -45,14 +43,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Dungeon_Resolver</a></li>
-<li class="toctree-l1"><a class="reference internal" href="modules.html#dungeon-gui">Dungeon_gui</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html#utility">Utility</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Menu</a></li>
-<li class="toctree-l2"><a class="reference internal" href="title.html">Title</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting Started</a></li>
 </ul>
 
         </div>
@@ -69,7 +61,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="modules.html">Dungeon_Resolver</a></li>
       <li class="breadcrumb-item active">Menu</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/menu.rst.txt" rel="nofollow"> View page source</a>
@@ -81,30 +72,33 @@
            <div itemprop="articleBody">
              
   <section id="module-menu">
-<span id="menu"></span><h1>Menu<a class="headerlink" href="#module-menu" title="Permalink to this heading"></a></h1>
+<span id="menu"></span><h1>Menu<a class="headerlink" href="#module-menu" title="Link to this heading"></a></h1>
 <p>This module is part of the utility package, which contains some functions and utility classes</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="menu.Menu">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">menu.</span></span><span class="sig-name descname"><span class="pre">Menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu_items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">menu.</span></span><span class="sig-name descname"><span class="pre">Menu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">menu_items</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>This class representat a Menu Object</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="menu.Menu.choose">
-<span class="sig-name descname"><span class="pre">choose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu.choose" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">choose</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu.choose" title="Link to this definition"></a></dt>
 <dd><p>Allows to enter a choice between different menu items</p>
+<section id="returns">
+<h2>Returns<a class="headerlink" href="#returns" title="Link to this heading"></a></h2>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Number of entered choice</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="menu.Menu.print_menu">
-<span class="sig-name descname"><span class="pre">print_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu.print_menu" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">print_menu</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#menu.Menu.print_menu" title="Link to this definition"></a></dt>
 <dd><p>Print a Menu composed by a title and different items</p>
 </dd></dl>
 
@@ -115,10 +109,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Weapon.html" class="btn btn-neutral float-left" title="Weapon" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="title.html" class="btn btn-neutral float-right" title="Title" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 
