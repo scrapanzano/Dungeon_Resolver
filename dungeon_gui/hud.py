@@ -261,6 +261,8 @@ class HUD():
         ----------
         :param new_id: Number of room visited
         :type new_id: int
+        :param is_exit: Boolean that indicates if the room is an exit
+        :type is_exit: bool
         """        
 
         self.id = new_id
