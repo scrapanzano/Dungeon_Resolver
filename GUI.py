@@ -54,6 +54,8 @@ class GUI():
     This class manages the project GUI
     """
     def __init__(self, problem, result, rooms):
+        #Initialize pygame
+        pygame.init()
         self.problem = problem
         self.result = result
         self.rooms = rooms
