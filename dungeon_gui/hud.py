@@ -219,7 +219,7 @@ class HUD():
         self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
     
 
-    def create_alpha_surface(self, text_surface, alpha_value):
+    def create_alpha_surface(self, text_surface, alpha_value, is_exit):
         """
         Creates an alpha surface for HUD id representation
 
@@ -240,7 +240,10 @@ class HUD():
         alpha_surface = pygame.Surface(text_surface.get_size(), pygame.SRCALPHA)
     
         # Fill the new surface with the desired color
-        alpha_surface.fill((255, 255, 255))
+        if is_exit:
+            alpha_surface.fill((255, 215, 0))
+        else:
+            alpha_surface.fill((255, 255, 255))
     
         # Set the alpha of the new surface
         alpha_surface.set_alpha(alpha_value)  # Set the alpha to a low value to make the text barely visible
@@ -250,7 +253,7 @@ class HUD():
     
         return alpha_surface
 
-    def update_id(self, new_id):
+    def update_id(self, new_id, is_exit):
         """
         Updates id attribute and its HUD representation
        
@@ -261,8 +264,11 @@ class HUD():
         """        
 
         self.id = new_id
-        self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
-        self.id_text_alpha = self.create_alpha_surface(self.id_text, 100)
+        if is_exit:
+            self.id_text = self.id_font.render(f"{self.id}", True, (255, 215, 0))
+        else:
+            self.id_text = self.id_font.render(f"{self.id}", True, (255, 255, 255))
+        self.id_text_alpha = self.create_alpha_surface(self.id_text, 100, is_exit)
     
         self.id_text_rect = self.id_text.get_rect()
         center_x = 1100
