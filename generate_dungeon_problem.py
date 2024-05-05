@@ -285,6 +285,8 @@ def generate_instance(instance_name, num_rooms):
     else:
         selected_planner = 'enhsp'
 
+    print(colored("Trying solving the problem with %s...\n" % selected_planner, 'light_yellow'))
+
     with OneshotPlanner(name=selected_planner) as planner:
         result = planner.solve(problem)
         print("%s returned: %s\n" % (planner.name, result.plan))
