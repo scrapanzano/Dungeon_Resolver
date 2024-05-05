@@ -36,7 +36,7 @@ class Room():
     This class describes the representation of the Room 
     """
 
-    def __init__(self, id, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door = False, x=0, y=0):
+    def __init__(self, id, key= None, loot=None, enemy=None, weapon=None, potion=None, width=WIDTH, height=HEIGHT, has_door=False, is_exit=False,x=0, y=0):
         self.id = id
         self.key = key
         self.loot = loot
@@ -46,6 +46,7 @@ class Room():
         self.width = WIDTH
         self.height = HEIGHT
         self.has_door = has_door
+        self.is_exit = is_exit 
         self.x = x
         self.y = y
         self.scale_factor = SCALE_FACTOR
