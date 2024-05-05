@@ -30,8 +30,6 @@ MENU_TITLE = 'Welcome to the Dungeon Resolver!'
 MENU_ITEMS = ['Generate and solve a new random Dungeon instance', 'Solve an existing Dungeon instance']
 GOODBYE = 'Thanks for using Dungeon Resolver! \nGoodbye!'
 
-WIDTH, HEIGHT = 1270, 720
-
 template_name = "./dungeon_resolver/dungeon_template.pddl"
 
 def generate_instance(instance_name, num_rooms):
@@ -315,6 +313,8 @@ def generate_instance(instance_name, num_rooms):
                     n_action += 1
                 if simulator.is_goal(state):
                     print(colored("Goal reached!", 'magenta'))
+    else:
+        print(colored('Unsolvable problem!', 'light_yellow'))
 
     graph_choice = yes_or_no('\nDo you want to view the Dungeon graph?')
     if graph_choice:
@@ -762,7 +762,13 @@ def Main():
             args_choice = yes_or_no(f'\nDo you want to set problem arguments? (DEFAULT: seed = {random_seed}, num_rooms = {num_rooms})')
             if args_choice:
                 random_seed = int(input('Insert random seed: '))
-                num_rooms = int(input("Insert number of rooms: "))
+                incorrect_entry = True
+                while incorrect_entry:
+                    num_rooms = int(input("Insert number of rooms (>= 4): "))
+                    if num_rooms < 4:
+                        print(colored('Incorrect entry! Insert a number >= 4', 'light_red'))
+                    else:
+                        incorrect_entry = False
             random.seed(random_seed )
             print(colored(f'Setting seed = {random_seed}, rooms = {num_rooms}', 'light_green'))
             generate_instance('instance_'+str(num_rooms)+'_'+str(random_seed), num_rooms)
@@ -772,6 +778,8 @@ def Main():
                 invoke_unified_planning(path)
             except FileNotFoundError:
                 print(colored('\nAttention! File path not found!\n', 'light_red'))
+            except:
+                print(colored('\nAttention, incorrect file! Please select a pddl problem instance file!\n', 'light_red'))
         else:
             print(colored('\n' + GOODBYE + '\n', 'light_cyan'))
             go_on = False

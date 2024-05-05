@@ -103,7 +103,6 @@ class GUI():
         hero_life_goal = goals_values[1]
         defeated_enemy_counter_goal = goals_values[2]
 
-        
 
         # Invoke unified-planning sequential simulator
         simulator = SequentialSimulator(self.problem)
@@ -354,9 +353,9 @@ class GUI():
                     sys.exit()
                     
 
-
 def exit_room(player, screen, room, hud):
     """
+    Updates room rendering when player leaves room
 
     Parameters
     ----------
@@ -391,6 +390,7 @@ def exit_room(player, screen, room, hud):
 
 def enter_room(player, screen, room, hud):
     """
+    Updates room rendering when player enters the room
 
     Parameters  
     ----------
@@ -427,6 +427,7 @@ def enter_room(player, screen, room, hud):
 
 def fluent_to_int(state, fluent):
     """
+    Converts unified_planning Fluent to int
 
     Parameters
     ----------
@@ -446,6 +447,7 @@ def fluent_to_int(state, fluent):
 
 def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None):
     """
+    Updates all hud variables
 
     Parameters
     ----------
