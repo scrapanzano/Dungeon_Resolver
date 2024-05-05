@@ -154,7 +154,7 @@ class GUI():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                     pygame.quit()
-                    sys.exit()
+                    return
                 if event.type == PLAYER_GET_DAMAGE:
                     player.blink_counter += 1
                     player.health_bar.blink_counter += 1
@@ -296,17 +296,17 @@ class GUI():
             # If the last action was a move action, the player has to exit the room
             # and then enter the new room
             if last_action_name == "move":
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action, defeated_enemy_counter)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,old_room_id, action, defeated_enemy_counter, old_room.is_exit)
                 exit_room(player, screen, old_room, hud)
                 if not transition_room.has_door:
                     transition_room.has_door = True
                 pygame.time.wait(500)
-                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action, defeated_enemy_counter)
+                update_hud(hud, state, hero_loot, key_counter, potion_counter,new_room_id, action, defeated_enemy_counter, actual_room.is_exit)
                 enter_room(player, screen, actual_room, hud)
                 pygame.time.wait(1000)
                 last_action_name = ""
 
-            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action, defeated_enemy_counter)
+            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action, defeated_enemy_counter, actual_room.is_exit)
             screen.fill((37, 19, 26))  
             actual_room.render(screen)
             player.render_player(screen, actual_room.scale_factor)
@@ -334,9 +334,14 @@ class GUI():
         overlay = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 128))  # RGBA color, the last value is the alpha (transparency)
 
+        soundtrack.stop()
+        escape_sound.play()
+
         while True:
-            soundtrack.stop()
-            escape_sound.play()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
+                    pygame.quit()
+                    return
             # Redraw the screen to be visible behind the semi-transparent surface
             screen.fill((37, 19, 26))  
             actual_room.render(screen)
@@ -348,12 +353,7 @@ class GUI():
             screen.blit(big_text, big_text_rect)
             screen.blit(small_text, small_text_rect)
             pygame.display.flip()
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
-                    pygame.quit()
-                    sys.exit()
-                    
-
+                     
 
 def exit_room(player, screen, room, hud):
     """
@@ -444,7 +444,7 @@ def fluent_to_int(state, fluent):
     return int(str(state.get_value(fluent)))
 
 
-def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None):
+def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None, is_exit=False):
     """
 
     Parameters
@@ -464,7 +464,7 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
     hud.update_hero_loot(state.get_value(hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))
-    hud.update_id(actual_room_id)
+    hud.update_id(actual_room_id, is_exit)
     hud.update_action(action)
     if defeated_enemy_counter is not None:
         hud.update_defeated_enemy_counter(state.get_value(defeated_enemy_counter))
