@@ -445,22 +445,32 @@ def fluent_to_int(state, fluent):
 
 
 def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_id, action, defeated_enemy_counter=None, is_exit=False):
+    
     """
 
     Parameters
     ----------
+    :param hud: HUD object
+    :type hud: HUD object
     :param state: Object representing the state of the problem
     :type state: unified_planning.shortcuts.State
-    :param hero_loot: Fluent representing the hero loot
-    :type hero_loot: int
-    :param potion_counter: Fluent representing the potion counter
-    :type potion_counter: int
+    :param hero_loot: Object representing the hero loot fluent
+    :type hero_loot: unified_planning.shortcuts.FluentExp
+    :param key_counter: Object representing the key counter fluent
+    :type key_counter: unified_planning.shortcuts.FluentExp
+    :param potion_counter: Object representing the potion counter fluent
+    :type potion_counter: unified_planning.shortcuts.FluentExp
     :param actual_room_id: The id of the actual room
-    :type actual_room_id: int or str
+    :type actual_room_id: int
     :param action: The last action executed
     :type action: str
+    :param defeated_enemy_counter: Object representing the defeated enemy counter fluent
+    :type defeated_enemy_counter: unified_planning.shortcuts.FluentExp
+    :param is_exit: Flag to check if the actual room is the exit room
+    :type is_exit: bool
 
     """
+    
     hud.update_hero_loot(state.get_value(hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))
