@@ -69,7 +69,10 @@ def generate_instance(instance_name, num_rooms):
     # Create Room Object for each node in the graph (dungeon_gui)
     rooms = []
     for node in G.nodes():
-        node = Room(id=node)
+        if node == exit_room:
+            node = Room(id=node, is_exit=True)
+        else:
+            node = Room(id=node)
         rooms.append(node)
         
     # Generate doors (graph edges)
