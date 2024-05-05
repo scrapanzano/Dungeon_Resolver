@@ -57,7 +57,7 @@ python3 .\dungeon_resolver\generate_dungeon_problem.py
 
 
 ## Documentation
-The documentation is available [here]().
+The documentation is available [here](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/docs/_build/html/index.html).
 
 ## Contributors
 
