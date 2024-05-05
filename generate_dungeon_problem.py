@@ -734,19 +734,6 @@ def yes_or_no(question):
              print(colored('Incorrect entry! Type \'y\' or \'n\'', 'light_red'))
 
 
-# def parse_arguments():
-#     parser = argparse.ArgumentParser( description = "Generate dungeon planning instance" )
-#     parser.add_argument( "--random_seed", required=False, help="Set RNG seed", default = "1229")
-#     parser.add_argument( "--num_rooms", required=False, help="Number of rooms in the dungeon", default = "8")
-
-#     args = parser.parse_args()
-#     args.random_seed = int(args.random_seed)
-#     if args.random_seed != None:
-#         random.seed( args.random_seed )
-#         print( ";;Setting seed to {0}\n".format(args.random_seed) )
-#     return args
-
-
 def Main():
     """
     Main function: generates and manages a user menu.
@@ -759,7 +746,6 @@ def Main():
     while go_on:
         choice = menu.choose()
         if choice == 1:
-            #args = parse_arguments()
             random_seed = 1229
             num_rooms = 8
             args_choice = yes_or_no(f'\nDo you want to set problem arguments? (DEFAULT: seed = {random_seed}, num_rooms = {num_rooms})')
