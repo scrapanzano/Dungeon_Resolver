@@ -47,7 +47,7 @@ class Player():
         :param screen: Screen where dungeon_gui runs
         :type screen: pygame Surface
         :param scale_factor: Object scale factor 
-        :type: scale_factor: int
+        :type scale_factor: int
         """
 
         player_surface = self.character_tileset.subsurface(pygame.Rect(self.player_tile_x * TILE_SIZE, self.player_tile_y * TILE_SIZE, TILE_SIZE, TILE_SIZE))
@@ -74,7 +74,7 @@ class Player():
         Parameters
         ----------
         :param health: Hero healt value
-        :type healt: int
+        :type health: int
         """
         self.current_health = health
         self.health_bar.update_health(health)

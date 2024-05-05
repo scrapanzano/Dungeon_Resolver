@@ -15,7 +15,6 @@ class HUD():
     This class describes the representation of the HUD 
     """
     def __init__(self, hero_loot=0, hero_loot_goal=0, key_counter=0, potion_counter=0, room_id=0, defeated_enemy_counter=0, defeated_enemy_counter_goal=0, action=""):
-
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.hero_loot_goal = hero_loot_goal
@@ -280,5 +279,13 @@ class HUD():
  
 
     def update_action(self, action):
+        """
+        Updates action attribute and its HUD representation
+       
+        Parameters
+        ----------
+        :param action: Hero action performed
+        :type action: str
+        """     
         self.action = action
         self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))

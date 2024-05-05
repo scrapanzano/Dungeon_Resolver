@@ -60,7 +60,7 @@ class HealthBar():
        
         Parameters
         ----------
-        :param healt: Hero health value
+        :param health: Hero health value
         :type health: int
         """
 

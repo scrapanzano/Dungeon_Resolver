@@ -46,7 +46,6 @@ def generate_instance(instance_name, num_rooms):
     ----------
     :param instance_name: Instance name for the pddl problem file
     :type instance_name: str
-    
     :param num_rooms: Number of dungeon rooms 
     :type num_rooms: int
     """

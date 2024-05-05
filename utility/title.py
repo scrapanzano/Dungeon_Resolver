@@ -1,3 +1,8 @@
+
+"""
+This module is part of the utility package, which contains some functions and utility classes
+"""
+
 from termcolor import colored
 
 TITLE = [
@@ -17,5 +22,8 @@ TITLE = [
 
 
 def print_title():
+    """
+    Print a title composed by several lines of string
+    """
     for string in TITLE:
         print(colored (string, 'light_magenta'))

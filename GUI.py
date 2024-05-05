@@ -361,12 +361,14 @@ def exit_room(player, screen, room, hud):
 
     Parameters
     ----------
+    :param player: Player object
+    :type player: Player 
     :param screen: Screen where dungeon_gui runs
     :type screen: pygame Surface
-    :param actual_room: Room the player is exiting
-    :type actual_room: Room object
+    :param room: Room the player is exiting
+    :type room: Room 
     :param hud: HUD object
-
+    :type hud: HUD 
     """
     out_transition_sound.play()
     player_target_y = PLAYER_EXIT_ENDING_POS[1]
@@ -396,12 +398,14 @@ def enter_room(player, screen, room, hud):
 
     Parameters  
     ----------
+    :param player: Player object
+    :type player: Player 
     :param screen: Screen where dungeon_gui runs
     :type screen: pygame Surface
-    :param actual_room: Room the player is entering
-    :type actual_room: Room object
+    :param room: Room the player is entering
+    :type room: Room 
     :param hud: HUD object
-
+    :type hud: HUD 
     """
     in_transition_sound.play()
     player.player_pos_y = PLAYER_ENTER_STARTING_POS[1]
@@ -455,7 +459,7 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
     Parameters
     ----------
     :param hud: HUD object
-    :type hud: HUD object
+    :type hud: HUD 
     :param state: Object representing the state of the problem
     :type state: unified_planning.shortcuts.State
     :param hero_loot: Object representing the hero loot fluent
