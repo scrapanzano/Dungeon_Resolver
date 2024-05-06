@@ -1,5 +1,5 @@
 Quickstart
 ==========
 
-.. include:: ./INSTALLATION.md
+.. include:: ./QUICKSTART.md
    :parser: myst_parser.sphinx_
