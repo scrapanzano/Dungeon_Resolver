@@ -19,10 +19,12 @@ class HUD():
         
         self.font = pygame.font.Font(FONT_PATH, 36)
         
+        self.loot_flag = False
+        self.enemies_flag = False
 
         # Setting up the escape room HUD
         self.escape_room = escape_room
-        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (255, 215, 0))
+        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (255, 255, 255))
         self.escape_room_text_rect = self.escape_room_text.get_rect()
         self.escape_room_text_rect.x = 50
         self.escape_room_text_rect.y = 20
@@ -212,9 +214,15 @@ class HUD():
         :type hero_loot: int
         """
         self.hero_loot = hero_loot
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
+        if self.hero_loot < self.hero_loot_goal:
+            self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
+        else:
+            self.loot_flag = True
+            self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (0, 255, 0))
 
-
+        if self.loot_flag and self.enemies_flag:
+            self.update_escape_room()
+            
     def update_keys(self, keys):
         """
         Updates keys attribute and its HUD representation
@@ -250,8 +258,14 @@ class HUD():
         :type defeated_enemy_counter: int
         """
         self.defeated_enemy_counter = defeated_enemy_counter
-        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
-    
+        if self.defeated_enemy_counter < self.defeated_enemy_counter_goal:
+            self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
+        else:
+            self.enemies_flag = True
+            self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (0, 255, 0))
+
+        if self.loot_flag and self.enemies_flag:
+            self.update_escape_room()
 
     def create_alpha_surface(self, text_surface, alpha_value, is_exit):
         """
@@ -324,3 +338,9 @@ class HUD():
         """     
         self.action = action
         self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
+
+    def update_escape_room(self):
+        """
+        Updates escape_room attribute and its HUD representation
+        """     
+        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (0, 255, 0))

@@ -486,11 +486,11 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
 
     """
     
-    hud.update_hero_loot(state.get_value(hero_loot))
+    hud.update_hero_loot(fluent_to_int(state, hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id, is_exit)
     hud.update_action(action)
     if defeated_enemy_counter is not None:
-        hud.update_defeated_enemy_counter(state.get_value(defeated_enemy_counter))
+        hud.update_defeated_enemy_counter(fluent_to_int(state, defeated_enemy_counter))
 
