@@ -343,4 +343,4 @@ class HUD():
         """
         Updates escape_room attribute and its HUD representation
         """     
-        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (0, 255, 0))
+        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (255, 215, 0))
