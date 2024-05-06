@@ -1,4 +1,5 @@
 What is Dungeon Resolver?
 =========================
 
-TODO: Insert text
+.. include:: ./WHATS_DUNGEON_RESOLVER.md
+   :parser: myst_parser.sphinx_

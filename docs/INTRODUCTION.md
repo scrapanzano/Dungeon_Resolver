@@ -1,8 +1,8 @@
-# Dungeon Resolver
+# Introduction
 
 Dungeon Resolver is a project developed initially as a university assignment for the "Intelligent Systems" course, focusing on Automated Planning. The project utilizes the unified-planning library to implement a planner and simulator for resolving randomly generated dungeon instances.
 
-## Introduction
+## Why Automated Planning?
 
 Automated Planning is a field within Artificial Intelligence (AI) that deals with designing algorithms and systems capable of generating plans to achieve specific goals. In the context of Dungeon Resolver, the objective is to create a system that can navigate through a randomly generated dungeon, overcoming obstacles, enemies, and collecting resources along the way.
 
@@ -19,45 +19,11 @@ Automated Planning is a field within Artificial Intelligence (AI) that deals wit
 To use Dungeon Resolver, follow these steps:
 
 1. Clone the repository to your local machine.
-2. Install the necessary dependencies, including the unified-planning library.
+2. Install the necessary dependencies, including the unified-planning library
 3. Run the program and specify the parameters for dungeon generation.
 4. The planner will then generate a plan (if exits) for navigating through the dungeon.
 5. At the user's choice plan will be displayed in the GUI, allowing the user to visualize the execution steps.
 6. At the user's choice the dungeon structure will be plotted using networkx graph.
-
-## Getting Started
-
-To get started with Dungeon Resolver, you can follow these steps:
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/scrapanzano/dungeon_resolver.git
-```
-
-2. Install dependencies:
-
-```bash
-cd .\dungeon_resolver
-pip install -r requirements.txt [Windows OS]
-pip3 install -r requirements.txt [Mac OS]
-```
-
-3. Run the program:
-
-```bash
-python3 .\dungeon_resolver\generate_dungeon_problem.py
-```
-
-4. Follow the on-screen instructions to specify dungeon parameters and visualize the plan.
-
-## UI examples
-![Terminal Ui preview](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/TerminalInterfaceExample.png)
-![GUI preview](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/GUIExample.png)
-
-
-## Documentation
-The documentation is available [here](https://raw.githack.com/scrapanzano/Dungeon_Resolver/master/docs/_build/html/index.html).
 
 ## Contributors
 
@@ -69,3 +35,4 @@ Everything used inside the project is free license!
 
 ## Acknowledgments
 The [unified-planning](https://unified-planning.readthedocs.io/en/latest/index.html) library contributors for providing the planner.
+
