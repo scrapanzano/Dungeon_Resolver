@@ -27,7 +27,7 @@ WIDTH, HEIGHT = 1270, 720
 soundtrack = pygame.mixer.Sound("dungeon_resolver/sound_effects/soundtrack.wav")
 soundtrack.set_volume(0.08)
 escape_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/escape.wav")
-escape_sound.set_volume(0.1)
+escape_sound.set_volume(0.2)
 door_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/door_open.wav")
 door_open_sound.set_volume(0.4)
 chest_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/chest_open.wav")
