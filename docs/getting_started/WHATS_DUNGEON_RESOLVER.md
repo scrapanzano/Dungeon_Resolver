@@ -5,11 +5,17 @@ Dungeon Resolver is a project developed initially as a university assignment for
 Unified-planning reads the [pddl dungeon domain file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_domain.pddl), that define the dungeon's structure, specifying the problem types (object), predicates (fluents), functions (numerics) and the actions that a hero can performe inside its.
 
 > [!NOTE]
-> A dungeon is made up of rooms, connected to each other, sometimes separated by closed doors: inside them it's possible to find treasures, keys, enemies, weapons and healing potions. 
+> A dungeon is made up of rooms, connected to each other, sometimes separated by closed doors: inside them it's possible to find keys to open doors, treasures to collect, enemies to defeat, weapons to fight them and healing potions. All these items (except keys) can have different values (E.g. different strength of enemies or more valuable treasures).
+> In an abstract way it's possible to represent the dungeon as an undirected graph.
 
-Instead, for the pddl dungeon istance file is possible to choose one of the following option:
-- **Generate and solve a random dungeon instance**: 
+Instead, for the pddl dungeon instance file is possible to choose one of the following option:
+- **Generate and solve a random dungeon instance**: Dungeon Resolver generates a [random pddl dungeon instance file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_problem.pddl), after the user has specified the desired number of rooms and the seed for the random functions. Then calls a unified-planning function to solve the problem. Finally it's possible to run the dungeon GUI and to view the abstract graphical representation of the dungeon. 
 
-- **Solve an already existing dungeon instance**: 
+- **Solve an already existing dungeon instance**: It's also possibile to read an [already existing pddl dungeon instance file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_instance2.pddl) and to call the unified-planning function to solve the problem, printing the result.
 
-  
+> [!NOTE]
+>  To solve the problem hero needs to: 
+> - survive (hero life always greater than zero)
+> - collect at least a pre-established percentage of treasures
+> - defeat at least a pre-established percentage of enemies
+> - reach the exit room and escape from dungeon  

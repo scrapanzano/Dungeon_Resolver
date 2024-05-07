@@ -40,6 +40,7 @@ def generate_instance(instance_name, num_rooms):
         - Generation of all elements inside the dungeon (doors, keys, treasures, enemies, weapons, potions)
         - Population and writing of the pddl template file with the previous elements
         - Invocation of unified-planning planner to solve the problem
+        - Running the dungeon GUI
         - Drawing the schematic representation (graph) of the dungeon whit matplotlib
 
     Parameters
@@ -288,9 +289,27 @@ def generate_instance(instance_name, num_rooms):
 
     with OneshotPlanner(name=selected_planner) as planner:
         result = planner.solve(problem)
-        print("%s returned: %s\n" % (planner.name, result.plan))
 
     if result.plan != None:
+        # Invoke unified-planning sequential simulator
+        life = FluentExp(problem.fluent("hero_life"))
+        strength = FluentExp(problem.fluent("hero_strength"))
+        loot = FluentExp(problem.fluent("hero_loot"))
+        n_action = 1
+
+        with SequentialSimulator(problem) as simulator: 
+            state = simulator.get_initial_state()
+            print(colored(f"Initial life = {state.get_value(life)}", 'green'))
+            print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
+            print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
+            for ai in result.plan.actions:
+                state = simulator.apply(state, ai)
+                print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
+                print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
+                n_action += 1
+            if simulator.is_goal(state):
+                print(colored("Goal reached!\n", 'magenta'))
+
         # Choose if run dungeon_gui
         gui_choice = yes_or_no('Do you want to run the Dungeon GUI?')
         print()
@@ -298,25 +317,7 @@ def generate_instance(instance_name, num_rooms):
             # Run dungeon_gui
             gui = GUI(problem, result, rooms)
             gui.run()
-        else:
-            # Invoke unified-planning sequential simulator
-            life = FluentExp(problem.fluent("hero_life"))
-            strength = FluentExp(problem.fluent("hero_strength"))
-            loot = FluentExp(problem.fluent("hero_loot"))
-            n_action = 1
 
-            with SequentialSimulator(problem) as simulator: 
-                state = simulator.get_initial_state()
-                print(colored(f"Initial life = {state.get_value(life)}", 'green'))
-                print(colored(f"Initial strength = {state.get_value(strength)}", 'red'))
-                print(colored(f"Initial loot = {state.get_value(loot)} - Loot goal >= {loot_goal}", 'yellow'))
-                for ai in result.plan.actions:
-                    state = simulator.apply(state, ai)
-                    print(colored(f"Applied action {n_action}: ", 'grey') + str(ai) + ". ", end="")
-                    print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
-                    n_action += 1
-                if simulator.is_goal(state):
-                    print(colored("Goal reached!", 'magenta'))
     else:
         print(colored('Unsolvable problem!', 'light_yellow'))
 
@@ -705,7 +706,7 @@ def invoke_unified_planning(path):
                 print(colored(f"Life: {state.get_value(life)}" , 'green') + " - " + colored(f"Strength: {state.get_value(strength)}" , 'red')+ " - " + colored(f"Loot: {state.get_value(loot)}", 'yellow'))
                 n_action += 1
             if simulator.is_goal(state):
-                print(colored("Goal reached!", 'magenta'))
+                print(colored("Goal reached!\n", 'magenta'))
     
 
 def yes_or_no(question):
