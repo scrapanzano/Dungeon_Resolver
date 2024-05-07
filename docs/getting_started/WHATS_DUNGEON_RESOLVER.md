@@ -11,7 +11,7 @@ Unified-planning reads the [pddl dungeon domain file](https://github.com/scrapan
 Instead, for the pddl dungeon instance file is possible to choose one of the following option:
 - **Generate and solve a random dungeon instance**: Dungeon Resolver generates a [random pddl dungeon instance file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_problem.pddl) after the user has specified the desired number of rooms and the seed for the random functions. Then calls a unified-planning function to solve the problem. Finally it's possible to run the dungeon GUI and to view the abstract graphical representation of the dungeon. 
 
-- **Solve an already existing dungeon instance**: It's also possibile to read an [already existing pddl dungeon instance file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_instance2.pddl) and to call the unified-planning function to solve the problem, printing the results. In this case the GUI is not available.
+- **Solve an already existing dungeon instance**: It's also possibile to read an [already existing pddl dungeon instance file](https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_instance2.pddl) and to call the unified-planning function to solve the problem, printing the result. In this case the GUI is not available.
 
 > [!NOTE]
 >  To solve the problem hero needs to: 
