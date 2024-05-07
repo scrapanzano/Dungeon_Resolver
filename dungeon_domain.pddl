@@ -132,7 +132,7 @@
 ;Collect weapon: assign weapon_value at hero_stregth
 (:action collect_weapon
     :parameters (?w - weapon ?x - room)
-    :precondition (and (at ?x) (weapon_at ?w ?x))
+    :precondition (and (at ?x) (weapon_at ?w ?x) (< (hero_strength) (weapon_strength ?w)))
     :effect (and (not (weapon_at ?w ?x)) (assign (hero_strength) (weapon_strength ?w)))
 )
 

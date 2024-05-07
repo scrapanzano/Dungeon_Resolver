@@ -253,6 +253,7 @@ class GUI():
                         last_action_name = "drink_potion"
             
                     elif action.startswith("open_door"):
+                        temp_room = actual_room
                         # Exit room animation
                         exit_room(player, screen, actual_room, hud)
                         # Entering in the transition room
@@ -286,7 +287,19 @@ class GUI():
                         pygame.display.flip()
                         last_action_name = "open_door"
                         pygame.time.wait(1000)
-                        
+
+                        ai = self.result.plan.actions[action_number + 1]
+                        action = str(ai)
+
+                        if not action.startswith("move"):
+                            exit_room(player, screen, actual_room, hud)
+                            enter_room(player, screen, temp_room, hud)
+                            actual_room = temp_room
+                            update_hud(hud, state, hero_loot, key_counter, potion_counter,actual_room.id, action, defeated_enemy_counter)
+                           
+                            hud.render(screen)
+                            pygame.display.flip()
+
                     elif action.startswith("escape_from_dungeon"):
                         exit_room(player, screen, actual_room, hud)
                         last_action_name = "escape_from_dungeon"
