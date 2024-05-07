@@ -27,7 +27,7 @@ WIDTH, HEIGHT = 1270, 720
 soundtrack = pygame.mixer.Sound("dungeon_resolver/sound_effects/soundtrack.wav")
 soundtrack.set_volume(0.08)
 escape_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/escape.wav")
-escape_sound.set_volume(0.1)
+escape_sound.set_volume(0.2)
 door_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/door_open.wav")
 door_open_sound.set_volume(0.4)
 chest_open_sound = pygame.mixer.Sound("dungeon_resolver/sound_effects/chest_open.wav")
@@ -133,8 +133,13 @@ class GUI():
         initial_potion_counter = fluent_to_int(state, potion_counter)
         initial_defeated_enemy_counter = fluent_to_int(state, defeated_enemy_counter)
 
+        # Get the escape room
+        for room in self.rooms:
+            if room.is_exit:
+                escape_room_id = room.id
+
         # Create a HUD object
-        hud = HUD(hero_loot=initial_hero_loot, hero_loot_goal=hero_loot_goal, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id, defeated_enemy_counter=initial_defeated_enemy_counter, defeated_enemy_counter_goal=defeated_enemy_counter_goal)
+        hud = HUD(escape_room=escape_room_id, hero_loot=initial_hero_loot, hero_loot_goal=hero_loot_goal, key_counter=initial_key_counter, potion_counter=initial_potion_counter,room_id=actual_room.id, defeated_enemy_counter=initial_defeated_enemy_counter, defeated_enemy_counter_goal=defeated_enemy_counter_goal)
 
         # Set up the clock
         clock = pygame.time.Clock()
@@ -145,8 +150,10 @@ class GUI():
         # Flag to check if the player has entered the dungeon for the first time
         entered = False
 
+        # Set up the transition room
         transition_room = Room(id="", has_door=True)
 
+    
         # Game loop
 
         while True and not simulator.is_goal(state):
@@ -479,11 +486,11 @@ def update_hud(hud, state, hero_loot, key_counter, potion_counter, actual_room_i
 
     """
     
-    hud.update_hero_loot(state.get_value(hero_loot))
+    hud.update_hero_loot(fluent_to_int(state, hero_loot))
     hud.update_keys(state.get_value(key_counter))
     hud.update_potions(state.get_value(potion_counter))
     hud.update_id(actual_room_id, is_exit)
     hud.update_action(action)
     if defeated_enemy_counter is not None:
-        hud.update_defeated_enemy_counter(state.get_value(defeated_enemy_counter))
+        hud.update_defeated_enemy_counter(fluent_to_int(state, defeated_enemy_counter))
 

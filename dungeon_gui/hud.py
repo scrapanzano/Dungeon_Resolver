@@ -7,6 +7,7 @@ import pygame
 
 TILE_SIZE = 16
 SCALE_FACTOR = 2
+OFFSET_NO_GOAL = 50
 
 FONT_PATH = "dungeon_Resolver/dungeon_gui/fonts/Minecraft.ttf"
 
@@ -14,7 +15,58 @@ class HUD():
     """
     This class describes the representation of the HUD 
     """
-    def __init__(self, hero_loot=0, hero_loot_goal=0, key_counter=0, potion_counter=0, room_id=0, defeated_enemy_counter=0, defeated_enemy_counter_goal=0, action=""):
+    def __init__(self, escape_room=0, hero_loot=0, hero_loot_goal=0, key_counter=0, potion_counter=0, room_id=0, defeated_enemy_counter=0, defeated_enemy_counter_goal=0, action=""):
+        
+        self.font = pygame.font.Font(FONT_PATH, 36)
+        
+        self.loot_flag = False
+        self.enemies_flag = False
+
+        # Setting up the escape room HUD
+        self.escape_room = escape_room
+        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (255, 255, 255))
+        self.escape_room_text_rect = self.escape_room_text.get_rect()
+        self.escape_room_text_rect.x = 50
+        self.escape_room_text_rect.y = 20
+
+        escape_room_tile_x = 27
+        escape_room_tile_y = 1
+
+        escape_room_pixel_x = escape_room_tile_x * TILE_SIZE
+        escape_room_pixel_y = escape_room_tile_y * TILE_SIZE
+
+        self.escape_room_icon = pygame.image.load("dungeon_resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
+        self.escape_room_icon = self.escape_room_icon.subsurface(pygame.Rect(escape_room_pixel_x, escape_room_pixel_y, TILE_SIZE * 2, TILE_SIZE * 2))
+        self.escape_room_icon = pygame.transform.scale(self.escape_room_icon, (25, 25))
+
+        self.escape_room_icon_rect = self.escape_room_icon.get_rect()
+        self.escape_room_icon_rect.x = 11.5
+        self.escape_room_icon_rect.y = self.escape_room_text_rect.y
+        
+        
+        # Setting up the defeated enemy counter HUD
+        self.defeated_enemy_counter = defeated_enemy_counter
+        self.defeated_enemy_counter_goal = defeated_enemy_counter_goal
+        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
+        self.defeated_enemy_counter_text_rect = self.defeated_enemy_counter_text.get_rect()
+        self.defeated_enemy_counter_text_rect.x = 50
+        self.defeated_enemy_counter_text_rect.y = 60
+
+        enemies_tile_x = 1
+        enemies_tile_y = 3
+
+        enemies_pixel_x = enemies_tile_x * TILE_SIZE
+        enemies_pixel_y = enemies_tile_y * TILE_SIZE
+
+        self.enemy_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
+        self.enemy_icon = self.enemy_icon.subsurface(pygame.Rect(enemies_pixel_x, enemies_pixel_y, TILE_SIZE, TILE_SIZE))
+        self.enemy_icon = pygame.transform.scale(self.enemy_icon, (40, 40))
+        
+        self.enemy_icon_rect = self.enemy_icon.get_rect()
+        self.enemy_icon_rect.x = 5
+        self.enemy_icon_rect.y = self.defeated_enemy_counter_text_rect.y - 7.5
+
+
         # Setting up the hero loot HUD
         self.hero_loot = hero_loot
         self.hero_loot_goal = hero_loot_goal
@@ -22,7 +74,7 @@ class HUD():
         self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
         self.loot_text_rect = self.loot_text.get_rect()
         self.loot_text_rect.x = 50
-        self.loot_text_rect.y = 50
+        self.loot_text_rect.y = 100
 
         loot_tile_x = 6
         loot_tile_y = 8
@@ -38,13 +90,14 @@ class HUD():
         self.loot_icon_rect = self.loot_icon.get_rect()
         self.loot_icon_rect.x = 5
         self.loot_icon_rect.y = self.loot_text_rect.y - 7.5
-
+        
+        
         # Setting up the keys HUD
         self.keys = key_counter
         self.keys_text = self.font.render(f"Keys: {self.keys}", True, (255, 255, 255))
         self.keys_text_rect = self.keys_text.get_rect()
         self.keys_text_rect.x = 50
-        self.keys_text_rect.y = 130
+        self.keys_text_rect.y = 130 + OFFSET_NO_GOAL
 
         keys_tile_x = 9
         keys_tile_y = 9
@@ -65,7 +118,7 @@ class HUD():
         self.potions_text = self.font.render(f"Potions: {self.potions}", True, (255, 255, 255))
         self.potions_text_rect = self.potions_text.get_rect()
         self.potions_text_rect.x = 50
-        self.potions_text_rect.y = 90
+        self.potions_text_rect.y = 170 + OFFSET_NO_GOAL
 
         potions_tile_x = 12
         potions_tile_y = 11
@@ -88,7 +141,7 @@ class HUD():
 
         self.health_icon_rect = self.health_icon.get_rect()
         self.health_icon_rect.x = 10
-        self.health_icon_rect.y = 170 - 7.5
+        self.health_icon_rect.y = 210 - 7.5 + OFFSET_NO_GOAL
 
         # Setting up the room id HUD
         self.id_font = pygame.font.Font(FONT_PATH, 250)
@@ -113,30 +166,11 @@ class HUD():
         self.id_text_rect.x = center_x - self.id_text_rect.width / 2
         self.id_text_rect.y = center_y - self.id_text_rect.height / 2
 
-        # Setting up the defeated enemy counter HUD
-        self.defeated_enemy_counter = defeated_enemy_counter
-        self.defeated_enemy_counter_goal = defeated_enemy_counter_goal
-        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
-        self.defeated_enemy_counter_text_rect = self.defeated_enemy_counter_text.get_rect()
-        self.defeated_enemy_counter_text_rect.x = 50
-        self.defeated_enemy_counter_text_rect.y = 10
-
-        enemies_tile_x = 1
-        enemies_tile_y = 3
-
-        enemies_pixel_x = enemies_tile_x * TILE_SIZE
-        enemies_pixel_y = enemies_tile_y * TILE_SIZE
-
-        self.enemy_icon = pygame.image.load("dungeon_Resolver/dungeon_gui/assets/0x72_16x16DungeonTileset.v5.png")
-        self.enemy_icon = self.enemy_icon.subsurface(pygame.Rect(enemies_pixel_x, enemies_pixel_y, TILE_SIZE, TILE_SIZE))
-        self.enemy_icon = pygame.transform.scale(self.enemy_icon, (40, 40))
-        
-        self.enemy_icon_rect = self.enemy_icon.get_rect()
-        self.enemy_icon_rect.x = 5
-        self.enemy_icon_rect.y = self.defeated_enemy_counter_text_rect.y - 7.5
-
-        
         # Setting up the action text HUD
+        self.action_title = self.font.render("Action:", True, (255, 255, 255))
+        self.action_title_rect = self.action_title.get_rect()
+        self.action_title_rect.x = 20
+        self.action_title_rect.y = 620
         self.action = action
         self.action_font = pygame.font.Font(FONT_PATH, 36)
         self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
@@ -160,12 +194,15 @@ class HUD():
         screen.blit(self.potions_icon, self.potions_icon_rect)
         screen.blit(self.health_icon, self.health_icon_rect)
         screen.blit(self.enemy_icon, self.enemy_icon_rect)
+        screen.blit(self.escape_room_icon, self.escape_room_icon_rect)
         screen.blit(self.loot_text, self.loot_text_rect)
         screen.blit(self.keys_text, self.keys_text_rect)
         screen.blit(self.potions_text, self.potions_text_rect)
         screen.blit(self.defeated_enemy_counter_text, self.defeated_enemy_counter_text_rect)
         screen.blit(self.id_text_alpha, self.id_text_rect)
+        screen.blit(self.action_title, self.action_title_rect)
         screen.blit(self.action_text, self.action_text_rect)
+        screen.blit(self.escape_room_text, self.escape_room_text_rect)
           
     def update_hero_loot(self, hero_loot):
         """
@@ -177,9 +214,15 @@ class HUD():
         :type hero_loot: int
         """
         self.hero_loot = hero_loot
-        self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
+        if self.hero_loot < self.hero_loot_goal:
+            self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (255, 255, 255))
+        else:
+            self.loot_flag = True
+            self.loot_text = self.font.render(f"Loot: {self.hero_loot}/{self.hero_loot_goal}", True, (0, 255, 0))
 
-
+        if self.loot_flag and self.enemies_flag:
+            self.update_escape_room()
+            
     def update_keys(self, keys):
         """
         Updates keys attribute and its HUD representation
@@ -215,8 +258,14 @@ class HUD():
         :type defeated_enemy_counter: int
         """
         self.defeated_enemy_counter = defeated_enemy_counter
-        self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
-    
+        if self.defeated_enemy_counter < self.defeated_enemy_counter_goal:
+            self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (255, 255, 255))
+        else:
+            self.enemies_flag = True
+            self.defeated_enemy_counter_text = self.font.render(f"Defeated Enemies: {self.defeated_enemy_counter}/{self.defeated_enemy_counter_goal}", True, (0, 255, 0))
+
+        if self.loot_flag and self.enemies_flag:
+            self.update_escape_room()
 
     def create_alpha_surface(self, text_surface, alpha_value, is_exit):
         """
@@ -289,3 +338,9 @@ class HUD():
         """     
         self.action = action
         self.action_text = self.action_font.render(f"{self.action}", True, (255, 255, 255))
+
+    def update_escape_room(self):
+        """
+        Updates escape_room attribute and its HUD representation
+        """     
+        self.escape_room_text = self.font.render(f"Escape Room: {self.escape_room}", True, (255, 215, 0))
