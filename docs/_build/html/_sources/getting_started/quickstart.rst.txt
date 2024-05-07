@@ -1,4 +1,5 @@
 Quickstart
 ==========
 
-TODO: Insert text
+.. include:: ./QUICKSTART.md
+   :parser: myst_parser.sphinx_

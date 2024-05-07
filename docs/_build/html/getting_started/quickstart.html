@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../examples.html" />
+    <link rel="next" title="API Reference" href="../api_reference.html" />
     <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
@@ -49,10 +49,16 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../getting_started.html">Getting Started</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="whats_dungeon_resolver.html">What is Dungeon Resolver?</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Quickstart</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#main-menu">Main Menu</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generate-and-solve-a-new-random-dungeon-instance">1 - Generate and solve a new random Dungeon instance</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#solve-an-existing-dungeon">2 - Solve an existing Dungeon</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
 </ul>
 
@@ -83,7 +89,27 @@
              
   <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Link to this heading"></a></h1>
-<p>TODO: Insert text</p>
+<p>This guide shows the usage of Dungeon Resolver.</p>
+<section id="main-menu">
+<h2>Main Menu<a class="headerlink" href="#main-menu" title="Link to this heading"></a></h2>
+<p><img alt="Terminal Ui preview" src="../_images/TerminalInterfaceExample.png" /></p>
+<section id="generate-and-solve-a-new-random-dungeon-instance">
+<h3>1 - Generate and solve a new random Dungeon instance<a class="headerlink" href="#generate-and-solve-a-new-random-dungeon-instance" title="Link to this heading"></a></h3>
+<p>Initially it’s possible to choose whether to set the problem arguments or use the default parameters:</p>
+<p><img alt="First option preview" src="../_images/ArgumentsSelExample.png" /></p>
+<p>Then it’s possible to choose whether to run the optimal version of unified-planning planner, that will solve the problem and print the result:</p>
+<p><img alt="Optimal option preview" src="../_images/OptimalSelExample.png" /></p>
+<p>Finally it’s possible to choose whether to run the dungeon GUI and view the abstract graphical representation of the dungeon:</p>
+<p><img alt="Grafic option preview" src="../_images/GUISelExample.png" /></p>
+<p><img alt="GUI preview" src="../_images/GUIExample.png" /></p>
+<p><img alt="Graph preview" src="../_images/GraphExample.png" /></p>
+</section>
+<section id="solve-an-existing-dungeon">
+<h3>2 - Solve an existing Dungeon<a class="headerlink" href="#solve-an-existing-dungeon" title="Link to this heading"></a></h3>
+<p>It’s also possibile to read an already existing pddl dungeon instance file, specifying its path, and to call the unified-planning function to solve the problem, printing the result (in this case the GUI is not available):</p>
+<p><img alt="Second Option preview" src="../_images/ExistingProblemExample.png" /></p>
+</section>
+</section>
 </section>
 
 
@@ -91,7 +117,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../examples.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../api_reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

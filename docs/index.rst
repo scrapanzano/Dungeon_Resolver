@@ -8,12 +8,11 @@ Welcome to Dungeon Resolver's documentation!
    :parser: myst_parser.sphinx_
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
    :hidden:
 
    getting_started
-   examples
    api_reference
 
 Indices and tables

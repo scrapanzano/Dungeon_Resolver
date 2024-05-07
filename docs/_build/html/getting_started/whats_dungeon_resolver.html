@@ -52,7 +52,6 @@
 <li class="toctree-l2"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api_reference.html">API Reference</a></li>
 </ul>
 
@@ -83,7 +82,30 @@
              
   <section id="what-is-dungeon-resolver">
 <h1>What is Dungeon Resolver?<a class="headerlink" href="#what-is-dungeon-resolver" title="Link to this heading"></a></h1>
-<p>TODO: Insert text</p>
+<p>Dungeon Resolver is a project developed initially as a university assignment for the “Intelligent Systems” course, focusing on Automated Planning. The project utilizes the unified-planning library to implement a planner and simulator for resolving randomly generated dungeon instances.</p>
+<p>Unified-planning reads the <a class="reference external" href="https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_domain.pddl">pddl dungeon domain file</a>, that define the dungeon’s structure, specifying the problem types (object), predicates (fluents), functions (numerics) and the actions that a hero can performe inside the dungeon.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A dungeon is made up of rooms, connected to each other, sometimes separated by closed doors: inside them it’s possible to find keys to open doors, treasures to collect, enemies to defeat, weapons to fight them and healing potions. All these items (except keys) can have different values (E.g. different strength of enemies or more valuable treasures).
+In an abstract way it’s possible to represent the dungeon as an undirected graph.</p>
+</div>
+<p>Instead, for the pddl dungeon instance file is possible to choose one of the following option:</p>
+<ul class="simple">
+<li><p><strong>Generate and solve a random dungeon instance</strong>: Dungeon Resolver generates a <a class="reference external" href="https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_problem.pddl">random pddl dungeon instance file</a> after the user has specified the desired number of rooms and the seed for the random functions. Then calls a unified-planning function to solve the problem. Finally it’s possible to run the dungeon GUI and to view the abstract graphical representation of the dungeon.</p></li>
+<li><p><strong>Solve an already existing dungeon instance</strong>: It’s also possibile to read an <a class="reference external" href="https://github.com/scrapanzano/Dungeon_Resolver/blob/master/dungeon_instance2.pddl">already existing pddl dungeon instance file</a> and to call the unified-planning function to solve the problem, printing the result. In this case the GUI is not available.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<dl class="simple">
+<dt>To solve the problem hero needs to:</dt><dd><ul class="simple">
+<li><p>survive (hero life always greater than zero)</p></li>
+<li><p>collect at least a pre-established percentage of treasures</p></li>
+<li><p>defeat at least a pre-established percentage of enemies</p></li>
+<li><p>reach the exit room and escape from dungeon</p></li>
+</ul>
+</dd>
+</dl>
+</div>
 </section>
 
 
