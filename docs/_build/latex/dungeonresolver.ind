@@ -1,0 +1,180 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter C
+  \item \spxentry{choose()}\spxextra{menu.Menu method}, \hyperpage{28}
+  \item \spxentry{collect()}\spxextra{collectable.Collectable method}, \hyperpage{17}
+  \item \spxentry{collect\_key()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{collect\_potion()}\spxextra{Player.Player method}, \hyperpage{23}
+  \item \spxentry{collect\_potion()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{collect\_treasure()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{collect\_weapon()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{collectable}
+    \subitem \spxentry{module}, \hyperpage{17}
+  \item \spxentry{Collectable}\spxextra{class in collectable}, \hyperpage{17}
+  \item \spxentry{constants}
+    \subitem \spxentry{module}, \hyperpage{17}
+  \item \spxentry{create\_alpha\_surface()}\spxextra{hud.HUD method}, \hyperpage{19}
+
+  \indexspace
+  \bigletter D
+  \item \spxentry{defeat\_enemy()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{draw()}\spxextra{health\_bar.HealthBar method}, \hyperpage{18}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{Enemy}
+    \subitem \spxentry{module}, \hyperpage{18}
+  \item \spxentry{Enemy}\spxextra{class in Enemy}, \hyperpage{18}
+  \item \spxentry{enter\_room()}\spxextra{in module GUI}, \hyperpage{14}
+  \item \spxentry{exit\_room()}\spxextra{in module GUI}, \hyperpage{15}
+
+  \indexspace
+  \bigletter F
+  \item \spxentry{farthest\_node()}\spxextra{in module generate\_dungeon\_problem}, \hyperpage{9}
+  \item \spxentry{fluent\_to\_int()}\spxextra{in module GUI}, \hyperpage{15}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{generate\_doors()}\spxextra{in module generate\_dungeon\_problem}, \hyperpage{9}
+  \item \spxentry{generate\_dungeon\_problem}
+    \subitem \spxentry{module}, \hyperpage{9}
+  \item \spxentry{generate\_enemies()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{10}
+  \item \spxentry{generate\_instance()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{10}
+  \item \spxentry{generate\_keys()}\spxextra{in module generate\_dungeon\_problem}, \hyperpage{11}
+  \item \spxentry{generate\_loot\_goal()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{11}
+  \item \spxentry{generate\_potions()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{12}
+  \item \spxentry{generate\_tile\_mapping()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{generate\_treasures()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{12}
+  \item \spxentry{generate\_weapons()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{13}
+  \item \spxentry{get\_damage()}\spxextra{Player.Player method}, \hyperpage{23}
+  \item \spxentry{get\_heal()}\spxextra{Player.Player method}, \hyperpage{23}
+  \item \spxentry{GUI}
+    \subitem \spxentry{module}, \hyperpage{14}
+  \item \spxentry{GUI}\spxextra{class in GUI}, \hyperpage{14}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{health\_bar}
+    \subitem \spxentry{module}, \hyperpage{18}
+  \item \spxentry{HealthBar}\spxextra{class in health\_bar}, \hyperpage{18}
+  \item \spxentry{hud}
+    \subitem \spxentry{module}, \hyperpage{19}
+  \item \spxentry{HUD}\spxextra{class in hud}, \hyperpage{19}
+
+  \indexspace
+  \bigletter I
+  \item \spxentry{invoke\_unified\_planning()}\spxextra{in module generate\_dungeon\_problem}, 
+		\hyperpage{14}
+
+  \indexspace
+  \bigletter K
+  \item \spxentry{Key}
+    \subitem \spxentry{module}, \hyperpage{22}
+  \item \spxentry{Key}\spxextra{class in Key}, \hyperpage{22}
+  \item \spxentry{kill()}\spxextra{Enemy.Enemy method}, \hyperpage{18}
+
+  \indexspace
+  \bigletter L
+  \item \spxentry{Loot}
+    \subitem \spxentry{module}, \hyperpage{22}
+  \item \spxentry{Loot}\spxextra{class in Loot}, \hyperpage{22}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{Main()}\spxextra{in module generate\_dungeon\_problem}, \hyperpage{9}
+  \item \spxentry{menu}
+    \subitem \spxentry{module}, \hyperpage{28}
+  \item \spxentry{Menu}\spxextra{class in menu}, \hyperpage{28}
+  \item \spxentry{module}
+    \subitem \spxentry{collectable}, \hyperpage{17}
+    \subitem \spxentry{constants}, \hyperpage{17}
+    \subitem \spxentry{Enemy}, \hyperpage{18}
+    \subitem \spxentry{generate\_dungeon\_problem}, \hyperpage{9}
+    \subitem \spxentry{GUI}, \hyperpage{14}
+    \subitem \spxentry{health\_bar}, \hyperpage{18}
+    \subitem \spxentry{hud}, \hyperpage{19}
+    \subitem \spxentry{Key}, \hyperpage{22}
+    \subitem \spxentry{Loot}, \hyperpage{22}
+    \subitem \spxentry{menu}, \hyperpage{28}
+    \subitem \spxentry{Player}, \hyperpage{23}
+    \subitem \spxentry{Potion}, \hyperpage{24}
+    \subitem \spxentry{Room}, \hyperpage{25}
+    \subitem \spxentry{title}, \hyperpage{28}
+    \subitem \spxentry{Weapon}, \hyperpage{27}
+
+  \indexspace
+  \bigletter P
+  \item \spxentry{Player}
+    \subitem \spxentry{module}, \hyperpage{23}
+  \item \spxentry{Player}\spxextra{class in Player}, \hyperpage{23}
+  \item \spxentry{Potion}
+    \subitem \spxentry{module}, \hyperpage{24}
+  \item \spxentry{Potion}\spxextra{class in Potion}, \hyperpage{24}
+  \item \spxentry{print\_menu()}\spxextra{menu.Menu method}, \hyperpage{28}
+  \item \spxentry{print\_title()}\spxextra{in module title}, \hyperpage{28}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{render()}\spxextra{hud.HUD method}, \hyperpage{20}
+  \item \spxentry{render()}\spxextra{Room.Room method}, \hyperpage{25}
+  \item \spxentry{render\_collectable()}\spxextra{collectable.Collectable method}, \hyperpage{17}
+  \item \spxentry{render\_collectable()}\spxextra{Key.Key method}, \hyperpage{22}
+  \item \spxentry{render\_collectable()}\spxextra{Loot.Loot method}, \hyperpage{22}
+  \item \spxentry{render\_collectable()}\spxextra{Potion.Potion method}, \hyperpage{24}
+  \item \spxentry{render\_collectable()}\spxextra{Weapon.Weapon method}, \hyperpage{27}
+  \item \spxentry{render\_enemy()}\spxextra{Enemy.Enemy method}, \hyperpage{18}
+  \item \spxentry{render\_player()}\spxextra{Player.Player method}, \hyperpage{23}
+  \item \spxentry{Room}
+    \subitem \spxentry{module}, \hyperpage{25}
+  \item \spxentry{Room}\spxextra{class in Room}, \hyperpage{25}
+  \item \spxentry{run()}\spxextra{GUI.GUI method}, \hyperpage{14}
+
+  \indexspace
+  \bigletter S
+  \item \spxentry{set\_enemy()}\spxextra{Room.Room method}, \hyperpage{26}
+  \item \spxentry{set\_key()}\spxextra{Room.Room method}, \hyperpage{26}
+  \item \spxentry{set\_loot()}\spxextra{Room.Room method}, \hyperpage{26}
+  \item \spxentry{set\_potion()}\spxextra{Room.Room method}, \hyperpage{26}
+  \item \spxentry{set\_weapon()}\spxextra{Room.Room method}, \hyperpage{27}
+
+  \indexspace
+  \bigletter T
+  \item \spxentry{title}
+    \subitem \spxentry{module}, \hyperpage{28}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{update\_action()}\spxextra{hud.HUD method}, \hyperpage{20}
+  \item \spxentry{update\_damage()}\spxextra{Weapon.Weapon method}, \hyperpage{27}
+  \item \spxentry{update\_defeated\_enemy\_counter()}\spxextra{hud.HUD method}, \hyperpage{20}
+  \item \spxentry{update\_escape\_room()}\spxextra{hud.HUD method}, \hyperpage{20}
+  \item \spxentry{update\_health()}\spxextra{health\_bar.HealthBar method}, \hyperpage{19}
+  \item \spxentry{update\_health()}\spxextra{Player.Player method}, \hyperpage{24}
+  \item \spxentry{update\_hero\_loot()}\spxextra{hud.HUD method}, \hyperpage{20}
+  \item \spxentry{update\_hud()}\spxextra{in module GUI}, \hyperpage{16}
+  \item \spxentry{update\_id()}\spxextra{hud.HUD method}, \hyperpage{21}
+  \item \spxentry{update\_keys()}\spxextra{hud.HUD method}, \hyperpage{21}
+  \item \spxentry{update\_potions()}\spxextra{hud.HUD method}, \hyperpage{21}
+  \item \spxentry{update\_weapon()}\spxextra{Player.Player method}, \hyperpage{24}
+
+  \indexspace
+  \bigletter W
+  \item \spxentry{Weapon}
+    \subitem \spxentry{module}, \hyperpage{27}
+  \item \spxentry{Weapon}\spxextra{class in Weapon}, \hyperpage{27}
+
+  \indexspace
+  \bigletter Y
+  \item \spxentry{yes\_or\_no()}\spxextra{in module generate\_dungeon\_problem}, \hyperpage{14}
+
+\end{sphinxtheindex}
