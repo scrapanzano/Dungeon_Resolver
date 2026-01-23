@@ -1,10 +1,10 @@
-﻿click==8.1.7
+click==8.1.7
 colorama==0.4.6
 ConfigSpace==0.7.1
 contourpy==1.2.1
 cycler==0.12.1
 Cython==3.0.10
-fonttools==4.51.0
+fonttools==4.60.2
 kiwisolver==1.4.5
 matplotlib==3.8.4
 more-itertools==10.2.0
